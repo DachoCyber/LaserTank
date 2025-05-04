@@ -47,10 +47,13 @@ void MainGame::handleInput() {
             if(player.getDir() != UP) {
                 player.setDir(UP);
             } else {
-                if(tileMap.getTileMap()[newGridPos.y - 1][newGridPos.x] -> isWalkable()) {
+                if(validMove(newGridPos.x, newGridPos.y - 1)) {
 
-                    newGridPos.y -= 1;
-                    moved = true;
+                    if(tileMap.getTileMap()[newGridPos.y - 1][newGridPos.x] -> isWalkable()) {
+
+                        newGridPos.y -= 1;
+                        moved = true;
+                    }
                 }
             }
         }
@@ -65,10 +68,13 @@ void MainGame::handleInput() {
             if(player.getDir() != DOWN) {
                 player.setDir(DOWN);
             } else {
-                if(tileMap.getTileMap()[newGridPos.y + 1][newGridPos.x] -> isWalkable()) {
+                if(validMove(newGridPos.x, newGridPos.y + 1)) {
 
-                    newGridPos.y += 1;
-                    moved = true;
+                    if(tileMap.getTileMap()[newGridPos.y + 1][newGridPos.x] -> isWalkable()) {
+
+                        newGridPos.y += 1;
+                        moved = true;
+                    }
                 }
             }
         }
@@ -83,10 +89,13 @@ void MainGame::handleInput() {
             if(player.getDir() != LEFT) {
                 player.setDir(LEFT);
             } else {
-                if(tileMap.getTileMap()[newGridPos.y][newGridPos.x - 1] -> isWalkable()) {
+                if(validMove(newGridPos.x - 1, newGridPos.y)) {
 
-                    newGridPos.x -= 1;
-                    moved = true;
+                    if(tileMap.getTileMap()[newGridPos.y][newGridPos.x - 1] -> isWalkable()) {
+
+                        newGridPos.x -= 1;
+                        moved = true;
+                    }
                 }
             }
         }
@@ -101,9 +110,12 @@ void MainGame::handleInput() {
             if(player.getDir() != RIGHT) {
                 player.setDir(RIGHT);
             } else {
-                if(tileMap.getTileMap()[newGridPos.y][newGridPos.x + 1] -> isWalkable()) {
-                    newGridPos.x += 1;
-                    moved = true;
+                if(validMove(newGridPos.y, newGridPos.x + 1)) {
+
+                    if(tileMap.getTileMap()[newGridPos.y][newGridPos.x + 1] -> isWalkable()) {
+                        newGridPos.x += 1;
+                        moved = true;
+                    }
                 }
                 
             }
@@ -197,6 +209,6 @@ void MainGame::render() {
 }
 
 bool MainGame::validMove(int x, int y) const {
-    return x >= 0 && x < (windowSizeX / tileSize) && 
-           y >= 0 && y < (windowSizeY / tileSize);
+    return x >= 0 && x < 18  && 
+           y >= 0 && y < 18;
 }
