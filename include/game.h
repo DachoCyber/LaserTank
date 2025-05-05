@@ -23,11 +23,6 @@ private:
     int startTankX;
     int startTankY;
 
-    bool upPressed = false;
-    bool downPressed = false;
-    bool leftPressed = false;
-    bool rightPressed = false;
-    bool spacePressed = false;
     
 
     const int tileSize = 32;
