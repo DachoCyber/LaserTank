@@ -50,86 +50,7 @@ Direction Tank::getDir() const {
 sf::Vector2i Tank::getGridPosition() const {
     return gridPos;
 }
-/*
-void Tank::handleInput() {
-    if (moveQueued) return; // Only allow one move per key press
 
-    sf::Vector2i newGridPos = gridPos;
-
-    // UP
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        if (!upPressed) {
-            upPressed = true;
-            if (dir != UP) {
-                setDir(UP);
-            } else {
-                newGridPos.y -= 1;
-                if (validMove(newGridPos.x, newGridPos.y)) {
-                    gridPos = newGridPos;
-                }
-            }
-        }
-    } else {
-        upPressed = false;
-    }
-
-    // DOWN
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        if (!downPressed) {
-            downPressed = true;
-            if (dir != DOWN) {
-                setDir(DOWN);
-            } else {
-                newGridPos.y += 1;
-                if (validMove(newGridPos.x, newGridPos.y)) {
-                    gridPos = newGridPos;
-                }
-            }
-        }
-    } else {
-        downPressed = false;
-    }
-
-    // LEFT
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        if (!leftPressed) {
-            leftPressed = true;
-            if (dir != LEFT) {
-                setDir(LEFT);
-            } else {
-                newGridPos.x -= 1;
-                if (validMove(newGridPos.x, newGridPos.y)) {
-                    gridPos = newGridPos;
-                }
-            }
-        }
-    } else {
-        leftPressed = false;
-    }
-
-    // RIGHT
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        if (!rightPressed) {
-            rightPressed = true;
-            if (dir != RIGHT) {
-                setDir(RIGHT);
-            } else {
-                newGridPos.x += 1;
-                if (validMove(newGridPos.x, newGridPos.y)) {
-                    gridPos = newGridPos;
-                }
-            }
-        }
-    } else {
-        rightPressed = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-        fireBullet();
-    }
-}
-
-*/
 void Tank :: setGridPosition(sf::Vector2i gridPos) {
     this -> gridPos = gridPos;
     updateSpritePosition();
@@ -169,18 +90,59 @@ void Tank::fireBullet() {
 
     sf::Vector2f tankPos = sprite.getPosition();
     auto tankSize = tankImg.getSize();
+    float bulletStartPosX, bulletStartPosY;
     switch (dir) {
-        case UP: bullet = new Bullet(sf::Vector2f(tankPos.x -2.f, tankPos.y - tileSize / 2 + 11.f), dir); break;
-        case DOWN: bullet = new Bullet(sf::Vector2f(tankPos.x - 2.f, tankPos.y + tileSize / 2 - 11.f), dir); break;
-        case RIGHT: bullet = new Bullet(sf::Vector2f(tankPos.x + tileSize / 2 -11.f, tankPos.y - 2.f), dir); break;
-        case LEFT: bullet = new Bullet(sf::Vector2f(tankPos.x - tileSize / 2 +11.f, tankPos.y -1.f), dir); break;
-    }
+        case UP: bulletStartPosX = tankPos.x-2.f; bulletStartPosY = tankPos.y - tileSize/2 - 11.f;  break;
+        case DOWN: bulletStartPosX = tankPos.x - 2.f; bulletStartPosY = tankPos.y + tileSize / 2 - 11.f;  break;
+        case RIGHT: bulletStartPosX = tankPos.x + tileSize / 2 -11; bulletStartPosY = tankPos.y - 2.f;  break;
+        case LEFT: bulletStartPosX = tankPos.x - tileSize / 2 - 11.f; bulletStartPosY = tankPos.y -2.f;  break;
+    }   
+    bullet   = new Bullet(sf::Vector2f(bulletStartPosX, bulletStartPosY), dir);
 
-}
+}   
 
 void Tank::deleteBullet() {
     if(bullet) {
 
         bullet = nullptr;
     }
+}
+
+bool Tank :: deleteAdjBlockIfExists(Map& tileMap) {
+    int x = getGridPosition().x;
+    int y = getGridPosition().y;
+
+    switch(dir) {
+        case UP:
+            std::cout << y -1 << "      " << x  << std::endl;
+            if(y - 1 >= 0 && tileMap.getTileMap()[y-1][x]->isBulletDestroyable()) {
+                tileMap.destroyTile(x, y - 1);
+                std::cout << "bullet not fired!" << std::endl;
+                return true;
+            }
+            break;
+        case DOWN:
+            if(y + 1 < tileMap.getTileMap().size() && tileMap.getTileMap()[y + 1][x]->isBulletDestroyable()) {
+                tileMap.destroyTile(x, y + 1);
+                std::cout << "bullet not fired" << std::endl;
+                return true;
+            }
+            break;
+        case LEFT:
+            if(x - 1 >= 0 && tileMap.getTileMap()[y][x - 1]->isBulletDestroyable()) {
+                tileMap.destroyTile(x - 1, y);
+                std::cout << "bullet not fired" << std::endl;
+                return true;
+            }
+            break;
+        case RIGHT:
+            if(x + 1 < tileMap.getTileMap()[y].size() && tileMap.getTileMap()[y][x + 1]->isBulletDestroyable()) {
+                tileMap.destroyTile(x + 1, y);
+                std::cout << "bullet not fired" << std::endl;
+                return true;
+            }
+            break;
+    }
+
+    return false;
 }

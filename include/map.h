@@ -24,7 +24,7 @@ private:
     void loadTextures();
     void buildMap();
 
-    const int tileSize = 16;
+    const int tileSize = 32;
     const int mapWidth = 19;
     const int mapHeight = 19;
     

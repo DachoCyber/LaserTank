@@ -17,9 +17,10 @@ public:
                throw new std::runtime_error("Cannot open image walkableGround.png!");
             }
             sprite.setTexture(tex);
-            sprite.setPosition(x*2, y*2);
+            sprite.setPosition(x, y);
+            sprite.setScale(32.f/53.f, 32.f/55.f);
         }
-        catch(std::string& what) {
+        catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
     }
@@ -28,6 +29,12 @@ public:
     }
     bool isBulletDestroyable() override {
         return true;
+    }
+    void interactWithBullet() override {
+        return;
+    }
+    bool isBulletMovable() override {
+        return false;
     }
 };
 

@@ -23,7 +23,7 @@ private:
     int startTankX;
     int startTankY;
 
-    
+    int countSpacePressed;
 
     const int tileSize = 32;
     bool moveQueued = false;

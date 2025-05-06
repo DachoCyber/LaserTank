@@ -11,7 +11,7 @@ public:
     Bullet() {
         shape.setSize(sf::Vector2f(0.f, 0.f));
         velocity = sf::Vector2f(0.f, 0.f);
-        dir = UP; // Initialize with default direction
+        dir = UP;
     }
 
     Bullet(sf::Vector2f position, Direction dir) : dir(dir) {
@@ -21,10 +21,6 @@ public:
                 break;
             case UP : case DOWN:
                 shape.setSize(sf::Vector2f(2.f, 20.f));
-        }
-        switch(dir) {
-            case RIGHT: case UP: case LEFT: case DOWN:
-                shape.setOrigin(sf::Vector2f(0.f, 0.f));
         }
         shape.setFillColor(sf::Color::Red);
         shape.setPosition(position);
@@ -45,7 +41,7 @@ public:
     }
 
     void update(sf::Time updateTime) {
-        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/2));
+        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/1.5));
     }
 
 

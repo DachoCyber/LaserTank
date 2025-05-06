@@ -4,6 +4,7 @@
 
 #include "include/tile.h"
 #include "include/destructibleBlock.h"
+#include "include/mirror1Tile.h"
 
 #include <stdexcept>
 #include <fstream>
@@ -43,6 +44,8 @@ void Map::buildMap() {
                 case 3:
                     tiles[y][x] = std::make_unique<DestructibleBlock>(x*tileSize, y*tileSize);
                     break;
+                //case 4:
+                  //  tiles[y][x] = std::make_unique<Mirror1Tile>(x*tileSize, y*tileSize);
                 default:
                     tiles[y][x] = nullptr; 
                     break;

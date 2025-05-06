@@ -3,15 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-
-extern sf::Texture walkableTexture;
-extern sf::Texture destructibleTexture;
-
-
-enum TileType {
-    WALKABLE_GROUND,
-    DESTRUCTIBLE_BLOCK
-};
+#include "direction.h"
 
 class Tile : public sf::Drawable {
 
@@ -31,6 +23,8 @@ public:
     }
     virtual bool isWalkable() = 0;
     virtual bool isBulletDestroyable() = 0;
+    virtual void interactWithBullet() = 0;
+    virtual bool isBulletMovable() = 0;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override {
         target.draw(sprite);
     }

@@ -1,37 +1,35 @@
 #pragma once
 
 #include "tile.h"
-
-#include <SFML/Graphics.hpp>
 #include <iostream>
 
-class WalkableGround : public Tile {
+
+class Mirror1Tile : public Tile {
 public:
-    WalkableGround(int x, int y) : Tile(x, y) {
+    Mirror1Tile(int x, int y) : Tile(x, y) {
         try {
-            walkable = true;
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/walkableGround.png")) {
+            walkable = false;
+            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/Mirror1.png")) {
                throw new std::runtime_error("Cannot open image walkableGround.png!");
             }
             sprite.setTexture(tex);
             sprite.setPosition(x, y);
-            sprite.setScale(32.f/55.f, 32.f/55.f);
         }
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
     }
+
     bool isWalkable() override {
-        return true;
+        return false;
     }
     bool isBulletDestroyable() override {
         return false;
     }
+    bool isBulletMovable() override {
+        return true;
+    }
     void interactWithBullet() override {
         return;
     }
-    bool isBulletMovable() override {
-        return false;
-    }
 };
-

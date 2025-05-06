@@ -10,26 +10,30 @@ class Tank : public sf::Drawable {
 public:
     Tank(int startX, int startY, int windowSizeX, int windowSizeY);
     virtual ~Tank() = default; 
+
     void setDir(Direction dir);
     Direction getDir() const;
 
-    void handleInput();
     void update(sf::Time, sf::Time);
     sf::Vector2i getGridPosition() const;
     void setGridPosition(sf::Vector2i);
+
     bool validMove(int x, int y) const;
-    void fireBullet();
-    Bullet* getBullet() const {return  bullet;}
-    bool bulletInScreen() const;
+    
     void loadTextureFromImage();
     void updateSpritePosition();
     void deleteBullet();
+
+    bool deleteAdjBlockIfExists(Map& tileMap); /// Do not fire bullet
+    void fireBullet();
+    Bullet* getBullet() const {return  bullet;}
+    bool bulletInScreen() const;
+    bool getShouldFireBullet() const {return shouldFireBullet;}
+    bool killPlayer();
+
 private:
 
-    bool upPressed = false;
-    bool downPressed = false;
-    bool leftPressed = false;
-    bool rightPressed = false;
+    bool shouldFireBullet;
 
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
