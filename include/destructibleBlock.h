@@ -30,10 +30,25 @@ public:
     bool isBulletDestroyable() override {
         return true;
     }
-    void interactWithBullet() override {
+    void interactWithBullet(Direction dir) override {
         return;
     }
     bool isBulletMovable() override {
+        return false;
+    }
+    bool isMirror1() override {
+        return false;
+    }
+    bool isMirror2() override {
+        return false;
+    }
+    bool isMirror3() override {
+        return false;
+    }
+    bool isMirror4() override {
+        return false;
+    }
+    bool isOverlappled() override {
         return false;
     }
 };

@@ -19,6 +19,29 @@ public:
         std::unique_ptr<Tile> tile = std::make_unique<WalkableGround>(gridPosX*tileSize, gridPosY*tileSize);
         tiles[gridPosY][gridPosX] = std::move(tile);
     }
+    void moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldGridPosX) {
+    // 1. Check bounds and validity
+        if (oldGridPosY < 0 || oldGridPosY >= tiles.size() ||
+            oldGridPosX < 0 || oldGridPosX >= tiles[0].size() ||
+            newGridPosY < 0 || newGridPosY >= tiles.size() ||
+            newGridPosX < 0 || newGridPosX >= tiles[0].size() ||
+            !tiles[oldGridPosY][oldGridPosX]) {
+            return;
+        }
+
+        // 2. Move the tile
+        tiles[newGridPosY][newGridPosX] = std::move(tiles[oldGridPosY][oldGridPosX]);
+        
+        // 3. Update the moved tile's position
+        tiles[newGridPosY][newGridPosX]->setPosition(newGridPosX * tileSize, newGridPosY * tileSize);
+        
+        // 4. Update tileMap to maintain consistency
+        tileMap[newGridPosY][newGridPosX] = tileMap[oldGridPosY][oldGridPosX];
+        
+        // 5. Create new walkable ground at old position
+        tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+        tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
+    }
 
 private:
     void loadTextures();
@@ -34,4 +57,5 @@ private:
     
     sf::Texture walkableTexture;
     sf::Texture destructibleTexture;
+    sf::Texture mirror1Texture;
 };

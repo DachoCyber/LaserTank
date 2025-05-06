@@ -23,8 +23,16 @@ public:
     }
     virtual bool isWalkable() = 0;
     virtual bool isBulletDestroyable() = 0;
-    virtual void interactWithBullet() = 0;
+    virtual void interactWithBullet(Direction dir) = 0;
     virtual bool isBulletMovable() = 0;
+    virtual bool isMirror1() = 0;
+    virtual bool isMirror2() = 0;
+    virtual bool isMirror3() = 0;
+    virtual bool isMirror4() = 0;
+    virtual bool isOverlappled() = 0;
+    virtual void setPosition(int x, int y) {
+        sprite.setPosition(x, y);
+    }
     virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override {
         target.draw(sprite);
     }

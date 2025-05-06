@@ -27,6 +27,32 @@ public:
         setVelocity();
     }
 
+    void changeVelocity(Direction dir, int mirrorType) {
+        switch(dir) {
+            case RIGHT : case LEFT :
+                shape.setSize(sf::Vector2f(20.f, 2.f));
+                break;
+            case UP : case DOWN:
+                shape.setSize(sf::Vector2f(2.f, 20.f));
+        }
+        switch(dir) {
+            case UP:
+                velocity = sf::Vector2f(0.f, -1.f); break;
+            case DOWN:
+                velocity = sf::Vector2f(0.f, 1.f); break;
+            case LEFT:
+                velocity = sf::Vector2f(-1.f, 0.f);
+                if(mirrorType == 1) {
+
+                    shape.setPosition(sf::Vector2f(shape.getPosition().x - 16.f, shape.getPosition().y - 16.f));
+                    
+                }
+                break;
+            case RIGHT:
+                velocity = sf::Vector2f(1.f, 0.f); break;
+        }
+    }
+
     void setVelocity() {
         switch(dir) {
             case UP:

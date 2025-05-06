@@ -5,20 +5,18 @@
 
 
 class Mirror1Tile : public Tile {
-public:
-    Mirror1Tile(int x, int y) : Tile(x, y) {
-        try {
+
+    private:
+        const sf::Texture* texturePtr;
+    public:
+        Mirror1Tile(int x, int y, const sf::Texture& mirrorTex) : Tile(x, y) {
             walkable = false;
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/Mirror1.png")) {
-               throw new std::runtime_error("Cannot open image walkableGround.png!");
-            }
-            sprite.setTexture(tex);
+            texturePtr = &mirrorTex;
+            sprite.setTexture(*texturePtr);
             sprite.setPosition(x, y);
         }
-        catch(const std::string& what) {
-            std::cerr << what << std::endl;
-        }
-    }
+
+
 
     bool isWalkable() override {
         return false;
@@ -29,7 +27,22 @@ public:
     bool isBulletMovable() override {
         return true;
     }
-    void interactWithBullet() override {
+    void interactWithBullet(Direction dir) override {
         return;
+    }
+    bool isMirror1() override {
+        return true;
+    }
+    bool isMirror2() override {
+        return false;
+    }
+    bool isMirror3() override {
+        return false;
+    }
+    bool isMirror4() override {
+        return false;
+    }
+    bool isOverlappled() override {
+        return false;
     }
 };

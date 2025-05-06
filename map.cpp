@@ -29,6 +29,9 @@ void Map::loadTextures() {
     if (!destructibleTexture.loadFromFile("Images/destructibleBlock.png")) {
         throw std::runtime_error("Failed to load destructible texture");
     }
+    if(!mirror1Texture.loadFromFile("Images/Mirror1WithBackground.png")) {
+        throw std::runtime_error("Failed to load mirror 1 texture");
+    }
 }
 
 void Map::buildMap() {
@@ -44,8 +47,9 @@ void Map::buildMap() {
                 case 3:
                     tiles[y][x] = std::make_unique<DestructibleBlock>(x*tileSize, y*tileSize);
                     break;
-                //case 4:
-                  //  tiles[y][x] = std::make_unique<Mirror1Tile>(x*tileSize, y*tileSize);
+                case 4:
+                    tiles[y][x] = std::make_unique<Mirror1Tile>(x*tileSize, y*tileSize, mirror1Texture);
+                    break;
                 default:
                     tiles[y][x] = nullptr; 
                     break;

@@ -9,6 +9,8 @@ void BulletInteraction :: interact() {
         return;
     }
     
+    int lastBulletGridPosX = player.getBullet()->getPosition().x/tileSize;
+    int lastBulletGridPosY = player.getBullet()->getPosition().y/tileSize;
 
     player.getBullet()->update(timePerFrame);
     
@@ -32,6 +34,48 @@ void BulletInteraction :: interact() {
             player.deleteBullet();
             tileMap.destroyTile(bulletGridPosX, bulletGridPosY);
             }
+        if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
+    && tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMirror1()) 
+{
+    // First ensure bullet is actually on the mirror tile
+    if(!(bulletGridPosX == lastBulletGridPosX && bulletGridPosY == lastBulletGridPosY))
+    {
+        // Hit from left - reflect down
+        if(lastBulletGridPosX < bulletGridPosX) {
+            player.getBullet()->changeVelocity(DOWN, 1);
         }
+        // Hit from right - move mirror left
+        else if(lastBulletGridPosX > bulletGridPosX) {
+            if(bulletGridPosX > 0) {  // Can we move left?
+                bool canMove = !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1] || 
+                             tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1]->isOverlappled();
+                
+                if(canMove) {
+                    tileMap.moveTile(bulletGridPosY, bulletGridPosX - 1,
+                                   bulletGridPosY, bulletGridPosX);
+                }
+            }
+            player.deleteBullet();
+        }
+        // Hit from bottom - reflect left
+        else if(lastBulletGridPosY > bulletGridPosY) {
+            player.getBullet()->changeVelocity(LEFT, 1);
+        }
+        // Hit from top - move mirror down
+        else if(lastBulletGridPosY < bulletGridPosY) {
+            if(bulletGridPosY < tileMap.getTileMap().size() - 1) {  // Can we move down?
+                bool canMove = !tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX] || 
+                             tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX]->isOverlappled();
+                
+                if(canMove) {
+                    tileMap.moveTile(bulletGridPosY + 1, bulletGridPosX,
+                                   bulletGridPosY, bulletGridPosX);
+                }
+            }
+            player.deleteBullet();
+        }
+    }
+}
+    }
     
 } 
