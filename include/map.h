@@ -59,4 +59,6 @@ private:
     sf::Texture destructibleTexture;
     sf::Texture mirror1Texture;
     sf::Texture mirror2Texture;
+    sf::Texture mirror3Texture;
+    sf::Texture mirror4Texture;
 };

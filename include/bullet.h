@@ -42,14 +42,18 @@ public:
                 velocity = sf::Vector2f(0.f, 1.f); break;
             case LEFT:
                 velocity = sf::Vector2f(-1.f, 0.f);
-                if(mirrorType == 1) {
+                /*if(mirrorType == 1) {
 
                     shape.setPosition(sf::Vector2f(shape.getPosition().x - 10.f, shape.getPosition().y - 10.f));
                     
-                }
+                }*/
                 break;
             case RIGHT:
-                velocity = sf::Vector2f(1.f, 0.f); break;
+                velocity = sf::Vector2f(1.f, 0.f);
+                /*if(mirrorType == 1 || mirrorType == 3) {
+                    shape.setPosition(sf::Vector2f(shape.getPosition().x + 10.f, shape.getPosition().y - 10.f));
+                } */
+                break;
         }
     }
 
