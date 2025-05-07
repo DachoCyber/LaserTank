@@ -44,7 +44,7 @@ public:
                 velocity = sf::Vector2f(-1.f, 0.f);
                 if(mirrorType == 1) {
 
-                    shape.setPosition(sf::Vector2f(shape.getPosition().x - 16.f, shape.getPosition().y - 16.f));
+                    shape.setPosition(sf::Vector2f(shape.getPosition().x - 10.f, shape.getPosition().y - 10.f));
                     
                 }
                 break;

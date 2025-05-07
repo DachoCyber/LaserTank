@@ -114,7 +114,6 @@ bool Tank :: deleteAdjBlockIfExists(Map& tileMap) {
 
     switch(dir) {
         case UP:
-            std::cout << y -1 << "      " << x  << std::endl;
             if(y - 1 >= 0 && tileMap.getTileMap()[y-1][x]->isBulletDestroyable()) {
                 tileMap.destroyTile(x, y - 1);
                 std::cout << "bullet not fired!" << std::endl;

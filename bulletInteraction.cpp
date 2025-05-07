@@ -23,7 +23,9 @@ void BulletInteraction :: interact() {
 
     int bulletGridPosX = player.getBullet()->getPosition().x/tileSize;
     int bulletGridPosY = player.getBullet()->getPosition().y/tileSize;
-    std::cout << bulletGridPosX << " " << bulletGridPosY << std::endl;
+        //std::cout << bulletGridPosX << " " << bulletGridPosY << std::endl;
+
+
 
     if (bulletGridPosX >= 0 && bulletGridPosX < tileMap.getTileMap()[0].size() &&
     bulletGridPosY >= 0 && bulletGridPosY < tileMap.getTileMap().size()) {
@@ -36,18 +38,19 @@ void BulletInteraction :: interact() {
             }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
     && tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMirror1()) 
-{
+{   
+    std::cout << lastBulletGridPosX << " " << lastBulletGridPosY << " " << bulletGridPosX << " "<< bulletGridPosY << std::endl;
     // First ensure bullet is actually on the mirror tile
-    if(!(bulletGridPosX == lastBulletGridPosX && bulletGridPosY == lastBulletGridPosY))
-    {
+    //if(!(bulletGridPosX == lastBulletGridPosX && bulletGridPosY == lastBulletGridPosY))
+    //{
         // Hit from left - reflect down
         if(lastBulletGridPosX < bulletGridPosX) {
             player.getBullet()->changeVelocity(DOWN, 1);
         }
         // Hit from right - move mirror left
-        else if(lastBulletGridPosX > bulletGridPosX) {
+        else if(lastBulletGridPosX > bulletGridPosX || player.getGridPosition().x > bulletGridPosX) {
             if(bulletGridPosX > 0) {  // Can we move left?
-                bool canMove = !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1] || 
+                bool canMove = bulletGridPosX > 0 && !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1] || 
                              tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1]->isOverlappled();
                 
                 if(canMove) {
@@ -58,14 +61,14 @@ void BulletInteraction :: interact() {
             player.deleteBullet();
         }
         // Hit from bottom - reflect left
-        else if(lastBulletGridPosY > bulletGridPosY) {
+        else if(lastBulletGridPosY > bulletGridPosY || player.getGridPosition().y > bulletGridPosY) {
             player.getBullet()->changeVelocity(LEFT, 1);
         }
         // Hit from top - move mirror down
-        else if(lastBulletGridPosY < bulletGridPosY) {
+        else if(lastBulletGridPosY < bulletGridPosY ) {
             if(bulletGridPosY < tileMap.getTileMap().size() - 1) {  // Can we move down?
-                bool canMove = !tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX] || 
-                             tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX]->isOverlappled();
+                bool canMove = bulletGridPosY < 17 && (!tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX] || 
+                             tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX]->isOverlappled());
                 
                 if(canMove) {
                     tileMap.moveTile(bulletGridPosY + 1, bulletGridPosX,
@@ -77,5 +80,4 @@ void BulletInteraction :: interact() {
     }
 }
     }
-    
-} 
+     
