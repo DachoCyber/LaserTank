@@ -58,4 +58,5 @@ private:
     sf::Texture walkableTexture;
     sf::Texture destructibleTexture;
     sf::Texture mirror1Texture;
+    sf::Texture mirror2Texture;
 };

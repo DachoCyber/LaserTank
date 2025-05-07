@@ -5,6 +5,7 @@
 #include "include/tile.h"
 #include "include/destructibleBlock.h"
 #include "include/mirror1Tile.h"
+#include "include/mirror2Tile.h"
 
 #include <stdexcept>
 #include <fstream>
@@ -32,6 +33,9 @@ void Map::loadTextures() {
     if(!mirror1Texture.loadFromFile("Images/Mirror1WithBackground.png")) {
         throw std::runtime_error("Failed to load mirror 1 texture");
     }
+    if(!mirror2Texture.loadFromFile("Images/Mirror2WithBackground.png")) {
+        throw std::runtime_error("Failed to load mirror 2 texture");
+    }
 }
 
 void Map::buildMap() {
@@ -49,6 +53,9 @@ void Map::buildMap() {
                     break;
                 case 4:
                     tiles[y][x] = std::make_unique<Mirror1Tile>(x*tileSize, y*tileSize, mirror1Texture);
+                    break;
+                case 5: 
+                    tiles[y][x] = std::make_unique<Mirror2Tile>(x*tileSize, y*tileSize, mirror2Texture);
                     break;
                 default:
                     tiles[y][x] = nullptr; 
