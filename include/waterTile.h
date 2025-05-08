@@ -4,28 +4,37 @@
 #include <iostream>
 
 
-class Mirror3Tile : public Tile {
+class WaterTile : public Tile {
 
     private:
         const sf::Texture* texturePtr;
     public:
-        Mirror3Tile(int x, int y, const sf::Texture& mirrorTex) : Tile(x, y) {
+        WaterTile(int x, int y, const sf::Texture& WaterTileTexture) : Tile(x, y) {
             walkable = false;
-            texturePtr = &mirrorTex;
+            texturePtr = &WaterTileTexture;
             sprite.setTexture(*texturePtr);
             sprite.setPosition(x, y);
         }
 
 
+    bool killPlayerTile(int playerPosX, int playerPosY) override {
+        if(posX == playerPosX && posY == playerPosY) {
+            return true;
+        }
+        return false;
+    }
+    bool isWater() override {
+        return true;
+    }
 
     bool isWalkable() override {
-        return false;
+        return true;
     }
     bool isBulletDestroyable() override {
         return false;
     }
     bool isBulletMovable() override {
-        return true;
+        return false;
     }
     void interactWithBullet(Direction dir) override {
         return;
@@ -37,7 +46,7 @@ class Mirror3Tile : public Tile {
         return false;
     }
     bool isMirror3() override {
-        return true;
+        return false;
     }
     bool isMirror4() override {
         return false;
@@ -46,12 +55,6 @@ class Mirror3Tile : public Tile {
         return false;
     }
     int getMirrorType() override {
-        return 3;
-    }
-    virtual bool killPlayerTile(int playerPosX, int playerPosY) override {
-        return false;
-    }
-    bool isWater() override {
-        return false;
+        return -1;
     }
 };

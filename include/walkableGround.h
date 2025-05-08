@@ -21,6 +21,9 @@ public:
             std::cerr << what << std::endl;
         }
     }
+    virtual bool killPlayerTile(int playerPosX, int playerPosY) override {
+        return false;
+    }
     bool isWalkable() override {
         return true;
     }
@@ -49,6 +52,9 @@ public:
     }
     bool isOverlappled() override {
         return true;
+    }
+    bool isWater() override {
+        return false;
     }
 };
 

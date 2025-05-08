@@ -54,5 +54,11 @@ public:
     bool isOverlappled() override {
         return false;
     }
+    bool killPlayerTile(int playerPosX, int playerPosY) override {
+        return posX == playerPosX && posY == playerPosY;
+    }
+    bool isWater() override {
+        return false;
+    }
 };
 

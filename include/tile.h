@@ -34,6 +34,8 @@ public:
     virtual void setPosition(int x, int y) {
         sprite.setPosition(x, y);
     }
+    virtual bool isWater() = 0;
+    virtual bool killPlayerTile(int playerPosX, int playerPosY) = 0;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates) const override {
         target.draw(sprite);
     }

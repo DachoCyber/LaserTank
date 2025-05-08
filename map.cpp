@@ -8,6 +8,7 @@
 #include "include/mirror2Tile.h"
 #include "include/mirror3Tile.h"
 #include "include/mirror4Tile.h"
+#include "include/waterTile.h"
 
 #include <stdexcept>
 #include <fstream>
@@ -44,6 +45,9 @@ void Map::loadTextures() {
     if(!mirror4Texture.loadFromFile("Images/Mirror4WithBackground.png")) {
         throw std::runtime_error("Failed to load mirror 4 texture");
     }
+    if(!waterTileTexture.loadFromFile("Images/waterTile.png")) {
+        throw std::runtime_error("Faild to load water tile texture");
+    }
 }
 
 void Map::buildMap() {
@@ -70,6 +74,9 @@ void Map::buildMap() {
                     break;
                 case 7:
                     tiles[y][x] = std::make_unique<Mirror4Tile>(x*tileSize, y*tileSize, mirror4Texture);
+                    break;
+                case 8:
+                    tiles[y][x] = std::make_unique<WaterTile>(x*tileSize, y*tileSize, waterTileTexture);
                     break;
                 default:
                     tiles[y][x] = nullptr; 

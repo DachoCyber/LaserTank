@@ -14,6 +14,13 @@ public:
     void setDir(Direction dir);
     Direction getDir() const;
 
+    void setShouldKillPlayer() {
+        shouldKillPlayer = true;
+    }
+    bool getShouldKillPlayer() {
+        return shouldKillPlayer;
+    }
+
     void update(sf::Time, sf::Time);
     sf::Vector2i getGridPosition() const;
     void setGridPosition(sf::Vector2i);
@@ -23,15 +30,17 @@ public:
     void loadTextureFromImage();
     void updateSpritePosition();
     void deleteBullet();
+    
 
     bool deleteAdjBlockIfExists(Map& tileMap); /// Do not fire bullet
     void fireBullet();
     Bullet* getBullet() const {return  bullet;}
     bool bulletInScreen() const;
     bool getShouldFireBullet() const {return shouldFireBullet;}
-    bool killPlayer();
 
 private:
+
+    bool shouldKillPlayer = false;
 
     bool shouldFireBullet;
 

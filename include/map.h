@@ -61,4 +61,5 @@ private:
     sf::Texture mirror2Texture;
     sf::Texture mirror3Texture;
     sf::Texture mirror4Texture;
+    sf::Texture waterTileTexture;
 };

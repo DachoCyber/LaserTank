@@ -1,4 +1,5 @@
 #include "include/game.h"
+#include "include/playerInteraction.h"
 
 MainGame::MainGame(int windowSizeX, int windowSizeY) :
     window(std::make_unique<sf::RenderWindow>(
@@ -15,7 +16,7 @@ MainGame::MainGame(int windowSizeX, int windowSizeY) :
 }
 
 void MainGame::run() {
-    while(window->isOpen()) {
+    while(window->isOpen() && player.getShouldKillPlayer() == false) {
         sf::Event event;
         while(window->pollEvent(event)) {
             if(event.type == sf::Event::Closed)
@@ -32,96 +33,28 @@ void MainGame::run() {
 }
 
 void MainGame::handleInput() {
+    sf::Keyboard::Key pressedKey = sf::Keyboard::Unknown;
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        pressedKey = sf::Keyboard::Up;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        pressedKey = sf::Keyboard::Down;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        pressedKey = sf::Keyboard::Left;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        pressedKey = sf::Keyboard::Right;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        pressedKey = sf::Keyboard::Space;
+    }
 
+    if (pressedKey != sf::Keyboard::Unknown) {
+        PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
+        playerInteraction -> handleMovement();
+        delete playerInteraction;
+    }
     sf::Vector2i newGridPos = player.getGridPosition();
     bool moved = false;
 
-    // UP
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        if(player.getBullet() == nullptr) {
-            if(player.getDir() != UP) {
-                player.setDir(UP);
-            } else {
-                if(validMove(newGridPos.x, newGridPos.y - 1)) {
-
-                    if(tileMap.getTileMap()[newGridPos.y - 1][newGridPos.x] -> isWalkable()) {
-
-                        newGridPos.y -= 1;
-                        moved = true;
-                    }
-                }
-            }
-        }
-    }
-
-    // DOWN
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        if(player.getBullet() == nullptr) {
-            if(player.getDir() != DOWN) {
-                player.setDir(DOWN);
-            } else {
-                if(validMove(newGridPos.x, newGridPos.y + 1)) {
-
-                    if(tileMap.getTileMap()[newGridPos.y + 1][newGridPos.x] -> isWalkable()) {
-
-                        newGridPos.y += 1;
-                        moved = true;
-                    }
-                }
-            }
-        }
-    }
-
-    
-
-    // LEFT
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && player.getBullet() == nullptr) {
-        if(player.getDir() != LEFT) {
-            player.setDir(LEFT);
-        } else {
-            if(validMove(newGridPos.x - 1, newGridPos.y)) {
-
-                if(tileMap.getTileMap()[newGridPos.y][newGridPos.x - 1] -> isWalkable()) {
-
-                    newGridPos.x -= 1;
-                    moved = true;
-                }
-            }
-        }
-    }
-    
-
-    // RIGHT
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        if(player.getBullet() == nullptr) {
-            if(player.getDir() != RIGHT) {
-                player.setDir(RIGHT);
-            } else {
-                if(validMove(newGridPos.y, newGridPos.x + 1)) {
-
-                    if(tileMap.getTileMap()[newGridPos.y][newGridPos.x + 1] -> isWalkable()) {
-                        newGridPos.x += 1;
-                        moved = true;
-                    }
-                }
-                
-            }
-        }
-    }
-
-    // SPACE
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player.getBullet() == nullptr) {
-        
-        if(!player.deleteAdjBlockIfExists(tileMap)) {
-            player.fireBullet();
-        }
-    }
-
-    if(moved && validMove(newGridPos.x, newGridPos.y)) {
-        player.setGridPosition(newGridPos);
-        moveQueued = true;
-    }
 }
 
 void MainGame::update() {

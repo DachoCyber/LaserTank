@@ -48,4 +48,10 @@ class Mirror4Tile : public Tile {
     int getMirrorType() override {
         return 4;
     }
+    virtual bool killPlayerTile(int playerPosX, int playerPosY) override {
+        return false;
+    }
+    bool isWater() override {
+        return false;
+    }
 };
