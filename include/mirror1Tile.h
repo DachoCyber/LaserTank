@@ -45,4 +45,7 @@ class Mirror1Tile : public Tile {
     bool isOverlappled() override {
         return false;
     }
+    int getMirrorType() override {
+        return 1;
+    }
 };

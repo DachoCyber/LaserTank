@@ -37,11 +37,11 @@ public:
         }
         switch(dir) {
             case UP:
-                velocity = sf::Vector2f(0.f, -1.f); break;
+                velocity = sf::Vector2f(0.f, -1.f); dir = UP; break;
             case DOWN:
-                velocity = sf::Vector2f(0.f, 1.f); break;
+                velocity = sf::Vector2f(0.f, 1.f); dir = DOWN; break;
             case LEFT:
-                velocity = sf::Vector2f(-1.f, 0.f);
+                velocity = sf::Vector2f(-1.f, 0.f); dir = LEFT;
                 /*if(mirrorType == 1) {
 
                     shape.setPosition(sf::Vector2f(shape.getPosition().x - 10.f, shape.getPosition().y - 10.f));
@@ -50,6 +50,7 @@ public:
                 break;
             case RIGHT:
                 velocity = sf::Vector2f(1.f, 0.f);
+                dir = RIGHT;
                 /*if(mirrorType == 1 || mirrorType == 3) {
                     shape.setPosition(sf::Vector2f(shape.getPosition().x + 10.f, shape.getPosition().y - 10.f));
                 } */
@@ -69,9 +70,15 @@ public:
                 velocity = sf::Vector2f(1.f, 0.f); break;
         }
     }
+    void setTransparentColor() {
+        shape.setFillColor(sf::Color(255, 0, 0, 0));
+    }
+    void returnOldColor() {
+        shape.setFillColor(sf::Color::Red);
+    }
 
     void update(sf::Time updateTime) {
-        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/1.5));
+        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/10));
     }
 
 

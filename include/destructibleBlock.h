@@ -36,6 +36,9 @@ public:
     bool isBulletMovable() override {
         return false;
     }
+    virtual int getMirrorType() {
+        return 0;
+    }
     bool isMirror1() override {
         return false;
     }

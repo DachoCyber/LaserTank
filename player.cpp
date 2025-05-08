@@ -92,10 +92,10 @@ void Tank::fireBullet() {
     auto tankSize = tankImg.getSize();
     float bulletStartPosX, bulletStartPosY;
     switch (dir) {
-        case UP: bulletStartPosX = tankPos.x-2.f; bulletStartPosY = tankPos.y - tileSize/2 - 11.f;  break;
-        case DOWN: bulletStartPosX = tankPos.x - 2.f; bulletStartPosY = tankPos.y + tileSize / 2 - 11.f;  break;
-        case RIGHT: bulletStartPosX = tankPos.x + tileSize / 2 -11; bulletStartPosY = tankPos.y - 2.f;  break;
-        case LEFT: bulletStartPosX = tankPos.x - tileSize / 2 - 11.f; bulletStartPosY = tankPos.y -2.f;  break;
+        case UP: bulletStartPosX = tankPos.x; bulletStartPosY = tankPos.y ;  break;
+        case DOWN: bulletStartPosX = tankPos.x ; bulletStartPosY = tankPos.y;  break;
+        case RIGHT: bulletStartPosX = tankPos.x; bulletStartPosY = tankPos.y ;  break;
+        case LEFT: bulletStartPosX = tankPos.x; bulletStartPosY = tankPos.y;  break;
     }   
     bullet   = new Bullet(sf::Vector2f(bulletStartPosX, bulletStartPosY), dir);
 

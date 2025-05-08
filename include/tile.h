@@ -30,6 +30,7 @@ public:
     virtual bool isMirror3() = 0;
     virtual bool isMirror4() = 0;
     virtual bool isOverlappled() = 0;
+    virtual int getMirrorType() = 0;
     virtual void setPosition(int x, int y) {
         sprite.setPosition(x, y);
     }
