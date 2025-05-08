@@ -78,7 +78,7 @@ public:
     }
 
     void update(sf::Time updateTime) {
-        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/10));
+        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/1.5));
     }
 
 
