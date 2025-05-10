@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <iostream>
+#include <utility>
 
 #include "direction.h"
 
@@ -21,6 +23,12 @@ public:
         posX = x;
         posY = y;
     }
+    virtual ~Tile() = default;
+    virtual bool isTileMovableBlock() {
+        return false;
+    }
+    virtual void setAlpha(int alpha) = 0;
+    virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) = 0;
     virtual bool isWalkable() = 0;
     virtual bool isBulletDestroyable() = 0;
     virtual void interactWithBullet(Direction dir) = 0;
@@ -33,6 +41,8 @@ public:
     virtual int getMirrorType() = 0;
     virtual void setPosition(int x, int y) {
         sprite.setPosition(x, y);
+        posX = x;
+        posY = y;
     }
     virtual bool isWater() = 0;
     virtual bool killPlayerTile(int playerPosX, int playerPosY) = 0;

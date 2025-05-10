@@ -14,9 +14,16 @@ class WaterTile : public Tile {
             texturePtr = &WaterTileTexture;
             sprite.setTexture(*texturePtr);
             sprite.setPosition(x, y);
+            sf::Color waterColor = sprite.getColor();
+            waterColor.a = 155;
+            sprite.setColor(sf::Color(waterColor));
         }
 
-
+    void setAlpha(int alpha) override {
+        sf::Color waterColor = sprite.getColor();
+        waterColor.a = alpha;
+        sprite.setColor(sf::Color(waterColor));
+    }
     bool killPlayerTile(int playerPosX, int playerPosY) override {
         if(posX == playerPosX && posY == playerPosY) {
             return true;
@@ -52,9 +59,12 @@ class WaterTile : public Tile {
         return false;
     }
     bool isOverlappled() override {
-        return false;
+        return true;
     }
     int getMirrorType() override {
         return -1;
+    }
+    bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) override {
+        return false;
     }
 };

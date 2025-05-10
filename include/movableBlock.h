@@ -2,29 +2,41 @@
 
 #include "tile.h"
 
-#include <SFML/Graphics.hpp>
-#include <iostream>
 
-class WalkableGround : public Tile {
+class MovableBlock : public Tile {
 public:
-    WalkableGround(int x, int y) : Tile(x, y) {
+    MovableBlock(int x, int y) : Tile(x, y) {
         try {
-            walkable = true;
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/walkableGround.png")) {
+            walkable = false;
+            isMovable = true;
+            overlappled = false;
+            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/MovableBlock.png")) {
                throw new std::runtime_error("Cannot open image walkableGround.png!");
             }
             sprite.setTexture(tex);
             sprite.setPosition(x, y);
-            sprite.setScale(32.f/55.f, 32.f/55.f);
+            posX = x;
+            posY = y;
         }
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
     }
-    virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) {
+    bool overlappled;
+    bool isMovable;
+    virtual bool killPlayerTile(int playerPosX, int playerPosY) override {
         return false;
     }
-    virtual bool killPlayerTile(int playerPosX, int playerPosY) override {
+    bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) override {
+        if (waterTileCoords.empty()) return false; // Early exit if no water tile
+        for (const auto& coord : waterTileCoords) {
+            if (coord.first == posY/tileSize && coord.second == posX/tileSize) {
+                walkable = true;
+                isMovable = false;
+                overlappled = true;
+                return true;
+            }
+        }
         return false;
     }
     void setAlpha(int alpha) override {
@@ -33,7 +45,8 @@ public:
         sprite.setColor(color);
     }
     bool isWalkable() override {
-        return true;
+
+        return walkable;
     }
     bool isBulletDestroyable() override {
         return false;
@@ -42,7 +55,7 @@ public:
         return;
     }
     bool isBulletMovable() override {
-        return false;
+        return true;
     }
     virtual int getMirrorType() {
         return 0;
@@ -59,10 +72,12 @@ public:
         return false;
     }
     bool isOverlappled() override {
-        return true;
+        return overlappled;
     }
     bool isWater() override {
         return false;
     }
+    bool isTileMovableBlock() {
+        return isMovable;
+    }
 };
-

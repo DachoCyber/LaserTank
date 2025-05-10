@@ -9,6 +9,9 @@
 #include "include/mirror3Tile.h"
 #include "include/mirror4Tile.h"
 #include "include/waterTile.h"
+#include "include/movableBlock.h"
+
+#include "include/flag.h"
 
 #include <stdexcept>
 #include <fstream>
@@ -77,6 +80,15 @@ void Map::buildMap() {
                     break;
                 case 8:
                     tiles[y][x] = std::make_unique<WaterTile>(x*tileSize, y*tileSize, waterTileTexture);
+                    waterTilesCoords.push_back(std::make_pair(y, x));
+                    break;
+                case 9:
+                    tiles[y][x] = std::make_unique<MovableBlock>(x*tileSize, y*tileSize);
+                    break;
+                case 10:
+                    tiles[y][x] = std::make_unique<Flag>(x*tileSize, y*tileSize);
+                    flagCoordX = x*tileSize;
+                    flagCoordY = y*tileSize;
                     break;
                 default:
                     tiles[y][x] = nullptr; 
@@ -89,13 +101,28 @@ void Map::buildMap() {
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    for(int i = 0; i < tiles.size(); i++) {
-        for(int j = 0; j < tiles[i].size(); j++) {
-            if(tiles[i][j]) {
-                target.draw(*tiles[i][j]);
+
+    for (int y = 0; y < tiles.size(); y++) {
+        for (int x = 0; x < tiles[y].size(); x++) {
+            if (!tiles[y][x]) continue;
+
+            // If this tile is NOT a WaterTile but there's a water tile below it
+            bool isOnWater = tiles[y][x]->isUnderWater(waterTilesCoords);
+
+            if (isOnWater) {
+                // Draw water first
+                WaterTile water(x * tileSize, y * tileSize, waterTileTexture);
+                water.setAlpha(80);
+                target.draw(*tiles[y][x]);
+                target.draw(water);
+            } else {
+
+               target.draw(*tiles[y][x]);
             }
+
         }
     }
+
 }
 
 bool Map::isWalkable(int x, int y) const {

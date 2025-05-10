@@ -60,5 +60,13 @@ public:
     bool isWater() override {
         return false;
     }
+    bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) {
+        return false;
+    }
+    void setAlpha(int alpha) override {
+        sf::Color color = sprite.getColor();
+        color.a = alpha;
+        sprite.setColor(color);
+    }
 };
 

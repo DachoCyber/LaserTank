@@ -1,7 +1,7 @@
 #include "include/game.h"
 #include "include/playerInteraction.h"
 
-MainGame::MainGame(int windowSizeX, int windowSizeY) :
+MainGame::MainGame(int windowSizeX, int windowSizeY, int playerPosX, int playerPosY) :
     window(std::make_unique<sf::RenderWindow>(
         sf::VideoMode(windowSizeX, windowSizeY), 
         "Laser Tank", 
@@ -10,13 +10,16 @@ MainGame::MainGame(int windowSizeX, int windowSizeY) :
     tileMap(),
     windowSizeX(windowSizeX),
     windowSizeY(windowSizeY),
-    countSpacePressed(0)
+    playerPosX(playerPosX),
+    playerPosY(playerPosY)
 {   
+        player.setGridPosition(sf::Vector2i(playerPosX, playerPosY));
         window->setFramerateLimit(60);
 }
 
 void MainGame::run() {
-    while(window->isOpen() && player.getShouldKillPlayer() == false) {
+    while(window->isOpen() && player.getShouldKillPlayer() == false && 
+    (player.getGridPosition().x*tileSize != tileMap.getFlagCoordX() || player.getGridPosition().y*tileSize != tileMap.getFlagCoordY())) {
         sf::Event event;
         while(window->pollEvent(event)) {
             if(event.type == sf::Event::Closed)
@@ -59,9 +62,6 @@ void MainGame::handleInput() {
 
 void MainGame::update() {
 
-    // game.h -> (map.h, player.h), bulletInteraction.h -> (player.h, map.h), game.h -> bulletInteraction.h
-
-    // Update bullet if exists
     if(player.getBullet() != nullptr) {
 
         BulletInteraction *bulletInteract = new BulletInteraction(windowSizeX, windowSizeY, player, tileMap);
@@ -76,9 +76,4 @@ void MainGame::render() {
     window->draw(tileMap);
     window->draw(player);
     window->display();
-}
-
-bool MainGame::validMove(int x, int y) const {
-    return x >= 0 && x < 18  && 
-           y >= 0 && y < 18;
 }

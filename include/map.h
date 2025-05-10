@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>
+#include <utility>
+
 #include "tile.h"
 #include "walkableGround.h"
 
@@ -29,6 +31,15 @@ public:
             return;
         }
 
+        if(!tiles[oldGridPosY][oldGridPosX] -> isTileMovableBlock()) {
+            for(int i = 0; i < waterTilesCoords.size(); i++) {
+                if(waterTilesCoords[i].first == newGridPosY && waterTilesCoords[i].second == newGridPosX) {
+                    tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+                    return;        
+                } 
+            }
+        }
+        
         // 2. Move the tile
         tiles[newGridPosY][newGridPosX] = std::move(tiles[oldGridPosY][oldGridPosX]);
         
@@ -42,15 +53,18 @@ public:
         tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
         tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
     }
+    int getFlagCoordX() const {return flagCoordX;}
+    int getFlagCoordY() const {return flagCoordY;}
 
 private:
     void loadTextures();
     void buildMap();
 
     const int tileSize = 32;
-    const int mapWidth = 19;
-    const int mapHeight = 19;
+    const int mapWidth = 18;
+    const int mapHeight = 18;
     
+    std::vector<std::pair<int, int>> waterTilesCoords;
     std::vector<std::vector<int>> tileMap;
     std::vector<std::vector<sf::Sprite>> sprites;
     std::vector<std::vector<std::unique_ptr<Tile>>> tiles;
@@ -62,4 +76,7 @@ private:
     sf::Texture mirror3Texture;
     sf::Texture mirror4Texture;
     sf::Texture waterTileTexture;
+    sf::Texture flagTexture;
+
+    int flagCoordX, flagCoordY;
 };

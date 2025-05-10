@@ -6,14 +6,13 @@
 
 class MainGame {
 public:
-    MainGame(int windowSizeX, int windowSizeY);
+    MainGame(int windowSizeX, int windowSizeY, int playerPosX, int playerPosY);
     ~MainGame() = default;
     void run();
     
 private:
     void handleInput();
     void render();
-    bool validMove(int x, int y) const;
     void update();
 
     std::unique_ptr<sf::RenderWindow> window;
@@ -28,6 +27,8 @@ private:
     const int tileSize = 32;
     bool moveQueued = false;
     int windowSizeX, windowSizeY;
+
+    int playerPosX, playerPosY;
 
     sf::Clock gameClock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;

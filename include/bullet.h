@@ -17,12 +17,13 @@ public:
     Bullet(sf::Vector2f position, Direction dir) : dir(dir) {
         switch(dir) {
             case RIGHT : case LEFT :
-                shape.setSize(sf::Vector2f(20.f, 2.f));
+                shape.setSize(sf::Vector2f(20.f, 3.f));
                 break;
             case UP : case DOWN:
-                shape.setSize(sf::Vector2f(2.f, 20.f));
+                shape.setSize(sf::Vector2f(3.f, 20.f));
         }
         shape.setFillColor(sf::Color::Red);
+        shape.setOutlineThickness(1.f);
         shape.setPosition(position);
         setVelocity();
     }
@@ -30,10 +31,10 @@ public:
     void changeVelocity(Direction dir, int mirrorType) {
         switch(dir) {
             case RIGHT : case LEFT :
-                shape.setSize(sf::Vector2f(20.f, 2.f));
+                shape.setSize(sf::Vector2f(20.f, 3.f));
                 break;
             case UP : case DOWN:
-                shape.setSize(sf::Vector2f(2.f, 20.f));
+                shape.setSize(sf::Vector2f(3.f, 20.f));
         }
         switch(dir) {
             case UP:
