@@ -24,6 +24,9 @@ public:
             std::cerr << what << std::endl;
         }
     }
+    bool isUndestructibleBlock() override {
+        return false;
+    }
     bool isWalkable() override {
         return false;
     }

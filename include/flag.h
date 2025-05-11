@@ -17,6 +17,9 @@ public:
         sprite.setPosition(x, y);
         sprite.setScale(32.f/571.f, 32.f/574.f);
     }
+    bool isUndestructibleBlock() override {
+        return false;
+    }
     virtual ~Flag() = default;
     virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) {
         return false;

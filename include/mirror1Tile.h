@@ -19,6 +19,9 @@ class Mirror1Tile : public Tile {
     bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) override {
         return false;
     }
+    bool isUndestructibleBlock() override {
+        return false;
+    }
     void setAlpha(int alpha) override {
         sf::Color color = sprite.getColor();
         color.a = alpha;

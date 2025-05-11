@@ -43,7 +43,9 @@ void BulletInteraction :: interact() {
             player.deleteBullet();
             tileMap.destroyTile(bulletGridPosX, bulletGridPosY);
             }
-
+        if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isUndestructibleBlock()) {
+            player.deleteBullet();
+        }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isTileMovableBlock()) {
             
             if(player.getBullet() -> dir == UP) {
@@ -94,7 +96,7 @@ void BulletInteraction :: interact() {
         // Hit from right - move mirror left
         else if(lastBulletGridPosX > bulletGridPosX || (player.getGridPosition().x - bulletGridPosX == 1 && player.getGridPosition().y == bulletGridPosY)) {
             if(bulletGridPosX > 0) {  // Can we move left?
-                bool canMove = player.getGridPosition().x != bulletGridPosX - 1 && player.getGridPosition().y != bulletGridPosY
+                bool canMove = (player.getGridPosition().x != bulletGridPosX - 1 || player.getGridPosition().y != bulletGridPosY)
                                && bulletGridPosX > 0 && !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1] || 
                                tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1]->isOverlappled();
                 
@@ -111,13 +113,17 @@ void BulletInteraction :: interact() {
             player.getBullet() -> dir = LEFT;
         }
         // Hit from top - move mirror down
-        else if(lastBulletGridPosY < bulletGridPosY && lastBulletGridPosX == bulletGridPosX) {
+        else if(lastBulletGridPosY < bulletGridPosY) {
             if(bulletGridPosY < tileMap.getTileMap().size() - 1) {  // Can we move down?
-                bool canMove = player.getGridPosition().x != bulletGridPosX  && player.getGridPosition().y != bulletGridPosY + 1 &&
+                bool canMove = (player.getGridPosition().x != bulletGridPosX  || player.getGridPosition().y != bulletGridPosY + 1) &&
                                bulletGridPosY < 17 && (!tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX] || 
                                tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX]->isOverlappled());
-                
+                std::cout << "1" << std::endl;
+                if(player.getGridPosition().x != bulletGridPosX  && player.getGridPosition().y != bulletGridPosY + 1) {
+                    std::cout << "3" << std::endl;
+                }
                 if(canMove) {
+                    std::cout << "2" << std::endl;
                     tileMap.moveTile(bulletGridPosY + 1, bulletGridPosX,
                                    bulletGridPosY, bulletGridPosX);
                 }
@@ -143,7 +149,7 @@ if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
         // Hit from right - move mirror left
         else if(lastBulletGridPosX < bulletGridPosX || -player.getGridPosition().x + bulletGridPosX == 1) {
             if(bulletGridPosX > 0) {  // Can we move left?
-                bool canMove = player.getGridPosition().x != bulletGridPosX + 1 && player.getGridPosition().y != bulletGridPosY &&
+                bool canMove = (player.getGridPosition().x != bulletGridPosX + 1 || player.getGridPosition().y != bulletGridPosY) &&
                                 bulletGridPosX > 0 && !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1] || 
                              tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1]->isOverlappled();
                 
@@ -163,7 +169,7 @@ if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
         // Hit from top - move mirror down
         else if(lastBulletGridPosY < bulletGridPosY ) {
             if(bulletGridPosY < tileMap.getTileMap().size() - 1) {  // Can we move down?
-                bool canMove = player.getGridPosition().x != bulletGridPosX && player.getGridPosition().y != bulletGridPosY + 1 &&
+                bool canMove = (player.getGridPosition().x != bulletGridPosX || player.getGridPosition().y != bulletGridPosY + 1) &&
                              bulletGridPosY < 17 && (!tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX] || 
                              tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX]->isOverlappled());
                 
@@ -190,7 +196,7 @@ if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
         // Hit from right - move mirror left
         else if(lastBulletGridPosX > bulletGridPosX || player.getGridPosition().x - bulletGridPosX == 1) {
             if(bulletGridPosX > 0) {  // Can we move left?
-                bool canMove = player.getGridPosition().x != bulletGridPosX - 1 && player.getGridPosition().y != bulletGridPosY
+                bool canMove = (player.getGridPosition().x != bulletGridPosX - 1 || player.getGridPosition().y != bulletGridPosY)
                               && bulletGridPosX > 0 && !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1] || 
                              tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1]->isOverlappled();
                 
@@ -209,7 +215,7 @@ if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
         // Hit from top - move mirror down
         else if(lastBulletGridPosY > bulletGridPosY || player.getGridPosition().y - bulletGridPosY == 1) {
             if(bulletGridPosY > 0) {  // Can we move down?
-                bool canMove = player.getGridPosition().x != bulletGridPosX && player.getGridPosition().y != bulletGridPosY - 1 &&
+                bool canMove = (player.getGridPosition().x != bulletGridPosX || player.getGridPosition().y != bulletGridPosY - 1) &&
                              bulletGridPosY > 0 && (!tileMap.getTileMap()[bulletGridPosY - 1][bulletGridPosX] || 
                              tileMap.getTileMap()[bulletGridPosY - 1][bulletGridPosX]->isOverlappled());
                 
@@ -235,9 +241,9 @@ if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
             player.getBullet() -> dir = UP;
         }
         // Hit from right - move mirror left
-        else if(lastBulletGridPosX < bulletGridPosX || player.getGridPosition().x - bulletGridPosX == -1) {
+        else if(lastBulletGridPosX < bulletGridPosX || (player.getGridPosition().x - bulletGridPosX == -1 && player.getGridPosition().y == bulletGridPosY)) {
             if(bulletGridPosX < tileMap.getTileMap()[bulletGridPosY].size()) {  // Can we move left?
-                bool canMove = player.getGridPosition().x != bulletGridPosX + 1 && player.getGridPosition().y != bulletGridPosY
+                bool canMove = (player.getGridPosition().x != bulletGridPosX + 1 || player.getGridPosition().y != bulletGridPosY)
                              && bulletGridPosX > 0 && !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1] || 
                              tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1]->isOverlappled();
                 
@@ -254,9 +260,9 @@ if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
             player.getBullet() -> dir = RIGHT;
         }
         // Hit from top - move mirror down
-        else if(lastBulletGridPosY > bulletGridPosY ) {
+        else if(lastBulletGridPosY > bulletGridPosY) {
             if(bulletGridPosY > 0) {  // Can we move down?
-                bool canMove = player.getGridPosition().x != bulletGridPosX && player.getGridPosition().y != bulletGridPosY - 1 
+                bool canMove = (player.getGridPosition().x != bulletGridPosX || player.getGridPosition().y != bulletGridPosY - 1)
                             && bulletGridPosY > 0 && (!tileMap.getTileMap()[bulletGridPosY - 1][bulletGridPosX] || 
                              tileMap.getTileMap()[bulletGridPosY - 1][bulletGridPosX]->isOverlappled());
                 

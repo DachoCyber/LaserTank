@@ -17,7 +17,9 @@ class Mirror4Tile : public Tile {
         }
 
 
-
+    bool isUndestructibleBlock() override {
+        return false;
+    }
     bool isWalkable() override {
         return false;
     }

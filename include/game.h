@@ -10,7 +10,16 @@ public:
     ~MainGame() = default;
     void run();
     
+    
+
 private:
+    void loadGoblet();
+    void drawGoblet();
+
+    bool gameEnd();
+    bool gameLost();
+    bool gameWon();
+
     void handleInput();
     void render();
     void update();
@@ -33,4 +42,7 @@ private:
     sf::Clock gameClock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     const sf::Time timePerFrame = sf::seconds(1.f/60.f);
+
+    sf::Texture gobletTexture;
+    sf::Sprite gobletSprite;
 };

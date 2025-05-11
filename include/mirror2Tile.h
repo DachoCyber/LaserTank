@@ -62,4 +62,7 @@ class Mirror2Tile : public Tile {
         color.a = alpha;
         sprite.setColor(color);
     }
+    bool isUndestructibleBlock() override {
+        return false;
+    }
 };

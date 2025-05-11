@@ -80,4 +80,7 @@ public:
     bool isTileMovableBlock() {
         return isMovable;
     }
+    bool isUndestructibleBlock() override {
+        return false;
+    }
 };

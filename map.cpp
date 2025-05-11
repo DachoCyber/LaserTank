@@ -10,6 +10,7 @@
 #include "include/mirror4Tile.h"
 #include "include/waterTile.h"
 #include "include/movableBlock.h"
+#include "include/undestructableBlock.h"
 
 #include "include/flag.h"
 
@@ -89,6 +90,9 @@ void Map::buildMap() {
                     tiles[y][x] = std::make_unique<Flag>(x*tileSize, y*tileSize);
                     flagCoordX = x*tileSize;
                     flagCoordY = y*tileSize;
+                    break;
+                case 11:
+                    tiles[y][x] = std::make_unique<UndestructableBlock>(x*tileSize, y*tileSize);
                     break;
                 default:
                     tiles[y][x] = nullptr; 

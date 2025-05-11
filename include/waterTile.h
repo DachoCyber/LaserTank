@@ -18,7 +18,9 @@ class WaterTile : public Tile {
             waterColor.a = 155;
             sprite.setColor(sf::Color(waterColor));
         }
-
+    bool isUndestructibleBlock() override {
+        return false;
+    }
     void setAlpha(int alpha) override {
         sf::Color waterColor = sprite.getColor();
         waterColor.a = alpha;

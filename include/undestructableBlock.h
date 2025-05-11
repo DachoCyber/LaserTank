@@ -2,20 +2,16 @@
 
 #include "tile.h"
 
-#include <SFML/Graphics.hpp>
-#include <iostream>
-
-class WalkableGround : public Tile {
+class UndestructableBlock : public Tile {
 public:
-    WalkableGround(int x, int y) : Tile(x, y) {
+    UndestructableBlock(int x, int y) : Tile(x, y) {
         try {
             walkable = true;
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/walkableGround.png")) {
-               throw new std::runtime_error("Cannot open image walkableGround.png!");
+            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/undestructibleBlock.png")) {
+               throw new std::runtime_error("Cannot open image undestructibleBlock.png!");
             }
             sprite.setTexture(tex);
             sprite.setPosition(x, y);
-            sprite.setScale(32.f/55.f, 32.f/55.f);
         }
         catch(const std::string& what) {
             std::cerr << what << std::endl;
@@ -23,6 +19,9 @@ public:
     }
     virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) {
         return false;
+    }
+    bool isUndestructibleBlock() override {
+        return true;
     }
     virtual bool killPlayerTile(int playerPosX, int playerPosY) override {
         return false;
@@ -33,7 +32,7 @@ public:
         sprite.setColor(color);
     }
     bool isWalkable() override {
-        return true;
+        return false;
     }
     bool isBulletDestroyable() override {
         return false;
@@ -59,13 +58,9 @@ public:
         return false;
     }
     bool isOverlappled() override {
-        return true;
+        return false;
     }
     bool isWater() override {
         return false;
     }
-    bool isUndestructibleBlock() override {
-        return false;
-    }
 };
-

@@ -27,6 +27,7 @@ public:
     virtual bool isTileMovableBlock() {
         return false;
     }
+    virtual bool isUndestructibleBlock() = 0;
     virtual void setAlpha(int alpha) = 0;
     virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) = 0;
     virtual bool isWalkable() = 0;
