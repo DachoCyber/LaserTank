@@ -19,7 +19,9 @@ Tank::Tank(int gridPosX, int gridPosY, int windowSizeX, int windowSizeY)
     std::cout << sprite.getLocalBounds().width << " " << sprite.getLocalBounds().height << std::endl;
 }
 
-
+bool Tank :: getShouldKillPlayer() {
+    return shouldKillPlayer;
+}
 
 bool Tank::bulletInScreen() const {
     if (bullet && bullet->getPosition().x <= windowSizeX &&

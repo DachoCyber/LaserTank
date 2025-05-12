@@ -64,4 +64,10 @@ class Mirror4Tile : public Tile {
         color.a = alpha;
         sprite.setColor(color);
     }
+    bool killPlayer(const std::vector<std::vector<std::unique_ptr<Tile>>>& tileMap, int playerPosX, int playerPosY) override {
+        return false;
+    }
+    bool fireBullet() override {
+        return false;
+    }
 };

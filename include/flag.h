@@ -20,6 +20,12 @@ public:
     bool isUndestructibleBlock() override {
         return false;
     }
+    bool fireBullet() override {
+        return false;
+    }
+    bool killPlayer(const std::vector<std::vector<std::unique_ptr<Tile>>>& tileMap, int playerPosX, int playerPosY) override {
+        return false;
+    }
     virtual ~Flag() = default;
     virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) {
         return false;

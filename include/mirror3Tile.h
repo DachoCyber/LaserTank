@@ -65,4 +65,10 @@ class Mirror3Tile : public Tile {
     bool isUndestructibleBlock() override {
         return false;
     }
+    bool killPlayer(const std::vector<std::vector<std::unique_ptr<Tile>>>& tileMap, int playerPosX, int playerPosY) override {
+        return false;
+    }
+    bool fireBullet() override {
+        return false;
+    }
 };

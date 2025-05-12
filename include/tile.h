@@ -4,6 +4,10 @@
 #include <string>
 #include <iostream>
 #include <utility>
+#include <memory>
+#include <vector>
+
+#include "bullet.h"
 
 #include "direction.h"
 
@@ -27,6 +31,10 @@ public:
     virtual bool isTileMovableBlock() {
         return false;
     }
+    virtual Bullet* getBullet() { return nullptr; }
+
+    virtual bool fireBullet() = 0;
+    virtual bool killPlayer(const std::vector<std::vector<std::unique_ptr<Tile>>>& tileMap, int playerPosX, int playerPosY) = 0;
     virtual bool isUndestructibleBlock() = 0;
     virtual void setAlpha(int alpha) = 0;
     virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) = 0;

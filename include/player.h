@@ -17,9 +17,7 @@ public:
     void setShouldKillPlayer() {
         shouldKillPlayer = true;
     }
-    bool getShouldKillPlayer() {
-        return shouldKillPlayer;
-    }
+    bool getShouldKillPlayer();
 
     void update(sf::Time, sf::Time);
     sf::Vector2i getGridPosition() const;
@@ -30,7 +28,6 @@ public:
     void loadTextureFromImage();
     void updateSpritePosition();
     void deleteBullet();
-    
 
     bool deleteAdjBlockIfExists(Map& tileMap); /// Do not fire bullet
     void fireBullet();

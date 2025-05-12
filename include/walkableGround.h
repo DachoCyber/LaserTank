@@ -21,6 +21,12 @@ public:
             std::cerr << what << std::endl;
         }
     }
+    bool fireBullet() override {
+        return false;
+    }
+    bool killPlayer(const std::vector<std::vector<std::unique_ptr<Tile>>>& tileMap, int playerPosX, int playerPosY) override {
+        return false;
+    }
     virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) {
         return false;
     }

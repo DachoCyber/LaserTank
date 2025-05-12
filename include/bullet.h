@@ -7,6 +7,7 @@ public:
     sf::RectangleShape shape;
     sf::Vector2f velocity;
     Direction dir;
+    bool enemysBullet;
 
     Bullet() {
         shape.setSize(sf::Vector2f(0.f, 0.f));
@@ -14,7 +15,20 @@ public:
         dir = UP;
     }
 
-    Bullet(sf::Vector2f position, Direction dir) : dir(dir) {
+    Bullet(sf::Vector2f position, Direction dir) : dir(dir), enemysBullet(false) {
+        switch(dir) {
+            case RIGHT : case LEFT :
+                shape.setSize(sf::Vector2f(20.f, 3.f));
+                break;
+            case UP : case DOWN:
+                shape.setSize(sf::Vector2f(3.f, 20.f));
+        }
+        shape.setFillColor(sf::Color::Green);
+        shape.setOutlineThickness(1.f);
+        shape.setPosition(position);
+        setVelocity();
+    }
+    Bullet(sf::Vector2f position, Direction dir, bool enemysTank) : dir(dir), enemysBullet(true) {
         switch(dir) {
             case RIGHT : case LEFT :
                 shape.setSize(sf::Vector2f(20.f, 3.f));
@@ -79,7 +93,12 @@ public:
     }
 
     void update(sf::Time updateTime) {
+        if(enemysBullet) {
+            shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/10));
+            
+        }
         shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/1.5));
+    
     }
 
 

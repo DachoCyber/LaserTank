@@ -11,6 +11,7 @@
 #include "include/waterTile.h"
 #include "include/movableBlock.h"
 #include "include/undestructableBlock.h"
+#include "include/tank1.h"
 
 #include "include/flag.h"
 
@@ -93,6 +94,12 @@ void Map::buildMap() {
                     break;
                 case 11:
                     tiles[y][x] = std::make_unique<UndestructableBlock>(x*tileSize, y*tileSize);
+                    break;
+                case 12: 
+                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 0);
+                    break;
+                case 13:
+                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 1);
                     break;
                 default:
                     tiles[y][x] = nullptr; 
