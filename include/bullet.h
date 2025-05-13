@@ -94,10 +94,10 @@ public:
 
     void update(sf::Time updateTime) {
         if(enemysBullet) {
-            shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/10));
+            shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()));
             
         }
-        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/1.5));
+        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/2));
     
     }
 

@@ -2,13 +2,13 @@
 #include "include/playerInteraction.h"
 
 
-MainGame::MainGame(int windowSizeX, int windowSizeY, int playerPosX, int playerPosY) :
+MainGame::MainGame(int windowSizeX, int windowSizeY, int playerPosX, int playerPosY, int level) :
     window(std::make_unique<sf::RenderWindow>(
         sf::VideoMode(windowSizeX, windowSizeY), 
         "Laser Tank", 
         sf::Style::Close)),
     player(3, 3, windowSizeX, windowSizeY),
-    tileMap(),
+    tileMap(level),
     windowSizeX(windowSizeX),
     windowSizeY(windowSizeY),
     playerPosX(playerPosX),

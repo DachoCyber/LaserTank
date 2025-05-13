@@ -1,6 +1,25 @@
 #include "include/game.h"
+#include "include/mainMenu/mainMenu.h"
+
+#include "include/mainMenu/resources.h"
 
 int main() {
-    MainGame game(576, 576, 0, 0);
-    game.run();
+
+    try {
+        loadGlobalFont();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << '\n';
+        return -1;
+    }
+
+    MainMenu menu(5);
+    menu.run();
+
+    int chosenLevel = menu.getChosenLevel();
+    if (chosenLevel != -1) {
+        MainGame game(576, 576, 0, 0, chosenLevel);
+        game.run();
+    }
+
+    return 0;
 }

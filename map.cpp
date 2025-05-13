@@ -19,8 +19,8 @@
 #include <fstream>
 #include <sstream>
 
-Map::Map() {
-    readMapFromXML(tileMap);
+Map::Map(int level) {
+    readMapFromXML(tileMap, level);
 
     tiles.resize(mapHeight);
     for (int y = 0; y < mapHeight; ++y) {
@@ -100,6 +100,12 @@ void Map::buildMap() {
                     break;
                 case 13:
                     tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 1);
+                    break;
+                case 14:
+                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 2);
+                    break;
+                case 15:
+                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 3);
                     break;
                 default:
                     tiles[y][x] = nullptr; 

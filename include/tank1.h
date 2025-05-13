@@ -18,9 +18,19 @@
                         throw new std::runtime_error("Cannot open image walkableGround.png!");
                         }
                         break;
-                    default :
+                    case 1 :
                         if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/tank2.png")) {
-                            throw new std::runtime_error("Cannot open image walkableGround.png!");
+                            throw new std::runtime_error("Cannot open image tank2.png!");
+                        }
+                        break;
+                    case 2 :
+                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/tank3.png")) {
+                            throw new std::runtime_error("Cannot open image tank3.png!");
+                        }
+                        break;
+                    case 3 : 
+                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/tank4.png")) {
+                            throw new std::runtime_error("Cannot open image tank4.png!");
                         }
                         break;
                 }
@@ -40,12 +50,12 @@
 
 
         bool killPlayer(const std::vector<std::vector<std::unique_ptr<Tile>>>& tileMap, int playerPosX, int playerPosY) override {
-            std::cout << playerPosX << " " << playerPosY << std::endl;
+            
             switch(dir) {
                 case 0:
                     
                     if(playerPosY != posY) return false;
-                    std::cout << "defe" << std::endl;
+                    
                     if(posX < playerPosX) return false;
                     for(int j = posX/tileSize - 1; j > playerPosX/tileSize; j--) {
                         int gPosY = posY/tileSize;
@@ -69,6 +79,30 @@
                             }
                     }
                     break;
+                case 2:
+                    if(playerPosX != posX) return false;
+                    if(posY < playerPosY) return false;
+                    for(int j = posY/tileSize - 1; j > playerPosY/tileSize; j--) {
+                        int gPosX = posX/tileSize;
+                
+
+                        if(!(tileMap[j][gPosX]->isWalkable() || tileMap[j][gPosX]->isWater())) {
+                                return false;
+                            }
+                    }
+                    break;
+                default:
+                    if(playerPosX != posX) return false;
+                    if(posY > playerPosY) return false;
+                    for(int j = posY/tileSize + 1; j < playerPosY/tileSize; j++) {
+                        int gPosX = posX/tileSize;
+                
+
+                        if(!(tileMap[j][gPosX]->isWalkable() || tileMap[j][gPosX]->isWater())) {
+                                return false;
+                            }
+                    }
+                    break;
             }
 
             
@@ -80,8 +114,12 @@
             if(dir == 0) {
 
                 bullet = new Bullet(sf::Vector2f(posX, posY + tileSize/2), LEFT, true);
-            } else {
+            } else if(dir == 1) {
                 bullet = new Bullet(sf::Vector2f(posX, posY + tileSize/2), RIGHT, true);
+            } else if(dir == 2) {
+                bullet = new Bullet(sf::Vector2f(posX + tileSize/2, posY), UP, true);
+            } else {
+                bullet = new Bullet(sf::Vector2f(posX + tileSize/2, posY), DOWN, true);
             }
             return true;
         }

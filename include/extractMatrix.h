@@ -3,6 +3,6 @@
 
 #include <vector>
 
-void readMapFromXML(std::vector<std::vector<int>>& map);
+void readMapFromXML(std::vector<std::vector<int>>& map, int level);
 
 #endif

@@ -9,7 +9,7 @@
 
 class Map : public sf::Drawable {
 public:
-    Map();
+    Map(int level);
     virtual ~Map() = default;
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override ;
     bool isWalkable(int x, int y) const;
@@ -77,6 +77,8 @@ private:
     sf::Texture mirror4Texture;
     sf::Texture waterTileTexture;
     sf::Texture flagTexture;
+    
+    int level;
 
     int flagCoordX, flagCoordY;
 };

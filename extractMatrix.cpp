@@ -5,14 +5,22 @@
 using namespace tinyxml2;
 
 const int N = 18;
-void readMapFromXML(std::vector<std::vector<int>>& map) {
+void readMapFromXML(std::vector<std::vector<int>>& map, int level) {
     map.resize(N, std::vector<int>(N));
 
     XMLDocument doc;
-    XMLError res = doc.LoadFile("map1.tmx");
+    XMLError res;
+    switch(level) {
+        case 1:
+            res = doc.LoadFile("map1.tmx");
+            break;
+        case 2:
+            res = doc.LoadFile("map2.tmx");
+            break;
+    }
 
     if(res != XML_SUCCESS) {
-        throw std::runtime_error("Failed to load file map1.tmx!");
+        throw std::runtime_error("Failed to load file map...");
     }
 
     XMLElement* root = doc.FirstChildElement("map");

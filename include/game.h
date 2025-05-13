@@ -6,7 +6,7 @@
 
 class MainGame {
 public:
-    MainGame(int windowSizeX, int windowSizeY, int playerPosX, int playerPosY);
+    MainGame(int windowSizeX, int windowSizeY, int playerPosX, int playerPosY, int level);
     ~MainGame() = default;
     void run();
     
