@@ -123,6 +123,12 @@
             }
             return true;
         }
+        int isTank() {
+            return dir + 1;
+        }
+        bool isMovableBlock() {
+            return true;
+        }
 
         Bullet* getBullet() override {
             return bullet;

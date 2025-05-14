@@ -36,7 +36,35 @@ void BulletInteraction :: interact() {
 
     if (bulletGridPosX >= 0 && bulletGridPosX < tileMap.getTileMap()[0].size() &&
     bulletGridPosY >= 0 && bulletGridPosY < tileMap.getTileMap().size()) {
-    
+        
+        int tankType = tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isTank();
+        bool deleted = false;
+        if(tankType == 1) {
+            if(player.getBullet()->dir == RIGHT) {
+                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 1);
+            }
+            player.deleteBullet();
+        } else if(tankType == 2) {
+            if(player.getBullet()->dir == LEFT) {
+                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 2);
+            }
+            player.deleteBullet();
+        } else if(tankType == 3) {
+            if(player.getBullet()->dir == DOWN) {
+                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 3);
+            }
+            player.deleteBullet();
+        } else if(tankType == 4) {
+            if(player.getBullet()->dir == UP) {
+                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 4);
+            }
+            player.deleteBullet();
+        }
+
+        if(tankType != 0) {
+            deleted = true;
+        }
+
         if (tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] &&
             tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isBulletDestroyable()) {
 
@@ -44,31 +72,33 @@ void BulletInteraction :: interact() {
             tileMap.destroyTile(bulletGridPosX, bulletGridPosY);
             }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isUndestructibleBlock()) {
-            player.deleteBullet();
+            if(!deleted) {
+                player.deleteBullet();
+            }
         }
-        if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isTileMovableBlock()) {
-            
-            if(player.getBullet() -> dir == UP) {
+        if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isTileMovableBlock() || tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMovableBlock()) {
+            std::cout << "dfddfdfdfd" << std::endl;
+            if(lastBulletGridPosY > bulletGridPosY) {
                 if(bulletGridPosY > 0 && (player.getGridPosition().x != bulletGridPosX || player.getGridPosition().y != bulletGridPosY - 1)) {
                     if(tileMap.getTileMap()[bulletGridPosY - 1][bulletGridPosX] -> isOverlappled()) {
                         tileMap.moveTile(bulletGridPosY - 1, bulletGridPosX, bulletGridPosY, bulletGridPosX);
                     }
                 }
-            } else if(player.getBullet() -> dir == DOWN) {
+            } else if(lastBulletGridPosY < bulletGridPosY) {
                 if(bulletGridPosY < tileMap.getTileMap().size() - 1 && (player.getGridPosition().x != bulletGridPosX || player.getGridPosition().y != bulletGridPosY + 1)) {
                     if(tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX] -> isOverlappled()) {
 
                         tileMap.moveTile(bulletGridPosY + 1, bulletGridPosX, bulletGridPosY, bulletGridPosX);
                     }
                 }
-            }else if(player.getBullet() -> dir == LEFT) {
+            }else if(lastBulletGridPosX > bulletGridPosX) {
                 if(bulletGridPosX > 0 && (player.getGridPosition().x != bulletGridPosX - 1 || player.getGridPosition().y != bulletGridPosY)) {
                     if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX - 1] -> isOverlappled()) {
 
                         tileMap.moveTile(bulletGridPosY, bulletGridPosX - 1, bulletGridPosY, bulletGridPosX);
                     }
                 }
-            } else if(player.getBullet() -> dir == RIGHT) {
+            } else if(lastBulletGridPosX < bulletGridPosX) {
                 if(bulletGridPosX < tileMap.getTileMap()[bulletGridPosY].size() && (player.getGridPosition().x != bulletGridPosX + 1 || player.getGridPosition().y != bulletGridPosY)) {
                     if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1] -> isOverlappled()) {
 
@@ -76,7 +106,10 @@ void BulletInteraction :: interact() {
                     }
                 }
             }
-            player.deleteBullet();
+            if(!deleted) {
+
+                player.deleteBullet();
+            }
             return;
         }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]

@@ -32,7 +32,8 @@ public:
         return false;
     }
     virtual Bullet* getBullet() { return nullptr; }
-
+    virtual int isTank() {return 0;}
+    virtual bool isMovableBlock() {return false;}
     virtual bool fireBullet() = 0;
     virtual bool killPlayer(const std::vector<std::vector<std::unique_ptr<Tile>>>& tileMap, int playerPosX, int playerPosY) = 0;
     virtual bool isUndestructibleBlock() = 0;

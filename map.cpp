@@ -12,6 +12,7 @@
 #include "include/movableBlock.h"
 #include "include/undestructableBlock.h"
 #include "include/tank1.h"
+#include "include/destroyedTank.h"
 
 #include "include/flag.h"
 
@@ -107,6 +108,19 @@ void Map::buildMap() {
                 case 15:
                     tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 3);
                     break;
+                case 16: 
+                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 0);
+                    break;
+                case 17:
+                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 1);
+                    break;
+                case 18:
+                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 2);
+                    break;
+                case 19:
+                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 3);
+                    break;
+                    
                 default:
                     tiles[y][x] = nullptr; 
                     break;
@@ -115,6 +129,25 @@ void Map::buildMap() {
         }
 
     }
+}
+
+
+void Map :: destroyTank(int bulletGridPosX, int bulletGridPosY, int tankType) {
+    switch(tankType) {
+        case 1:
+            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 0);
+            break;
+        case 2:
+            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 1);
+            break;
+        case 3:
+            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 2);
+            break;
+        case 4:
+            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 3);
+            break;
+    }
+    
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {

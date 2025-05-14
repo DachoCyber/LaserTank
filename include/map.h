@@ -21,6 +21,7 @@ public:
         std::unique_ptr<Tile> tile = std::make_unique<WalkableGround>(gridPosX*tileSize, gridPosY*tileSize);
         tiles[gridPosY][gridPosX] = std::move(tile);
     }
+    void destroyTank(int bulletGridPosX, int bulletGridPosY, int tankType);
     void moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldGridPosX) {
     // 1. Check bounds and validity
         if (oldGridPosY < 0 || oldGridPosY >= tiles.size() ||
