@@ -231,16 +231,26 @@ void MainGame::loadGameOverFont() {
 
 void MainGame :: handlTransportableTrack(int y, int x) {
     if(returnFromTrack) return;
-    player.setDir(LEFT);
-    if(player.validMove(x - 1, y)) {
+    
+    int dx = 0, dy = 0;
+    if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() == 1) {
+        dx = -1;
+    } else if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() == 2) {
+        dx = 1;
+    } else if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() == 3) {
+        dy = -1;
+    } else if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() == 4) {
+        dy = 1;
+    }
+    if(player.validMove(x + dx, y + dy)) {
 
-            if(tileMap.getTileMap()[y][x-1] -> isTileMovableBlock() || 
-                tileMap.getTileMap()[y][x-1] -> isBulletDestroyable() ||
-                tileMap.getTileMap()[y][x-1] -> isMirror1() ||
-                tileMap.getTileMap()[y][x-1] -> isMirror2() ||
-                tileMap.getTileMap()[y][x-1] -> isMirror3() ||
-                tileMap.getTileMap()[y][x-1] -> isMirror4() ||
-                tileMap.getTileMap()[y][x-1] -> isTank()) {
+            if(tileMap.getTileMap()[y + dy][x + dx] -> isTileMovableBlock() || 
+                tileMap.getTileMap()[y + dy][x + dx] -> isBulletDestroyable() ||
+                tileMap.getTileMap()[y + dy][x + dx] -> isMirror1() ||
+                tileMap.getTileMap()[y + dy][x + dx] -> isMirror2() ||
+                tileMap.getTileMap()[y + dy][x + dx] -> isMirror3() ||
+                tileMap.getTileMap()[y + dy][x + dx] -> isMirror4() ||
+                tileMap.getTileMap()[y + dy][x + dx] -> isTank()) {
                     returnFromTrack = true;
                     return;
             }
@@ -248,8 +258,8 @@ void MainGame :: handlTransportableTrack(int y, int x) {
             int currGridCoordY = y;
 
             returnFromTrack = false;
-            std::cout << player.getGridPosition().x << std::endl;
-            player.setGridPosition(sf::Vector2i(x - 1, y));
-            std::cout << player.getGridPosition().x << std::endl;
+            
+            player.setGridPosition(sf::Vector2i(x + dx, y + dy));
+
         }
 }

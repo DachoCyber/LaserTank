@@ -9,14 +9,33 @@ class TransportTrack : public Tile {
         TransportTrack(int x, int y, Direction dir) : Tile(x, y) {
             try {
                 walkable = true;
-                if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack.png")) {
-                throw new std::runtime_error("Cannot open image walkableGround.png!");
-            }
-            sprite.setTexture(tex);
-            sprite.setPosition(x, y);
+                switch(dir) {
+                    case LEFT :
+                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack.png")) {
+                            throw new std::runtime_error("Cannot open image walkableGround.png!");
+                        }
+                        break;
+                    case RIGHT :
+                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack2.png")) {
+                            throw new std::runtime_error("Cannot open image walkableGround.png!");
+                        }
+                        break;
+                    case UP :
+                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack3.png")) {
+                            throw new std::runtime_error("Cannot open");
+                        }
+                        break;
+                    case DOWN :
+                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack4.png")) {
+                            throw new std::runtime_error("Cannot open");
+                        }
+                        break;
+                }
+                sprite.setTexture(tex);
+                sprite.setPosition(x, y);
            
-            this->dir = dir;
-        }
+                this->dir = dir;
+            }
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }

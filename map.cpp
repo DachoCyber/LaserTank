@@ -131,7 +131,18 @@ void Map::buildMap() {
                     tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, LEFT);
                     trackTileCoords.push_back(std::make_tuple(y, x, LEFT));
                     break;
-                    
+                case 21:
+                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, RIGHT);
+                    trackTileCoords.push_back(std::make_tuple(y, x, RIGHT));
+                    break;
+                case 22:
+                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, UP);
+                    trackTileCoords.push_back(std::make_tuple(y, x, UP));
+                    break;
+                case 23:
+                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, DOWN);
+                    trackTileCoords.push_back(std::make_tuple(y, x, DOWN));
+                    break;
                 default:
                     tiles[y][x] = nullptr; 
                     break;
