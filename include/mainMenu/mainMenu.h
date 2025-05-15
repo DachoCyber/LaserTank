@@ -29,7 +29,6 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(levels);
         target.draw(start);
-        target.draw(quit);
     }
 
     void run() {
@@ -49,7 +48,7 @@ public:
                 }
             }
 
-            if (levels.level != -1) {
+            if (start.wasClicked() && levels.level != -1) {
                 level = levels.level;
                 window->close();
                 break;
@@ -63,7 +62,6 @@ public:
         window->clear(sf::Color::Black);
         window->draw(levels);
         window->draw(start);
-        window->draw(quit);
         window->display();
     }
 

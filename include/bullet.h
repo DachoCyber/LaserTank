@@ -97,7 +97,7 @@ public:
             shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()));
             
         }
-        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/2));
+        shape.move(velocity * static_cast<float>(updateTime.asMilliseconds()/1.5));
     
     }
 

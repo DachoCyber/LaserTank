@@ -4,7 +4,7 @@
 
 using namespace tinyxml2;
 
-const int N = 18;
+const int N = 16;
 void readMapFromXML(std::vector<std::vector<int>>& map, int level) {
     map.resize(N, std::vector<int>(N));
 
@@ -19,6 +19,10 @@ void readMapFromXML(std::vector<std::vector<int>>& map, int level) {
             break;
         case 3:
             res = doc.LoadFile("map3.tmx");
+            break;
+        case 4:
+            res = doc.LoadFile("map4.tmx");
+            break;
     }
 
     if(res != XML_SUCCESS) {

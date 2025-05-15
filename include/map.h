@@ -56,14 +56,19 @@ public:
     }
     int getFlagCoordX() const {return flagCoordX;}
     int getFlagCoordY() const {return flagCoordY;}
+    int getPlayerPositionX() const {return playerPosX;}
+    int getPlayerPositionY() const {return playerPosY;}
 
 private:
     void loadTextures();
     void buildMap();
 
     const int tileSize = 32;
-    const int mapWidth = 18;
-    const int mapHeight = 18;
+    const int mapWidth = 16;
+    const int mapHeight = 16;
+
+    int playerPosX;
+    int playerPosY;
     
     std::vector<std::pair<int, int>> waterTilesCoords;
     std::vector<std::vector<int>> tileMap;

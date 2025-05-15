@@ -1,8 +1,8 @@
 #include "include/playerInteraction.h"
 
 bool validMove(int x, int y) {
-    return x >= 0 && x < 18  && 
-           y >= 0 && y < 18;
+    return x >= 0 && x < 16  && 
+           y >= 0 && y < 16;
 }
 
 PlayerInteraction :: PlayerInteraction(int windowSizeX, int windowSizeY, Tank& player, Map& map, sf::Keyboard::Key key) :

@@ -17,7 +17,7 @@ int main() {
 
     int chosenLevel = menu.getChosenLevel();
     if (chosenLevel != -1) {
-        MainGame game(576, 576, 0, 0, chosenLevel);
+        MainGame game(512, 512, chosenLevel);
         game.run();
     }
 

@@ -6,7 +6,7 @@
 
 class MainGame {
 public:
-    MainGame(int windowSizeX, int windowSizeY, int playerPosX, int playerPosY, int level);
+    MainGame(int windowSizeX, int windowSizeY, int level);
     ~MainGame() = default;
     void run();
     
@@ -40,8 +40,6 @@ private:
     const int tileSize = 32;
     bool moveQueued = false;
     int windowSizeX, windowSizeY;
-
-    int playerPosX, playerPosY;
 
     bool killPlayer = false;
     bool bulletFired = false;

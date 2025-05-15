@@ -11,7 +11,7 @@ private:
 
 public:
     Start(int menuWinSizeX, int menuWinSizeY) {
-        startButton.setPosition(sf::Vector2f(static_cast<float>(menuWinSizeX) * 1 / 3, static_cast<float>(menuWinSizeY) * 1 / 3));
+        startButton.setPosition(sf::Vector2f(static_cast<float>(menuWinSizeX) * 1 / 3, static_cast<float>(menuWinSizeY) * 1 / 6));
         startButton.setSize(sf::Vector2f(static_cast<float>(menuWinSizeX) * 6 / 15, static_cast<float>(menuWinSizeY) * 3 / 15));
         startButton.setFillColor(sf::Color::White);
 

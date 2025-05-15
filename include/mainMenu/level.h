@@ -15,6 +15,8 @@ private:
     int menuSizeX;
     int menuSizeY;
 
+    sf::Text levelText;
+
 private:
     int openMenuWindow() {
         menuWindowOpen = true;
@@ -81,16 +83,32 @@ public:
           menuSizeY(menuWinSizeY),
           levelCount(levelCount),
           level(-1)
-    {
+    {   
+        
         levelRectShape.setSize(sf::Vector2f(static_cast<float>(menuSizeX)*6/15, static_cast<float>(menuSizeY)/5));
         levelRectShape.setFillColor(sf::Color::White);
-        levelRectShape.setOutlineThickness(5.f);
-        levelRectShape.setPosition(sf::Vector2f((static_cast<float>(menuSizeX)) / 3, (static_cast<float>(menuSizeY*9)/15)));
-        std::cout << levelRectShape.getSize().x << std::endl;
+        levelRectShape.setPosition(sf::Vector2f((static_cast<float>(menuSizeX)) / 3, (static_cast<float>(menuSizeY*12)/30)));
+        
+
+        
+        
+        levelText.setFont(globalFont);
+        levelText.setCharacterSize(24.f);
+        levelText.setString("Level");
+
+
+        float textWidth = levelText.getLocalBounds().width;
+        float textHeight = levelText.getLocalBounds().height;
+        levelText.setFillColor(sf::Color::Black);
+        levelText.setPosition(
+            levelRectShape.getPosition().x + (levelRectShape.getSize().x - textWidth) / 2.f,
+            levelRectShape.getPosition().y + (levelRectShape.getSize().y - textHeight) / 2.f - 5.f
+        );
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(levelRectShape);
+        target.draw(levelText);
     }
 
     void handleClick(const sf::Vector2f& mousePos) {

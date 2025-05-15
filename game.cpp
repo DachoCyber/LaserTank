@@ -2,23 +2,24 @@
 #include "include/playerInteraction.h"
 
 
-MainGame::MainGame(int windowSizeX, int windowSizeY, int playerPosX, int playerPosY, int level) :
+MainGame::MainGame(int windowSizeX, int windowSizeY, int level) :
     window(std::make_unique<sf::RenderWindow>(
         sf::VideoMode(windowSizeX, windowSizeY), 
         "Laser Tank", 
         sf::Style::Close)),
-    player(3, 3, windowSizeX, windowSizeY),
     tileMap(level),
+    player(tileMap.getPlayerPositionX(), tileMap.getPlayerPositionY(), windowSizeX, windowSizeY),
     windowSizeX(windowSizeX),
     windowSizeY(windowSizeY),
-    playerPosX(playerPosX),
-    playerPosY(playerPosY),
     bullet(nullptr)
 {   
-        player.setGridPosition(sf::Vector2i(playerPosX, playerPosY));
+        int playerPosX = tileMap.getPlayerPositionX();
+        int playerPosY = tileMap.getPlayerPositionY();
+        sf::Vector2i playerPos = sf::Vector2i(playerPosX, playerPosY);
+        player.setGridPosition(playerPos);
         window->setFramerateLimit(60);
         loadGoblet();
-        loadGameOverFont();
+        loadGameOverFont(); 
        
 
 }

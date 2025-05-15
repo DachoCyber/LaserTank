@@ -62,6 +62,12 @@ void Map::buildMap() {
     for (int y = 0; y < mapHeight; y++) {
         for (int x = 0; x < mapWidth; x++) {
             switch(tileMap[y][x]) {
+                case 0:
+                    playerPosX = x;
+                    playerPosY = y;
+                    std::cout << playerPosX << " " << playerPosX << std::endl;
+                    tiles[y][x] = std::make_unique<WalkableGround>(x*tileSize, y*tileSize);
+                    break;
                 case 1:
                     tiles[y][x] = std::make_unique<WalkableGround>(x*tileSize, y*tileSize);
                     

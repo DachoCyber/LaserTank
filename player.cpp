@@ -10,13 +10,13 @@ Tank::Tank(int gridPosX, int gridPosY, int windowSizeX, int windowSizeY)
     tankImg.loadFromFile("Images/tank.png");
     texture.loadFromImage(tankImg);
     sprite.setTexture(texture);
+    //std::cout << gridPosX << " " << gridPosY << std::endl;
     sprite.setScale(sf::Vector2f(0.65, 0.65));  
     sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
     setDir(dir);
     sprite.setPosition(sf::Vector2f(static_cast<float>(gridPosX * tileSize + tileSize/2), static_cast<float>(gridPosY*tileSize + tileSize/2)));
     updateSpritePosition();
     
-    std::cout << sprite.getLocalBounds().width << " " << sprite.getLocalBounds().height << std::endl;
 }
 
 bool Tank :: getShouldKillPlayer() {
@@ -59,6 +59,7 @@ void Tank :: setGridPosition(sf::Vector2i gridPos) {
 }
 
 void Tank::update(sf::Time accTime, sf::Time updateInterval) {
+
     sprite.setPosition(gridPos.x * tileSize + tileSize / 2, gridPos.y * tileSize + tileSize / 2);
 
     if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ||
@@ -86,7 +87,7 @@ void Tank::updateSpritePosition() {
 }
 
 bool Tank :: validMove(int gridPosX, int gridPosy) const {
-    return gridPosX >= 0 && gridPosX <= 19 && gridPosy >= 0 && gridPosy <= 19;
+    return gridPosX >= 0 && gridPosX <= 16 && gridPosy >= 0 && gridPosy <= 16;
 }
 void Tank::fireBullet() {
 
