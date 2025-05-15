@@ -31,8 +31,13 @@ public:
     virtual bool isTileMovableBlock() {
         return false;
     }
+    virtual int isTransportTrack() {
+        return 0;
+    }
+
     virtual Bullet* getBullet() { return nullptr; }
     virtual int isTank() {return 0;}
+    virtual bool isWalkableGround() {return false;}
     virtual bool isMovableBlock() {return false;}
     virtual bool fireBullet() = 0;
     virtual bool killPlayer(const std::vector<std::vector<std::unique_ptr<Tile>>>& tileMap, int playerPosX, int playerPosY) = 0;

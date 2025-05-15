@@ -16,6 +16,8 @@ private:
     void loadGoblet();
     void drawGoblet();
 
+
+
     void loadGameOverFont();
 
     bool gameEnd();
@@ -23,6 +25,11 @@ private:
     bool gameWon();
     bool shouldEnemyFireBullet();
     bool playerKilledByEnemy();
+
+
+
+    void setTrack();
+    void handlTransportableTrack(int x, int y);
 
     void handleInput();
     void render();
@@ -44,6 +51,8 @@ private:
     bool killPlayer = false;
     bool bulletFired = false;
 
+    bool returnFromTrack = false;
+
     Bullet* bullet;
     sf::Clock gameClock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
@@ -55,4 +64,8 @@ private:
 
     sf::Texture gobletTexture;
     sf::Sprite gobletSprite;
+
+
+
+    
 };

@@ -78,6 +78,7 @@ void BulletInteraction :: interact() {
         }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isTileMovableBlock() || tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMovableBlock()) {
             std::cout << "dfddfdfdfd" << std::endl;
+            std::cout << tileMap.getTileMap().size() << std::endl;
             if(lastBulletGridPosY > bulletGridPosY) {
                 if(bulletGridPosY > 0 && (player.getGridPosition().x != bulletGridPosX || player.getGridPosition().y != bulletGridPosY - 1)) {
                     if(tileMap.getTileMap()[bulletGridPosY - 1][bulletGridPosX] -> isOverlappled()) {
@@ -99,7 +100,7 @@ void BulletInteraction :: interact() {
                     }
                 }
             } else if(lastBulletGridPosX < bulletGridPosX) {
-                if(bulletGridPosX < tileMap.getTileMap()[bulletGridPosY].size() && (player.getGridPosition().x != bulletGridPosX + 1 || player.getGridPosition().y != bulletGridPosY)) {
+                if(bulletGridPosX < tileMap.getTileMap()[bulletGridPosY].size() - 1 && (player.getGridPosition().x != bulletGridPosX + 1 || player.getGridPosition().y != bulletGridPosY)) {
                     if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1] -> isOverlappled()) {
 
                         tileMap.moveTile(bulletGridPosY, bulletGridPosX + 1, bulletGridPosY, bulletGridPosX);

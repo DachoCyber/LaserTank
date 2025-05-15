@@ -59,6 +59,10 @@ public:
     int getPlayerPositionX() const {return playerPosX;}
     int getPlayerPositionY() const {return playerPosY;}
 
+    void updateTransportTracks();
+
+    std::vector<std::tuple<int, int, Direction>> getTrackCoord() const {return trackTileCoords;}
+
 private:
     void loadTextures();
     void buildMap();
@@ -71,6 +75,7 @@ private:
     int playerPosY;
     
     std::vector<std::pair<int, int>> waterTilesCoords;
+    
     std::vector<std::vector<int>> tileMap;
     std::vector<std::vector<sf::Sprite>> sprites;
     std::vector<std::vector<std::unique_ptr<Tile>>> tiles;
@@ -83,6 +88,8 @@ private:
     sf::Texture mirror4Texture;
     sf::Texture waterTileTexture;
     sf::Texture flagTexture;
+
+    std::vector<std::tuple<int, int, Direction>> trackTileCoords;
     
     int level;
 

@@ -13,6 +13,7 @@
 #include "include/undestructableBlock.h"
 #include "include/tank1.h"
 #include "include/destroyedTank.h"
+#include "include/transportTrack.h"
 
 #include "include/flag.h"
 
@@ -126,6 +127,10 @@ void Map::buildMap() {
                 case 19:
                     tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 3);
                     break;
+                case 20:
+                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, LEFT);
+                    trackTileCoords.push_back(std::make_tuple(y, x, LEFT));
+                    break;
                     
                 default:
                     tiles[y][x] = nullptr; 
@@ -174,7 +179,9 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
             } else {
 
                target.draw(*tiles[y][x]);
+               
             }
+
 
         }
     }
@@ -191,4 +198,16 @@ bool Map::isWalkable(int x, int y) const {
 
 sf::Vector2f Map::getTilePosition(int x, int y) const {
     return sf::Vector2f(x * tileSize, y * tileSize);
+}
+
+void Map::updateTransportTracks() {
+    for (auto& coord : trackTileCoords) {
+        int y = std::get<0>(coord);
+        int x = std::get<1>(coord);
+        Direction dir = std::get<2>(coord);
+        
+        if (!tiles[y][x]->isTransportTrack() && tiles[y][x]->isWalkableGround()) {
+            tiles[y][x] = std::make_unique<TransportTrack>(x * tileSize, y * tileSize, dir);
+        }
+    }
 }

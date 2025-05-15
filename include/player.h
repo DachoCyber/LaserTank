@@ -35,6 +35,14 @@ public:
     bool bulletInScreen() const;
     bool getShouldFireBullet() const {return shouldFireBullet;}
 
+
+    void movePlayer(int x, int y) {
+        sprite.setPosition(sf::Vector2f(static_cast<float>(x), static_cast<float>(y)));
+    } 
+
+    int getPositionX() const {return sprite.getPosition().x;}
+    int getPositionY() const {return sprite.getPosition().y;}
+
 private:
 
     bool shouldKillPlayer = false;

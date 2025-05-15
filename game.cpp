@@ -33,8 +33,23 @@ void MainGame::run() {
             while (window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
                     window->close();
-                if (event.type == sf::Event::KeyPressed && !bulletFired)
+                if (event.type == sf::Event::KeyPressed && (!bulletFired || tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack()))
                     handleInput();
+            }
+
+            tileMap.updateTransportTracks();
+
+            if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack() && !returnFromTrack) {
+                if(returnFromTrack == false) {
+                    std::cout << "false";
+                } else {
+                    std::cout << "true";
+                }
+                handlTransportableTrack(player.getGridPosition().y, player.getGridPosition().x);
+                
+            } 
+            if(!tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack()) {
+                returnFromTrack = false;
             }
 
             update();
@@ -103,7 +118,9 @@ void MainGame::handleInput() {
     }
 
     if (pressedKey != sf::Keyboard::Unknown) {
+       
         PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
+        
         playerInteraction -> handleMovement();
         delete playerInteraction;
     }
@@ -189,24 +206,50 @@ void MainGame::loadGameOverFont() {
         }
 
         gameOverText.setFont(weirdFont);
-        std::cout << "here" << std::endl;
+    
         gameOverText.setString("GAME OVER");
-        std::cout << "here" << std::endl;
+    
         gameOverText.setCharacterSize(80);
-        std::cout << "here" << std::endl;
+    
         gameOverText.setFillColor(sf::Color::Red);
-        std::cout << "here" << std::endl;
+    
         gameOverText.setStyle(sf::Text::Bold | sf::Text::Italic);
-        std::cout << "here" << std::endl;
+    
         sf::FloatRect textBounds = gameOverText.getLocalBounds();
-        std::cout << "here" << std::endl;
+    
         gameOverText.setOrigin(textBounds.left + textBounds.width / 2.f,
                                textBounds.top + textBounds.height / 2.f);
-                               std::cout << "here" << std::endl;
+                            
         gameOverText.setPosition(static_cast<float>(windowSizeX) / 2,
                                  static_cast<float>(windowSizeY) / 2);
-        std::cout << "here" << std::endl;
+    
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
     }
+}
+
+
+void MainGame :: handlTransportableTrack(int y, int x) {
+    if(returnFromTrack) return;
+    player.setDir(LEFT);
+    if(player.validMove(x - 1, y)) {
+
+            if(tileMap.getTileMap()[y][x-1] -> isTileMovableBlock() || 
+                tileMap.getTileMap()[y][x-1] -> isBulletDestroyable() ||
+                tileMap.getTileMap()[y][x-1] -> isMirror1() ||
+                tileMap.getTileMap()[y][x-1] -> isMirror2() ||
+                tileMap.getTileMap()[y][x-1] -> isMirror3() ||
+                tileMap.getTileMap()[y][x-1] -> isMirror4() ||
+                tileMap.getTileMap()[y][x-1] -> isTank()) {
+                    returnFromTrack = true;
+                    return;
+            }
+            int currGridCoordX = x;
+            int currGridCoordY = y;
+
+            returnFromTrack = false;
+            std::cout << player.getGridPosition().x << std::endl;
+            player.setGridPosition(sf::Vector2i(x - 1, y));
+            std::cout << player.getGridPosition().x << std::endl;
+        }
 }

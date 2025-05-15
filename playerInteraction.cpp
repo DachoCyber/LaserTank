@@ -15,9 +15,13 @@ PlayerInteraction :: PlayerInteraction(int windowSizeX, int windowSizeY, Tank& p
     
 }
 
+
+
 void PlayerInteraction :: handleMovement() {
     sf::Vector2i newGridPos = player.getGridPosition();
     bool moved = false;
+
+    
 
     // UP
     if(pressedKey == sf::Keyboard::Key::Up) {
@@ -107,3 +111,26 @@ void PlayerInteraction :: handleMovement() {
         }
     }
 }
+/*
+void PlayerInteraction :: handlTransportableTrack(int y, int x) {
+    player.setDir(LEFT);
+    if(validMove(x - 1, y)) {
+
+            if(tileMap.getTileMap()[y][x-1] -> isTileMovableBlock() || 
+                tileMap.getTileMap()[y][x-1] -> isBulletDestroyable() ||
+                tileMap.getTileMap()[y][x-1] -> isMirror1() ||
+                tileMap.getTileMap()[y][x-1] -> isMirror2() ||
+                tileMap.getTileMap()[y][x-1] -> isMirror3() ||
+                tileMap.getTileMap()[y][x-1] -> isMirror4() ||
+                tileMap.getTileMap()[y][x-1] -> isTank()) {
+                    std::cout << "here" << std::endl;
+                    return;
+            }
+            int currGridCoordX = x;
+            int currGridCoordY = y;
+
+            std::cout << player.getGridPosition().x << std::endl;
+            player.setGridPosition(sf::Vector2i(x - 1, y));
+            std::cout << player.getGridPosition().x << std::endl;
+        }
+}*/

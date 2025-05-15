@@ -21,6 +21,7 @@ public:
             std::cerr << what << std::endl;
         }
     }
+    virtual bool isWalkableGround() {return true;}
     bool fireBullet() override {
         return false;
     }
