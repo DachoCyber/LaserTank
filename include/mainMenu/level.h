@@ -16,6 +16,7 @@ private:
     int menuSizeY;
 
     sf::Text levelText;
+    sf::Text difficulty;
 
 private:
     int openMenuWindow() {
@@ -25,21 +26,35 @@ private:
 
         std::vector<sf::RectangleShape> levelButtons(levelCount);
         std::vector<sf::Text> levelTexts(levelCount);
-        /*if (!font.loadFromFile("arial.ttf")) {
-            return -1;
-        }*/
+        std::vector<sf::Text> difficulty(levelCount);
+        for(int i = 0; i < levelCount; i++) {
+            difficulty[i].setFont(globalFont);
+            if(i < 2) {
+                difficulty[i].setFillColor(sf::Color::Magenta);
+                difficulty[i].setString("Easy");
+            } else if(i < 4) {
+                difficulty[i].setFillColor(sf::Color::Yellow);
+                difficulty[i].setString("Medium");
+            } else {
+                difficulty[i].setFillColor(sf::Color::Red);
+                difficulty[i].setString("Red");
+            }
+            difficulty[i].setCharacterSize(12.f);
+        }
 
         for (int i = 0; i < levelCount; ++i) {
-            levelButtons[i].setSize(sf::Vector2f(static_cast<float>(menuSizeX/2), 50.f));
-            levelButtons[i].setFillColor(sf::Color(150, 150, 250));
+            levelButtons[i].setSize(sf::Vector2f(static_cast<float>(menuSizeX), 50.f));
+            levelButtons[i].setFillColor(sf::Color::Black);
             levelButtons[i].setPosition(0.f, static_cast<float>(i * 50));
 
             levelTexts[i].setFont(globalFont);
             levelTexts[i].setCharacterSize(24);
             levelTexts[i].setString("Level " + std::to_string(i + 1));
-            levelTexts[i].setFillColor(sf::Color::Black);
+            levelTexts[i].setFillColor(difficulty[i].getFillColor());
             levelTexts[i].setPosition(levelButtons[i].getPosition().x + 20.f, levelButtons[i].getPosition().y + 10.f);
+            difficulty[i].setPosition(levelButtons[i].getPosition().x + 120.f, levelButtons[i].getPosition().y + 22.f);
         }
+        
 
         while (menuWindow.isOpen()) {
             sf::Event event;
@@ -68,6 +83,7 @@ private:
             for (int i = 0; i < levelButtons.size(); ++i) {
                 menuWindow.draw(levelButtons[i]);
                 menuWindow.draw(levelTexts[i]);
+                menuWindow.draw(difficulty[i]);
             }
             menuWindow.display();
         }
