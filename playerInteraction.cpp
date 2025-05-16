@@ -30,11 +30,14 @@ void PlayerInteraction :: handleMovement() {
                 player.setDir(UP);
             } else {
                 if(validMove(newGridPos.x, newGridPos.y - 1)) {
+                    bool notUpTrack = tileMap.getTileMap()[newGridPos.y - 1][newGridPos.x] -> isTransportTrack() != 4;
+                    if(notUpTrack) {
 
-                    if(tileMap.getTileMap()[newGridPos.y - 1][newGridPos.x] -> isWalkable()) {
+                        if(tileMap.getTileMap()[newGridPos.y - 1][newGridPos.x] -> isWalkable()) {
 
-                        newGridPos.y -= 1;
-                        moved = true;
+                            newGridPos.y -= 1;
+                            moved = true;
+                        }
                     }
                 }
             }
@@ -48,11 +51,14 @@ void PlayerInteraction :: handleMovement() {
                 player.setDir(DOWN);
             } else {
                 if(validMove(newGridPos.x, newGridPos.y + 1)) {
+                    bool notDownTrack = tileMap.getTileMap()[newGridPos.y + 1][newGridPos.x] -> isTransportTrack() != 3;
+                    if(notDownTrack) {
+                        
+                        if(tileMap.getTileMap()[newGridPos.y + 1][newGridPos.x] -> isWalkable()) {
 
-                    if(tileMap.getTileMap()[newGridPos.y + 1][newGridPos.x] -> isWalkable()) {
-
-                        newGridPos.y += 1;
-                        moved = true;
+                            newGridPos.y += 1;
+                            moved = true;
+                        }
                     }
                 }
             }
@@ -67,11 +73,15 @@ void PlayerInteraction :: handleMovement() {
             player.setDir(LEFT);
         } else {
             if(validMove(newGridPos.x - 1, newGridPos.y)) {
+                std::cout << "this is good!" << std::endl;
+                bool notLeftTrack = tileMap.getTileMap()[newGridPos.y][newGridPos.x - 1] -> isTransportTrack() != 2;
+                if(notLeftTrack) {
+                    std::cout << "this is also good!" << std::endl;
+                    if(tileMap.getTileMap()[newGridPos.y][newGridPos.x - 1] -> isWalkable()) {
 
-                if(tileMap.getTileMap()[newGridPos.y][newGridPos.x - 1] -> isWalkable()) {
-
-                    newGridPos.x -= 1;
-                    moved = true;
+                        newGridPos.x -= 1;
+                        moved = true;
+                    }
                 }
             }
         }
@@ -85,11 +95,15 @@ void PlayerInteraction :: handleMovement() {
                 player.setDir(RIGHT);
             } else {
                 if(validMove(newGridPos.y, newGridPos.x + 1)) {
+                    bool notRightTrack = tileMap.getTileMap()[newGridPos.y][newGridPos.x + 1] -> isTransportTrack() != 1;
+                    if(notRightTrack) {
+                        if(tileMap.getTileMap()[newGridPos.y][newGridPos.x + 1] -> isWalkable()) {
+                            newGridPos.x += 1;
+                            moved = true;
+                        }
 
-                    if(tileMap.getTileMap()[newGridPos.y][newGridPos.x + 1] -> isWalkable()) {
-                        newGridPos.x += 1;
-                        moved = true;
                     }
+
                 }
                 
             }

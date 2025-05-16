@@ -33,18 +33,13 @@ void MainGame::run() {
             while (window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
                     window->close();
-                if (event.type == sf::Event::KeyPressed && (!bulletFired || tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack()))
+                if (event.type == sf::Event::KeyPressed && (tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() || !bulletFired))
                     handleInput();
             }
 
             tileMap.updateTransportTracks();
 
             if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack() && !returnFromTrack) {
-                if(returnFromTrack == false) {
-                    std::cout << "false";
-                } else {
-                    std::cout << "true";
-                }
                 handlTransportableTrack(player.getGridPosition().y, player.getGridPosition().x);
                 
             } 

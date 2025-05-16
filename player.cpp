@@ -87,7 +87,7 @@ void Tank::updateSpritePosition() {
 }
 
 bool Tank :: validMove(int gridPosX, int gridPosy) const {
-    return gridPosX >= 0 && gridPosX <= 16 && gridPosy >= 0 && gridPosy <= 16;
+    return gridPosX >= 0 && gridPosX < 16 && gridPosy >= 0 && gridPosy < 16;
 }
 void Tank::fireBullet() {
 
