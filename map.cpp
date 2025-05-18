@@ -220,7 +220,7 @@ void Map :: updateWaterTiles() {
             tiles[y][x] = std::make_unique<TileInWater>(x*tileSize, y*tileSize);
             waterTilesCoords.erase(it);
             tilesInWaterCoords.push_back(std::make_pair(y, x));
-            std::cout << "pushing tiles in water coords" << y << " " << x << std::endl;
+            std::cout << "pushing tiles in water coords" << y << " " << x << " aaaaaaaaaa" << tilesInWaterCoords.size()<< std::endl;
             return;
         }
     }

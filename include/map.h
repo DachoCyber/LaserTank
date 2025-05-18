@@ -48,12 +48,13 @@ public:
         //}
 
         if(tiles[oldGridPosY][oldGridPosX] -> isTileInWater() || tiles[oldGridPosY][oldGridPosX] -> isMovableTypeOfBlock()) {
-            std::cout << "eeeeeeee" << std::endl;
+           // std::cout << "eeeeeeee" << std::endl;
             // Check if we're moving from a position that was originally water
         bool wasWaterTile = false;
         for (auto it = tilesInWaterCoords.begin(); it != tilesInWaterCoords.end(); ++it) {
             if (it->first == oldGridPosY && it->second == oldGridPosX) {
                 wasWaterTile = true;
+                //std::cout << "was water tile on position  " << oldGridPosX << " " << oldGridPosY << std::endl;
                 break;
             }
         }
@@ -63,11 +64,15 @@ public:
         for (auto it = waterTilesCoords.begin(); it != waterTilesCoords.end(); ++it) {
             if (it->first == newGridPosY && it->second == newGridPosX) {
                 movingToWater = true;
+                //std::cout << "moving to water to position  " << newGridPosY << " " << newGridPosX << std::endl;
                 break;
             }
         }
+        //movingToWater = true;
+        if(!movingToWater) {
+            std::cout <<" not moving to water tile" << std::endl << std::endl;
+        }
 
-        
 
         // 2. Move the tile
         tiles[newGridPosY][newGridPosX] = std::move(tiles[oldGridPosY][oldGridPosX]);
@@ -78,16 +83,18 @@ public:
         // 4. Update tileMap to maintain consistency
         tileMap[newGridPosY][newGridPosX] = tileMap[oldGridPosY][oldGridPosX];
         
+
         // 5. Handle the old position
         if (wasWaterTile && movingToWater) {
             // Restore the water tile
             tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize);
             tileMap[oldGridPosY][oldGridPosX] = 8;/* whatever value represents water tiles */
+            //std::cout << "jeste " << std::endl;
         } else {
             // Create new walkable ground at old position
             tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
             tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
-            std::cout << "hereeeee" << std::endl;
+            //std::cout << "hereeeee" << std::endl;
             
             // If we moved to a water tile, remember the original position
             if (movingToWater) {
@@ -97,7 +104,7 @@ public:
         }
 
         else {
-            std::cout <<" aaaaaa" << std::endl;
+            //std::cout <<" aaaaaa" << std::endl;
             for(auto it = waterTilesCoords.begin(); it != waterTilesCoords.end(); it++) {
                 if(it -> first == newGridPosY && it -> second == newGridPosX) {
                     //if(!exists) {
