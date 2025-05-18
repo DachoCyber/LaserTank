@@ -8,6 +8,7 @@
 #include "tile.h"
 #include "walkableGround.h"
 #include "tileInWater.h"
+#include "waterTile.h"
 
 class Map : public sf::Drawable {
 public:
@@ -52,7 +53,7 @@ public:
                 break;
             }
         }
-
+    
         // 2. Move the tile
         tiles[newGridPosY][newGridPosX] = std::move(tiles[oldGridPosY][oldGridPosX]);
         
@@ -67,10 +68,11 @@ public:
             // Restore the water tile
             tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize);
             tileMap[oldGridPosY][oldGridPosX] = 8;/* whatever value represents water tiles */
-        } else {
+        } else if(movingToWater) {
             // Create new walkable ground at old position
             tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
             tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
+            tiles[newGridPosY][newGridPosX] = std::make_unique<WaterTile>(newGridPosX*tileSize, newGridPosY*tileSize, waterTileTexture);
             
             // If we moved to a water tile, remember the original position
             if (movingToWater) {
