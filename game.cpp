@@ -38,6 +38,7 @@ void MainGame::run() {
             }
 
             tileMap.updateTransportTracks();
+            tileMap.updateWaterTiles();
 
             if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack() && !returnFromTrack) {
                 handlTransportableTrack(player.getGridPosition().y, player.getGridPosition().x);

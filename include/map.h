@@ -3,9 +3,11 @@
 #include <memory>
 #include <vector>
 #include <utility>
+#include <list>
 
 #include "tile.h"
 #include "walkableGround.h"
+#include "tileInWater.h"
 
 class Map : public sf::Drawable {
 public:
@@ -21,6 +23,7 @@ public:
         std::unique_ptr<Tile> tile = std::make_unique<WalkableGround>(gridPosX*tileSize, gridPosY*tileSize);
         tiles[gridPosY][gridPosX] = std::move(tile);
     }
+    void updateWaterTiles();
     void destroyTank(int bulletGridPosX, int bulletGridPosY, int tankType);
     void moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldGridPosX) {
     // 1. Check bounds and validity
@@ -32,15 +35,24 @@ public:
             return;
         }
 
-        if(!tiles[oldGridPosY][oldGridPosX] -> isTileMovableBlock()) {
-            for(int i = 0; i < waterTilesCoords.size(); i++) {
-                if(waterTilesCoords[i].first == newGridPosY && waterTilesCoords[i].second == newGridPosX) {
-                    tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
-                    return;        
-                } 
+        // Check if we're moving from a position that was originally water
+        bool wasWaterTile = false;
+        for (auto it = tilesInWaterCoords.begin(); it != tilesInWaterCoords.end(); ++it) {
+            if (it->first == oldGridPosY && it->second == oldGridPosX) {
+                wasWaterTile = true;
+                break;
             }
         }
-        
+
+        // Check if we're moving to a water tile
+        bool movingToWater = false;
+        for (auto it = waterTilesCoords.begin(); it != waterTilesCoords.end(); ++it) {
+            if (it->first == newGridPosY && it->second == newGridPosX) {
+                movingToWater = true;
+                break;
+            }
+        }
+
         // 2. Move the tile
         tiles[newGridPosY][newGridPosX] = std::move(tiles[oldGridPosY][oldGridPosX]);
         
@@ -50,9 +62,21 @@ public:
         // 4. Update tileMap to maintain consistency
         tileMap[newGridPosY][newGridPosX] = tileMap[oldGridPosY][oldGridPosX];
         
-        // 5. Create new walkable ground at old position
-        tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
-        tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
+        // 5. Handle the old position
+        if (wasWaterTile && movingToWater) {
+            // Restore the water tile
+            tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+            tileMap[oldGridPosY][oldGridPosX] = 8;/* whatever value represents water tiles */
+        } else {
+            // Create new walkable ground at old position
+            tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+            tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
+            
+            // If we moved to a water tile, remember the original position
+            if (movingToWater) {
+                tilesInWaterCoords.emplace_back(oldGridPosY, oldGridPosX);
+            }
+        }
     }
     int getFlagCoordX() const {return flagCoordX;}
     int getFlagCoordY() const {return flagCoordY;}
@@ -74,11 +98,12 @@ private:
     int playerPosX;
     int playerPosY;
     
-    std::vector<std::pair<int, int>> waterTilesCoords;
+    std::list<std::pair<int, int>> waterTilesCoords;
     
     std::vector<std::vector<int>> tileMap;
     std::vector<std::vector<sf::Sprite>> sprites;
     std::vector<std::vector<std::unique_ptr<Tile>>> tiles;
+    std::vector<std::pair<int, int>> tileInWater;
     
     sf::Texture walkableTexture;
     sf::Texture destructibleTexture;
@@ -90,7 +115,9 @@ private:
     sf::Texture flagTexture;
 
     std::vector<std::tuple<int, int, Direction>> trackTileCoords;
-    
+
+    std::vector<std::pair<int, int>> tilesInWaterCoords;
+
     int level;
 
     int flagCoordX, flagCoordY;

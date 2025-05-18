@@ -14,6 +14,7 @@
 #include "include/tank1.h"
 #include "include/destroyedTank.h"
 #include "include/transportTrack.h"
+#include "include/tileInWater.h"
 
 #include "include/flag.h"
 
@@ -178,20 +179,8 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         for (int x = 0; x < tiles[y].size(); x++) {
             if (!tiles[y][x]) continue;
 
-            // If this tile is NOT a WaterTile but there's a water tile below it
-            bool isOnWater = tiles[y][x]->isUnderWater(waterTilesCoords);
-
-            if (isOnWater) {
-                // Draw water first
-                WaterTile water(x * tileSize, y * tileSize, waterTileTexture);
-                water.setAlpha(80);
-                target.draw(*tiles[y][x]);
-                target.draw(water);
-            } else {
-
-               target.draw(*tiles[y][x]);
+            target.draw(*tiles[y][x]);
                
-            }
 
 
         }
@@ -219,6 +208,20 @@ void Map::updateTransportTracks() {
         
         if (!tiles[y][x]->isTransportTrack() && tiles[y][x]->isWalkableGround()) {
             tiles[y][x] = std::make_unique<TransportTrack>(x * tileSize, y * tileSize, dir);
+        }
+    }
+}
+
+void Map :: updateWaterTiles() {
+    for(auto it = waterTilesCoords.begin(); it != waterTilesCoords.end(); it++) {
+        int x = it -> second;
+        int y = it -> first;
+        if(tiles[y][x] -> isTileMovableBlock()) {
+            tiles[y][x] = std::make_unique<TileInWater>(x*tileSize, y*tileSize);
+            waterTilesCoords.erase(it);
+            tilesInWaterCoords.push_back(std::make_pair(y, x));
+            std::cout << "pushing tiles in water coords" << y << " " << x << std::endl;
+            return;
         }
     }
 }
