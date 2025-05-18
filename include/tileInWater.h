@@ -72,6 +72,9 @@ public:
     bool isTileMovableBlock() {
         return isMovable;
     }
+    bool isTileInWater() {
+        return true;
+    }
     bool isUndestructibleBlock() override {
         return false;
     }

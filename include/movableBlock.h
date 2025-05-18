@@ -89,4 +89,7 @@ public:
     bool fireBullet() override {
         return false;
     }
+    bool isMovableTypeOfBlock() {
+        return true;
+    }
 };

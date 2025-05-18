@@ -34,7 +34,8 @@ public:
     virtual int isTransportTrack() {
         return 0;
     }
-
+    virtual bool isTileInWater() {return false;}
+    virtual bool isMovableTypeOfBlock() {return false;}
     virtual Bullet* getBullet() { return nullptr; }
     virtual int isTank() {return 0;}
     virtual bool isWalkableGround() {return false;}
