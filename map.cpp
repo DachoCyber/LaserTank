@@ -219,8 +219,11 @@ void Map :: updateWaterTiles() {
         if(tiles[y][x] -> isTileMovableBlock()) {
             tiles[y][x] = std::make_unique<TileInWater>(x*tileSize, y*tileSize);
             waterTilesCoords.erase(it);
+            //std::cout << "adding tile" << y << " " << x << std::endl;
             tilesInWaterCoords.push_back(std::make_pair(y, x));
-            std::cout << "pushing tiles in water coords" << y << " " << x << " aaaaaaaaaa" << tilesInWaterCoords.size()<< std::endl;
+            erasedWaterTiles.push_back(std::make_pair(y, x));
+            //std::cout << "pushing tiles in water coords" << y << " " << x << " aaaaaaaaaa" << tilesInWaterCoords.size()<< std::endl;
+            std::cout << "erasing water tile " << it -> first << " " << it -> second << std::endl;
             return;
         }
     }

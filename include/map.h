@@ -36,6 +36,8 @@ public:
             return;
         }
 
+        
+
         /*for(auto it = waterTilesCoords.begin(); it != waterTilesCoords.end(); it++) {
                 if(it -> first == newGridPosY && it -> second == newGridPosX) {
                     //if(!exists) {
@@ -55,6 +57,7 @@ public:
             if (it->first == oldGridPosY && it->second == oldGridPosX) {
                 wasWaterTile = true;
                 //std::cout << "was water tile on position  " << oldGridPosX << " " << oldGridPosY << std::endl;
+                tilesInWaterCoords.erase(it);
                 break;
             }
         }
@@ -68,12 +71,20 @@ public:
                 break;
             }
         }
+        bool wasGround = !(tiles[oldGridPosY][oldGridPosX] -> isWater());
         //movingToWater = true;
         if(!movingToWater) {
-            std::cout <<" not moving to water tile" << std::endl << std::endl;
         }
-
-
+        std::cout << "water tiles coords list:" << std::endl;
+        for (auto it = waterTilesCoords.begin(); it != waterTilesCoords.end(); ++it) {
+            std::cout << it -> first << "," << it->second << std::endl;
+        }
+        bool erasedWaterTilesExists = false;
+        for(int i = 0; i < erasedWaterTiles.size(); i++) {
+            if(oldGridPosX == erasedWaterTiles[i].second && oldGridPosY == erasedWaterTiles[i].first) {
+                erasedWaterTilesExists = true;
+            }
+        }
         // 2. Move the tile
         tiles[newGridPosY][newGridPosX] = std::move(tiles[oldGridPosY][oldGridPosX]);
         
@@ -83,17 +94,29 @@ public:
         // 4. Update tileMap to maintain consistency
         tileMap[newGridPosY][newGridPosX] = tileMap[oldGridPosY][oldGridPosX];
         
-
+        if(!wasWaterTile) {
+            std::cout << "nije water tile" << std::endl;
+        }
+        if(!movingToWater) {
+            std::cout << "nije moving to water tile" << std::endl;
+        }
         // 5. Handle the old position
-        if (wasWaterTile && movingToWater) {
+        if ((wasWaterTile && movingToWater)) {
             // Restore the water tile
             tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize);
             tileMap[oldGridPosY][oldGridPosX] = 8;/* whatever value represents water tiles */
             //std::cout << "jeste " << std::endl;
         } else {
             // Create new walkable ground at old position
-            tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
-            tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
+                if(erasedWaterTilesExists) {
+                    tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+                    tileMap[oldGridPosY][oldGridPosX] = 8;
+                }
+                else {
+
+                    tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+                    tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
+                }
             //std::cout << "hereeeee" << std::endl;
             
             // If we moved to a water tile, remember the original position
@@ -156,6 +179,7 @@ private:
     std::vector<std::vector<sf::Sprite>> sprites;
     std::vector<std::vector<std::unique_ptr<Tile>>> tiles;
     std::vector<std::pair<int, int>> tileInWater;
+    std::vector<std::pair<int, int>> erasedWaterTiles;
     
     sf::Texture walkableTexture;
     sf::Texture destructibleTexture;
