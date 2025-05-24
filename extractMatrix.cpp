@@ -26,6 +26,12 @@ void readMapFromXML(std::vector<std::vector<int>>& map, int level) {
         case 5:
             res = doc.LoadFile("map5.tmx");
             break;
+        case 6:
+            res = doc.LoadFile("map6.tmx");
+            break;
+        case 7:
+            res = doc.LoadFile("map7.tmx");
+            break;
     }
 
     if(res != XML_SUCCESS) {

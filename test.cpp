@@ -12,7 +12,7 @@ int main() {
         return -1;
     }
 
-    MainMenu menu(5);
+    MainMenu menu(7);
     menu.run();
 
     int chosenLevel = menu.getChosenLevel();

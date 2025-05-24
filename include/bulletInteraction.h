@@ -15,4 +15,5 @@ public:
     BulletInteraction(int windowSizeX, int windowSizeY, Tank& player, Map& map);
     ~BulletInteraction() = default;
     void interact();
+    bool wasMirrorBefore = false;
 };

@@ -42,24 +42,35 @@ void BulletInteraction :: interact() {
         if(tankType == 1) {
             if(player.getBullet()->dir == RIGHT) {
                 tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 1);
+                return;
             }
             player.deleteBullet();
+            std::cout << "bullet direction is right" << std::endl;
         } else if(tankType == 2) {
             if(player.getBullet()->dir == LEFT) {
-                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 2);
+                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 4);
+                return;
             }
             player.deleteBullet();
+            std::cout << "bullet direction is left" << std::endl;
+
         } else if(tankType == 3) {
             if(player.getBullet()->dir == DOWN) {
-                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 3);
+                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 2);
+                return;
             }
+            std::cout << "bullet direction is down" << std::endl;
             player.deleteBullet();
         } else if(tankType == 4) {
             if(player.getBullet()->dir == UP) {
-                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 4);
+                tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 3);
+                return;
             }
+            std::cout << "bullet direction is up" << std::endl;
             player.deleteBullet();
+
         }
+        std::cout << "tank should move " << std::endl;
 
         if(tankType != 0) {
             deleted = true;
@@ -67,14 +78,19 @@ void BulletInteraction :: interact() {
 
         if (tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] &&
             tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isBulletDestroyable()) {
-
+            std::cout << "bullet destroyed" << std::endl;
             player.deleteBullet();
             tileMap.destroyTile(bulletGridPosX, bulletGridPosY);
             }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isUndestructibleBlock()) {
             if(!deleted) {
                 player.deleteBullet();
+                std::cout << "bullet destroyed " << std::endl;
             }
+        }
+        std::cout << bulletGridPosX << " " << bulletGridPosY << std::endl;
+        if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMovableBlock()) {
+            std::cout << "jeste " << std::endl;
         }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isTileMovableBlock() || tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMovableBlock()) {
             std::cout << "dfddfdfdfd" << std::endl;

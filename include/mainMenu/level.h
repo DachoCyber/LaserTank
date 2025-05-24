@@ -22,7 +22,8 @@ private:
     int openMenuWindow() {
         menuWindowOpen = true;
 
-        sf::RenderWindow menuWindow(sf::VideoMode(menuSizeX, levelCount * 50), "Choose Level");
+        sf::RenderWindow menuWindow(sf::VideoMode(menuSizeX, 250), "Choose Level");
+        std::cout << levelCount << std::endl;
 
         std::vector<sf::RectangleShape> levelButtons(levelCount);
         std::vector<sf::Text> levelTexts(levelCount);
@@ -55,6 +56,7 @@ private:
             difficulty[i].setPosition(levelButtons[i].getPosition().x + 120.f, levelButtons[i].getPosition().y + 22.f);
         }
         
+        int firstLevelFromTop = 0;
 
         while (menuWindow.isOpen()) {
             sf::Event event;
@@ -77,10 +79,37 @@ private:
                         }
                     }
                 }
+                if(event.type == sf::Event::KeyPressed) {
+
+                    if(event.key.code == sf::Keyboard::Key::Down) {
+                        if(firstLevelFromTop < levelCount - 5) {
+
+                            firstLevelFromTop++;
+                        }
+                    }
+                    if(event.key.code == sf::Keyboard::Key::Up) {
+                        if(firstLevelFromTop > 0) {
+
+                            firstLevelFromTop--;
+                        }
+                    }
+                }
             }
 
             menuWindow.clear(sf::Color::White);
-            for (int i = 0; i < levelButtons.size(); ++i) {
+            for (int i = firstLevelFromTop, j = 0; i < firstLevelFromTop + 5; ++i, ++j) {
+
+                levelButtons[i].setSize(sf::Vector2f(static_cast<float>(menuSizeX), 50.f));
+                levelButtons[i].setFillColor(sf::Color::Black);
+                levelButtons[i].setPosition(0.f, static_cast<float>(j * 50));
+
+                levelTexts[i].setFont(globalFont);
+                levelTexts[i].setCharacterSize(24);
+                levelTexts[i].setString("Level " + std::to_string(i + 1));
+                levelTexts[i].setFillColor(difficulty[i].getFillColor());
+                levelTexts[i].setPosition(levelButtons[i].getPosition().x + 20.f, levelButtons[i].getPosition().y + 10.f);
+                difficulty[i].setPosition(levelButtons[i].getPosition().x + 120.f, levelButtons[i].getPosition().y + 22.f);
+
                 menuWindow.draw(levelButtons[i]);
                 menuWindow.draw(levelTexts[i]);
                 menuWindow.draw(difficulty[i]);
