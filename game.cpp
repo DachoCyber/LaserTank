@@ -28,7 +28,18 @@ MainGame::MainGame(int windowSizeX, int windowSizeY, int level) :
 void MainGame::run() {
     while (window->isOpen()) {
         if (!gameEnd()) {
-    
+            
+            if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack()) {
+                std::cout << "jeste" << std::endl;
+            } else {
+                std::cout << "nije" << std::endl;
+            }
+            if(returnFromTrack) {
+                std::cout << "jeste" << std::endl;
+            } else {
+                std::cout << "nije" << std::endl;
+            }
+
             sf::Event event;
             while (window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
@@ -85,7 +96,7 @@ bool MainGame :: shouldEnemyFireBullet() {
                     player.getGridPosition().y * tileSize)) {
             
                     tileMap.getTileMap()[i][j]->fireBullet();
-                    bullet = tileMap.getTileMap()[i][j]->getBullet(); // Store bullet pointer for updates
+                    bullet = tileMap.getTileMap()[i][j]->getBullet(); 
                     bulletFired = true;
                     return true;
                 }
@@ -111,6 +122,9 @@ void MainGame::handleInput() {
         pressedKey = sf::Keyboard::Right;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         pressedKey = sf::Keyboard::Space;
+    }
+    if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack() && returnFromTrack && pressedKey != sf::Keyboard::Unknown) {
+        returnFromTrack = false;
     }
 
     if (pressedKey != sf::Keyboard::Unknown) {
