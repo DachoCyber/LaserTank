@@ -13,6 +13,7 @@ private:
     const sf::Time timePerFrame = sf::seconds(1.f/60.f);
 public:
     BulletInteraction(int windowSizeX, int windowSizeY, Tank& player, Map& map);
+    
     ~BulletInteraction() = default;
     void interact();
     bool wasMirrorBefore = false;

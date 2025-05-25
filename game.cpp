@@ -29,17 +29,9 @@ void MainGame::run() {
     while (window->isOpen()) {
         if (!gameEnd()) {
             
-            if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack()) {
+            if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack() && !returnFromTrack) {
                 std::cout << "jeste" << std::endl;
-            } else {
-                std::cout << "nije" << std::endl;
             }
-            if(returnFromTrack) {
-                std::cout << "jeste" << std::endl;
-            } else {
-                std::cout << "nije" << std::endl;
-            }
-
             sf::Event event;
             while (window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
@@ -126,7 +118,6 @@ void MainGame::handleInput() {
     if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack() && returnFromTrack && pressedKey != sf::Keyboard::Unknown) {
         returnFromTrack = false;
     }
-
     if (pressedKey != sf::Keyboard::Unknown) {
        
         PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
@@ -140,6 +131,14 @@ void MainGame::handleInput() {
 }
 
 void MainGame::update() {
+
+    for(int i = 0; i < tileMap.getTileMap().size(); i++) {
+        for(int j = 0; j < tileMap.getTileMap()[i].size(); j++) {
+            if(tileMap.getTileMap()[i][j] -> getBullet() == nullptr) {
+                bulletFired = false;
+            }
+        }
+    }
 
     if(player.getBullet() != nullptr) {
 

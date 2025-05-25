@@ -1,7 +1,7 @@
 CXX := g++
 
 
-CXXFLAGS := -std=c++11 -Wall -Wextra -I./tinyxml2
+CXXFLAGS := -std=c++14 -Wall -Wextra -I./tinyxml2
 
 
 LDFLAGS := -L./tinyxml2 -ltinyxml2 -lsfml-graphics -lsfml-window -lsfml-system

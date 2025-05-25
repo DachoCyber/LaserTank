@@ -12,25 +12,25 @@ void readMapFromXML(std::vector<std::vector<int>>& map, int level) {
     XMLError res;
     switch(level) {
         case 1:
-            res = doc.LoadFile("map1.tmx");
+            res = doc.LoadFile("/home/dalibor/Desktop/LaserTank/maps/map1.tmx");
             break;
         case 2:
-            res = doc.LoadFile("map2.tmx");
+            res = doc.LoadFile("/home/dalibor/Desktop/LaserTank/maps/map2.tmx");
             break;
         case 3:
-            res = doc.LoadFile("map3.tmx");
+            res = doc.LoadFile("/home/dalibor/Desktop/LaserTank/maps/map3.tmx");
             break;
         case 4:
-            res = doc.LoadFile("map4.tmx");
+            res = doc.LoadFile("/home/dalibor/Desktop/LaserTank/maps/map4.tmx");
             break;
         case 5:
-            res = doc.LoadFile("map5.tmx");
+            res = doc.LoadFile("/home/dalibor/Desktop/LaserTank/maps/map5.tmx");
             break;
         case 6:
-            res = doc.LoadFile("map6.tmx");
+            res = doc.LoadFile("/home/dalibor/Desktop/LaserTank/maps/map6.tmx");
             break;
         case 7:
-            res = doc.LoadFile("map7.tmx");
+            res = doc.LoadFile("/home/dalibor/Desktop/LaserTank/maps/map7.tmx");
             break;
     }
 
