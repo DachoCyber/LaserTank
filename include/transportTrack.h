@@ -6,32 +6,11 @@
 
 class TransportTrack : public Tile {
     public:
-        TransportTrack(int x, int y, Direction dir) : Tile(x, y) {
+    const sf::Texture& texture;
+        TransportTrack(int x, int y, Direction dir,const sf::Texture& texture) : Tile(x, y), texture(texture) {
             try {
                 walkable = true;
-                switch(dir) {
-                    case LEFT :
-                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack.png")) {
-                            throw new std::runtime_error("Cannot open image walkableGround.png!");
-                        }
-                        break;
-                    case RIGHT :
-                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack2.png")) {
-                            throw new std::runtime_error("Cannot open image walkableGround.png!");
-                        }
-                        break;
-                    case UP :
-                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack3.png")) {
-                            throw new std::runtime_error("Cannot open");
-                        }
-                        break;
-                    case DOWN :
-                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/transportTrack4.png")) {
-                            throw new std::runtime_error("Cannot open");
-                        }
-                        break;
-                }
-                sprite.setTexture(tex);
+                sprite.setTexture(texture);
                 sprite.setPosition(x, y);
            
                 this->dir = dir;
@@ -39,6 +18,11 @@ class TransportTrack : public Tile {
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
+    }
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<TransportTrack>(posX, posY, dir, texture); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
     }
     Direction dir;
     bool isUndestructibleBlock() override {

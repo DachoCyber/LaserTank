@@ -4,18 +4,21 @@
 
 class Flag : public Tile {
 public:
-    Flag(int x, int y) : Tile(x, y) {
+    const sf::Texture& texture;
+    Flag(int x, int y,const sf::Texture& texture) : Tile(x, y), texture(texture) {
         try {
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/flagWithBackground.png")) {
-               throw new std::runtime_error("Cannot open image flagWithBackground.png!");
-            }
         } 
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
-        sprite.setTexture(tex);
+        sprite.setTexture(texture);
         sprite.setPosition(x, y);
         sprite.setScale(32.f/571.f, 32.f/574.f);
+    }
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<Flag>(posX, posY, texture); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
     }
     bool isUndestructibleBlock() override {
         return false;

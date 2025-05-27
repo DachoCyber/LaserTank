@@ -16,7 +16,11 @@ class Mirror4Tile : public Tile {
             sprite.setPosition(x, y);
         }
 
-
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<Mirror4Tile>(posX, posY, *texturePtr); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
+    }
     bool isUndestructibleBlock() override {
         return false;
     }

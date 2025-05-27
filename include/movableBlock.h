@@ -5,15 +5,13 @@
 
 class MovableBlock : public Tile {
 public:
-    MovableBlock(int x, int y) : Tile(x, y) {
+    const sf::Texture& texture;
+    MovableBlock(int x, int y, const sf::Texture& texture) : Tile(x, y), texture(texture) {
         try {
             walkable = false;
             isMovable = true;
             overlappled = false;
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/MovableBlock.png")) {
-               throw new std::runtime_error("Cannot open image walkableGround.png!");
-            }
-            sprite.setTexture(tex);
+            sprite.setTexture(texture);
             sprite.setPosition(x, y);
             posX = x;
             posY = y;
@@ -21,6 +19,11 @@ public:
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
+    }
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<MovableBlock>(*this); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
     }
     bool overlappled;
     bool isMovable;

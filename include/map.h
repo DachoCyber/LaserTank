@@ -21,9 +21,14 @@ public:
     const std::vector<std::vector<std::unique_ptr<Tile>>>& getTileMap() const {return tiles;}
     const std::vector<std::vector<int>> getTileMapInt() const {return tileMap;}
     void destroyTile(int gridPosX, int gridPosY) {
-        std::unique_ptr<Tile> tile = std::make_unique<WalkableGround>(gridPosX*tileSize, gridPosY*tileSize);
+        std::unique_ptr<Tile> tile = std::make_unique<WalkableGround>(gridPosX*tileSize, gridPosY*tileSize, walkableTexture);
         tiles[gridPosY][gridPosX] = std::move(tile);
     }
+
+    void setTilesEl(size_t i, size_t j, std::unique_ptr<Tile> newElement);
+
+    Tile* getTileFromUniquePtr(std::unique_ptr<Tile> tile) const;
+    std::vector<std::vector<Tile*>> getMapState() const;
     void updateWaterTiles();
     void destroyTank(int bulletGridPosX, int bulletGridPosY, int tankType);
     
@@ -63,6 +68,27 @@ private:
     sf::Texture mirror4Texture;
     sf::Texture waterTileTexture;
     sf::Texture flagTexture;
+    sf::Texture movableBlockTexture;
+    sf::Texture undestructableBlockTex;
+
+    sf::Texture EnemyTank1UpTexture;
+    sf::Texture EnemyTank1DownTexture;
+    sf::Texture EnemyTank1LeftTexture;
+    sf::Texture EnemyTank1RightTexture;
+
+    sf::Texture destroyedTankUpTexture;
+    sf::Texture destroyedTankDownTexture;
+    sf::Texture destroyedTankLeftTexture;
+    sf::Texture destroyedTankRightTexture;
+
+    sf::Texture transportTrackLeftTex;
+    sf::Texture transportTrackUpTex;
+    sf::Texture transportTrackRightTex;
+    sf::Texture transportTrackDownTex;
+
+    sf::Texture tileInWaterTex;
+
+
 
     std::vector<std::tuple<int, int, Direction>> trackTileCoords;
 

@@ -17,7 +17,11 @@ class Mirror3Tile : public Tile {
         }
 
 
-
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<Mirror3Tile>(posX, posY, *texturePtr); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
+    }
     bool isWalkable() override {
         return false;
     }

@@ -7,40 +7,24 @@
 
     class DestroyedTank: public Tile {
     public:
+        const sf::Texture& texture;
         int dir;
-        DestroyedTank(int x, int y, int dir) : Tile(x, y) {
+        DestroyedTank(int x, int y, int dir, const sf::Texture& texture) : Tile(x, y), texture(texture) {
             try {
                 this-> dir = dir;
                 walkable = false;
-                switch(dir) {
-                    case 0 :
-                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/destroyedTank1.png")) {
-                        throw new std::runtime_error("Cannot open image walkableGround.png!");
-                        }
-                        break;
-                    case 1 :
-                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/destroyedTank2.png")) {
-                            throw new std::runtime_error("Cannot open image tank2.png!");
-                        }
-                        break;
-                    case 2 :
-                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/destroyedTank3.png")) {
-                            throw new std::runtime_error("Cannot open image tank3.png!");
-                        }
-                        break;
-                    case 3 : 
-                        if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/destroyedTank4.png")) {
-                            throw new std::runtime_error("Cannot open image tank4.png!");
-                        }
-                        break;
-                }
-                sprite.setTexture(tex);
+                sprite.setTexture(texture);
                 sprite.setPosition(x, y);
             }
             catch(const std::string& what) {
                 std::cerr << what << std::endl;
             }
         }
+        std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<DestroyedTank>(posX, posY, dir, texture); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
+    }
 
         Bullet* enemysTankBullet;
 

@@ -5,15 +5,13 @@
 
 class TileInWater : public Tile {
 public:
-    TileInWater(int x, int y) : Tile(x, y) {
+const sf::Texture& texture;
+    TileInWater(int x, int y, const sf::Texture& texture) : Tile(x, y), texture(texture) {
         try {
             walkable = true;
             isMovable = false;
             overlappled = true;
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/tileInWater.png")) {
-               throw new std::runtime_error("Cannot open image tileInWater.png!");
-            }
-            sprite.setTexture(tex);
+            sprite.setTexture(texture);
             sprite.setPosition(x, y);
             posX = x;
             posY = y;
@@ -21,6 +19,11 @@ public:
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
+    }
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<TileInWater>(posX, posY, texture); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
     }
     bool overlappled;
     bool isMovable;

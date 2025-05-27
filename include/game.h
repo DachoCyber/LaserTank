@@ -65,6 +65,11 @@ private:
     sf::Texture gobletTexture;
     sf::Sprite gobletSprite;
 
+    std::vector<std::vector<std::vector<Tile*>>> mapStates;
+
+    bool playerMoved = false;
+    int moveCount = 0;
+    std::vector<std::pair<int, int>> playerPositions;
 
 
     

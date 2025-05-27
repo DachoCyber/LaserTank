@@ -15,7 +15,11 @@ class Mirror1Tile : public Tile {
             sprite.setTexture(*texturePtr);
             sprite.setPosition(x, y);
         }
-
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<Mirror1Tile>(posX, posY, *texturePtr); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
+    }
     bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) override {
         return false;
     }

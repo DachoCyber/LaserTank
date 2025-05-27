@@ -27,6 +27,7 @@ public:
         posX = x;
         posY = y;
     }
+    virtual std::unique_ptr<Tile> clone() const = 0;
     virtual ~Tile() = default;
     virtual bool isTileMovableBlock() {
         return false;

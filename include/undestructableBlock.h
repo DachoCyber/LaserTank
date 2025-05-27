@@ -4,18 +4,21 @@
 
 class UndestructableBlock : public Tile {
 public:
-    UndestructableBlock(int x, int y) : Tile(x, y) {
+const sf::Texture& texture;
+    UndestructableBlock(int x, int y, const sf::Texture& texture) : Tile(x, y), texture(texture) {
         try {
             walkable = true;
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/undestructibleBlock.png")) {
-               throw new std::runtime_error("Cannot open image undestructibleBlock.png!");
-            }
-            sprite.setTexture(tex);
+            sprite.setTexture(texture);
             sprite.setPosition(x, y);
         }
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
+    }
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<UndestructableBlock>(posX, posY, texture); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
     }
     virtual bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) {
         return false;

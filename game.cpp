@@ -19,7 +19,7 @@ MainGame::MainGame(int windowSizeX, int windowSizeY, int level) :
         player.setGridPosition(playerPos);
         window->setFramerateLimit(60);
         loadGoblet();
-        loadGameOverFont(); 
+        loadGameOverFont();
        
 
 }
@@ -106,14 +106,40 @@ void MainGame::handleInput() {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         pressedKey = sf::Keyboard::Up;
+        playerMoved = true;
+        moveCount++;
+        playerPositions.push_back(std::make_pair<int, int>(player.getGridPosition().x, player.getGridPosition().y - 1));
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         pressedKey = sf::Keyboard::Down;
+        playerMoved = true;
+        moveCount++;
+        playerPositions.push_back(std::make_pair<int, int>(player.getGridPosition().x, player.getGridPosition().y + 1));
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         pressedKey = sf::Keyboard::Left;
+        playerMoved = true;
+        moveCount++;
+        playerPositions.push_back(std::make_pair<int, int>(player.getGridPosition().x - 1, player.getGridPosition().y));
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         pressedKey = sf::Keyboard::Right;
+        playerMoved = true;
+        moveCount++;
+        playerPositions.push_back(std::make_pair<int, int>(player.getGridPosition().x + 1, player.getGridPosition().y));
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         pressedKey = sf::Keyboard::Space;
+        playerMoved = true;
+        moveCount++;
+    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::U) && moveCount > 0) {
+        moveCount--;
+        for(int i = 0; i < tileMap.getTileMap().size(); i++) {
+            for(int j = 0; j < tileMap.getTileMap()[i].size(); j++) {
+                if(WalkableGround* v = dynamic_cast<WalkableGround*>(mapStates.back()[i][j])) {
+                    std::cout << i << " " << j << " " << "walkable ground" << std::endl;
+                }
+                auto newEl = mapStates.back()[i][j]->clone();
+                tileMap.setTilesEl(i, j, std::move(newEl));
+            }
+        }
+        player.setGridPosition(sf::Vector2i(playerPositions[playerPositions.size() - 2].first, playerPositions[playerPositions.size()-2].second));
     }
     if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack() && returnFromTrack && pressedKey != sf::Keyboard::Unknown) {
         returnFromTrack = false;
@@ -123,6 +149,7 @@ void MainGame::handleInput() {
         PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
         
         playerInteraction -> handleMovement();
+        mapStates.push_back(tileMap.getMapState());
         delete playerInteraction;
     }
     sf::Vector2i newGridPos = player.getGridPosition();
@@ -165,7 +192,7 @@ void MainGame::update() {
 
 void MainGame::render() {
     window->clear(sf::Color::White);
-    window->draw(tileMap);
+    window -> draw(tileMap);
     window->draw(player);
     if(bullet != nullptr) {
         window -> draw(*bullet);

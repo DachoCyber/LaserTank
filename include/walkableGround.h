@@ -7,19 +7,22 @@
 
 class WalkableGround : public Tile {
 public:
-    WalkableGround(int x, int y) : Tile(x, y) {
+    const sf::Texture& texture;
+    WalkableGround(int x, int y, const sf::Texture& texture) : Tile(x, y), texture(texture) {
         try {
             walkable = true;
-            if(!tex.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/walkableGround.png")) {
-               throw new std::runtime_error("Cannot open image walkableGround.png!");
-            }
-            sprite.setTexture(tex);
+            sprite.setTexture(texture);
             sprite.setPosition(x, y);
             sprite.setScale(32.f/55.f, 32.f/55.f);
         }
         catch(const std::string& what) {
             std::cerr << what << std::endl;
         }
+    }
+    std::unique_ptr<Tile> clone() const override {
+        auto clone = std::make_unique<WalkableGround>(posX, posY, texture); // Copy constructor
+    clone->sprite = this->sprite; // Copy the sprite
+    return clone;
     }
     virtual bool isWalkableGround() {return true;}
     bool fireBullet() override {

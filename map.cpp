@@ -54,9 +54,59 @@ void Map::loadTextures() {
         throw std::runtime_error("Failed to load mirror 4 texture");
     }
     if(!waterTileTexture.loadFromFile("Images/waterTile.png")) {
-        throw std::runtime_error("Faild to load water tile texture");
+        throw std::runtime_error("Failed to load water tile texture");
     }
+    if(!movableBlockTexture.loadFromFile("Images/MovableBlock.png")) {
+        throw std::runtime_error("Failed to load water tile texture");
+    }
+    if(!flagTexture.loadFromFile("Images/flagWithBackground.png")) {
+        throw std::runtime_error("Failed to load flag texture");
+    }
+    if(!undestructableBlockTex.loadFromFile("Images/undestructibleBlock.png")) {
+        throw std::runtime_error("Failed to load undestructible block texture");
+    }
+    if(!EnemyTank1LeftTexture.loadFromFile("Images/tank1.png")) {
+        throw std::runtime_error("Failed to load enemy tank left texture");
+    }
+    if(!EnemyTank1RightTexture.loadFromFile("Images/tank2.png")) {
+        throw std::runtime_error("Failed to load enemy tank left texture");
+    }
+    if(!EnemyTank1UpTexture.loadFromFile("Images/tank3.png")) {
+        throw std::runtime_error("Failed to load enemy tank up texture");
+    }
+    if(!EnemyTank1DownTexture.loadFromFile("Images/tank4.png")) {
+        throw std::runtime_error("Failed to load enemy tank down texture");
+    }
+    if(!destroyedTankLeftTexture.loadFromFile("Images/destroyedTank1.png")) {
+        throw std::runtime_error("Failed to load destoryed tank left texutre");
+    }
+    if(!destroyedTankUpTexture.loadFromFile("Images/destroyedTank2.png")) {
+        throw std::runtime_error("Failed to load destoryed tank left texutre");
+    }
+    if(!destroyedTankDownTexture.loadFromFile("Images/destroyedTank3.png")) {
+        throw std::runtime_error("Failed to load destoryed tank left texutre");
+    }
+    if(!destroyedTankRightTexture.loadFromFile("Images/destroyedTank4.png")) {
+        throw std::runtime_error("Failed to load destoryed tank left texutre");
+    }
+    if(!transportTrackDownTex.loadFromFile("Images/transportTrack4.png")) {
+        throw std::runtime_error("Failed to load transport track texture");
+    }
+    if(!transportTrackUpTex.loadFromFile("Images/transportTrack3.png")) {
+        throw std::runtime_error("Failed to load transport track 3 texture");
+    }
+    if(!transportTrackRightTex.loadFromFile("Images/transportTrack2.png")) {
+        throw std::runtime_error("Failed to load transport track 3 texture");
+    }
+    if(!transportTrackLeftTex.loadFromFile("Images/transportTrack3.png")) {
+        throw std::runtime_error("Failed to load transport track 3 texture");
+    }
+    if(!tileInWaterTex.loadFromFile("Images/tileInWater.png")) {
+        throw std::runtime_error("Failed to load tile in water texture");
+    }
+
 }
+
 
 void Map::buildMap() {
     
@@ -68,14 +118,14 @@ void Map::buildMap() {
                     playerPosX = x;
                     playerPosY = y;
                     std::cout << playerPosX << " " << playerPosX << std::endl;
-                    tiles[y][x] = std::make_unique<WalkableGround>(x*tileSize, y*tileSize);
+                    tiles[y][x] = std::make_unique<WalkableGround>(x*tileSize, y*tileSize, walkableTexture);
                     break;
                 case 1:
-                    tiles[y][x] = std::make_unique<WalkableGround>(x*tileSize, y*tileSize);
+                    tiles[y][x] = std::make_unique<WalkableGround>(x*tileSize, y*tileSize, walkableTexture);
                     
                     break;
                 case 3:
-                    tiles[y][x] = std::make_unique<DestructibleBlock>(x*tileSize, y*tileSize);
+                    tiles[y][x] = std::make_unique<DestructibleBlock>(x*tileSize, y*tileSize, destructibleTexture);
                     break;
                 case 4:
                     tiles[y][x] = std::make_unique<Mirror1Tile>(x*tileSize, y*tileSize, mirror1Texture);
@@ -94,54 +144,54 @@ void Map::buildMap() {
                     waterTilesCoords.push_back(std::make_pair(y, x));
                     break;
                 case 9:
-                    tiles[y][x] = std::make_unique<MovableBlock>(x*tileSize, y*tileSize);
+                    tiles[y][x] = std::make_unique<MovableBlock>(x*tileSize, y*tileSize, movableBlockTexture);
                     break;
                 case 10:
-                    tiles[y][x] = std::make_unique<Flag>(x*tileSize, y*tileSize);
+                    tiles[y][x] = std::make_unique<Flag>(x*tileSize, y*tileSize, flagTexture);
                     flagCoordX = x*tileSize;
                     flagCoordY = y*tileSize;
                     break;
                 case 11:
-                    tiles[y][x] = std::make_unique<UndestructableBlock>(x*tileSize, y*tileSize);
+                    tiles[y][x] = std::make_unique<UndestructableBlock>(x*tileSize, y*tileSize, undestructableBlockTex);
                     break;
                 case 12: 
-                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 0);
+                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 0, EnemyTank1LeftTexture);
                     break;
                 case 13:
-                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 1);
+                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 1, EnemyTank1RightTexture);
                     break;
                 case 14:
-                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 2);
+                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 2, EnemyTank1UpTexture);
                     break;
                 case 15:
-                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 3);
+                    tiles[y][x] = std::make_unique<EnemyTank1>(x*tileSize, y*tileSize, 3, EnemyTank1DownTexture);
                     break;
                 case 16: 
-                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 0);
+                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 0, destroyedTankLeftTexture);
                     break;
                 case 17:
-                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 1);
+                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 1, destroyedTankUpTexture);
                     break;
                 case 18:
-                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 2);
+                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 2, destroyedTankDownTexture);
                     break;
                 case 19:
-                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 3);
+                    tiles[y][x] = std::make_unique<DestroyedTank>(x*tileSize, y*tileSize, 3, destroyedTankRightTexture);
                     break;
                 case 20:
-                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, LEFT);
+                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, LEFT, transportTrackLeftTex);
                     trackTileCoords.push_back(std::make_tuple(y, x, LEFT));
                     break;
                 case 21:
-                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, RIGHT);
+                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, RIGHT, transportTrackRightTex);
                     trackTileCoords.push_back(std::make_tuple(y, x, RIGHT));
                     break;
                 case 22:
-                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, UP);
+                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, UP, transportTrackUpTex);
                     trackTileCoords.push_back(std::make_tuple(y, x, UP));
                     break;
                 case 23:
-                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, DOWN);
+                    tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, DOWN, transportTrackDownTex);
                     trackTileCoords.push_back(std::make_tuple(y, x, DOWN));
                     break;
                 default:
@@ -158,16 +208,16 @@ void Map::buildMap() {
 void Map :: destroyTank(int bulletGridPosX, int bulletGridPosY, int tankType) {
     switch(tankType) {
         case 1:
-            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 0);
+            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 0, destroyedTankLeftTexture);
             break;
         case 2:
-            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 1);
+            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 1, destroyedTankDownTexture);
             break;
         case 3:
-            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 2);
+            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 2, destroyedTankUpTexture);
             break;
         case 4:
-            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 3);
+            tiles[bulletGridPosY][bulletGridPosX] = std::make_unique<DestroyedTank>(bulletGridPosX*tileSize, bulletGridPosY*tileSize, 3, destroyedTankRightTexture);
             break;
     }
     
@@ -207,7 +257,21 @@ void Map::updateTransportTracks() {
         Direction dir = std::get<2>(coord);
         
         if (!tiles[y][x]->isTransportTrack() && tiles[y][x]->isWalkableGround()) {
-            tiles[y][x] = std::make_unique<TransportTrack>(x * tileSize, y * tileSize, dir);
+            switch(dir) {
+                case LEFT:
+                    tiles[y][x] = std::make_unique<TransportTrack>(x * tileSize, y * tileSize, dir, transportTrackLeftTex);
+                    break;
+                case RIGHT:
+                    tiles[y][x] = std::make_unique<TransportTrack>(x * tileSize, y * tileSize, dir, transportTrackRightTex);
+                    break;
+                case UP:
+                    tiles[y][x] = std::make_unique<TransportTrack>(x * tileSize, y * tileSize, dir, transportTrackUpTex);
+                    break;
+                case DOWN:
+                    tiles[y][x] = std::make_unique<TransportTrack>(x * tileSize, y * tileSize, dir, transportTrackDownTex);
+                    break;
+            }
+            
         }
     }
 }
@@ -217,7 +281,7 @@ void Map :: updateWaterTiles() {
         int x = it -> second;
         int y = it -> first;
         if(tiles[y][x] -> isTileMovableBlock()) {
-            tiles[y][x] = std::make_unique<TileInWater>(x*tileSize, y*tileSize);
+            tiles[y][x] = std::make_unique<TileInWater>(x*tileSize, y*tileSize, tileInWaterTex);
             waterTilesCoords.erase(it);
             //std::cout << "adding tile" << y << " " << x << std::endl;
             tilesInWaterCoords.push_back(std::make_pair(y, x));
@@ -306,18 +370,18 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
         // 5. Handle the old position
         if ((wasWaterTile && movingToWater)) {
             // Restore the water tile
-            tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+            tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize, tileInWaterTex);
             tileMap[oldGridPosY][oldGridPosX] = 8;/* whatever value represents water tiles */
             //std::cout << "jeste " << std::endl;
         } else {
             // Create new walkable ground at old position
                 if(erasedWaterTilesExists) {
-                    tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+                    tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize, tileInWaterTex);
                     tileMap[oldGridPosY][oldGridPosX] = 8;
                 }
                 else {
 
-                    tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+                    tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize, walkableTexture);
                     tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
                 }
             //std::cout << "hereeeee" << std::endl;
@@ -335,7 +399,7 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
                 if(it -> first == newGridPosY && it -> second == newGridPosX) {
                     //if(!exists) {
 
-                        tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+                        tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize, walkableTexture);
                     /*} else {
                         tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX*tileSize, oldGridPosY*tileSize);
                     }*/
@@ -351,8 +415,32 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
         tileMap[newGridPosY][newGridPosX] = tileMap[oldGridPosY][oldGridPosX];
         
         // 5. Create new walkable ground at old position
-        tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize);
+        tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize, walkableTexture);
         tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
         }
         
+    }
+
+    Tile* Map :: getTileFromUniquePtr(std::unique_ptr<Tile> tile) const {
+        return tile.get();
+    }
+
+    std::vector<std::vector<Tile*>> Map::getMapState() const {
+        std::vector<std::vector<Tile*>> mapState(mapHeight); // Initialize outer vector with mapHeight empty vectors
+        
+        for(int i = 0; i < mapHeight; i++) {
+            mapState[i].reserve(mapWidth); // Optional but recommended for performance
+            for(int j = 0; j < mapWidth; j++) {
+                mapState[i].push_back(tiles[i][j].get());
+            }
+        }
+        return mapState;
+    }
+
+    void Map::setTilesEl(size_t i, size_t j, std::unique_ptr<Tile> newElement) {
+        if (i < tiles.size() && j < tiles[i].size()) {
+            tiles[i][j] = std::move(newElement);
+        } else {
+        // Handle out-of-bounds error (throw exception, assert, etc.)
+        }
     }
