@@ -21,6 +21,9 @@ class WaterTile : public Tile {
     bool isUndestructibleBlock() override {
         return false;
     }
+    int code() override {
+        return 8;
+    }
     std::unique_ptr<Tile> clone() const override {
         auto clone = std::make_unique<WaterTile>(posX, posY, *texturePtr); // Copy constructor
     clone->sprite = this->sprite; // Copy the sprite

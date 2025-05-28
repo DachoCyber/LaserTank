@@ -20,6 +20,9 @@ public:
     clone->sprite = this->sprite; // Copy the sprite
     return clone;
     }
+    int code() override {
+        return 10;
+    }
     bool isUndestructibleBlock() override {
         return false;
     }

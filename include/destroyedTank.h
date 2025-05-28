@@ -25,6 +25,9 @@
     clone->sprite = this->sprite; // Copy the sprite
     return clone;
     }
+        int code() override {
+            return 16 + dir;
+        }
 
         Bullet* enemysTankBullet;
 

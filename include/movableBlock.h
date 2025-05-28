@@ -20,6 +20,9 @@ public:
             std::cerr << what << std::endl;
         }
     }
+    int code() override {
+        return 9;
+    }
     std::unique_ptr<Tile> clone() const override {
         auto clone = std::make_unique<MovableBlock>(*this); // Copy constructor
     clone->sprite = this->sprite; // Copy the sprite

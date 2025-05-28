@@ -22,6 +22,9 @@ public:
             std::cerr << what << std::endl;
         }
     }
+    int code() override {
+        return 3;
+    }
     std::unique_ptr<Tile> clone() const override {
         auto clone = std::make_unique<DestructibleBlock>(posX, posY, texture); // Copy constructor
     return clone;

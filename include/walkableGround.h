@@ -19,6 +19,9 @@ public:
             std::cerr << what << std::endl;
         }
     }
+    int code() override {
+        return 1;
+    }
     std::unique_ptr<Tile> clone() const override {
         auto clone = std::make_unique<WalkableGround>(posX, posY, texture); // Copy constructor
     clone->sprite = this->sprite; // Copy the sprite

@@ -24,6 +24,9 @@
             auto clone = std::make_unique<EnemyTank1>(posX, posY, dir, texture); // Copy constructor
     return clone;
         }
+        int code() override {
+            return 12 + dir;
+        }
 
         Bullet* enemysTankBullet;
 

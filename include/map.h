@@ -28,7 +28,7 @@ public:
     void setTilesEl(size_t i, size_t j, std::unique_ptr<Tile> newElement);
 
     Tile* getTileFromUniquePtr(std::unique_ptr<Tile> tile) const;
-    std::vector<std::vector<Tile*>> getMapState() const;
+    std::vector<std::vector<int>> getMapState() const;
     void updateWaterTiles();
     void destroyTank(int bulletGridPosX, int bulletGridPosY, int tankType);
     
@@ -36,6 +36,8 @@ public:
     int getFlagCoordY() const {return flagCoordY;}
     int getPlayerPositionX() const {return playerPosX;}
     int getPlayerPositionY() const {return playerPosY;}
+
+    void undoMove(std::vector<std::vector<int>> lastMapState);
 
     void updateTransportTracks();
     void moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldGridPosX);

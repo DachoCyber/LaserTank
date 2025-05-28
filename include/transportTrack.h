@@ -19,6 +19,18 @@ class TransportTrack : public Tile {
             std::cerr << what << std::endl;
         }
     }
+    int code() override {
+        switch(dir) {
+            case LEFT:
+                return 20;
+            case RIGHT:
+                return 21;
+            case UP:
+                return 22;
+            case DOWN:
+                return 23;
+        }
+    }
     std::unique_ptr<Tile> clone() const override {
         auto clone = std::make_unique<TransportTrack>(posX, posY, dir, texture); // Copy constructor
     clone->sprite = this->sprite; // Copy the sprite

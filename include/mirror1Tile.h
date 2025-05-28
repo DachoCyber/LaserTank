@@ -20,6 +20,9 @@ class Mirror1Tile : public Tile {
     clone->sprite = this->sprite; // Copy the sprite
     return clone;
     }
+    int code() override {
+        return 4;
+    }
     bool isUnderWater(const std::vector<std::pair<int, int>>& waterTileCoords) override {
         return false;
     }

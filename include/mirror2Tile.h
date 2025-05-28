@@ -21,7 +21,9 @@ class Mirror2Tile : public Tile {
     clone->sprite = this->sprite; // Copy the sprite
     return clone;
     }
-
+    int code() override {
+        return 5;
+    }
     bool isWalkable() override {
         return false;
     }
