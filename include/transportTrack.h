@@ -30,6 +30,7 @@ class TransportTrack : public Tile {
             case DOWN:
                 return 23;
         }
+        return -1;
     }
     std::unique_ptr<Tile> clone() const override {
         auto clone = std::make_unique<TransportTrack>(posX, posY, dir, texture); // Copy constructor

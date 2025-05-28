@@ -132,7 +132,6 @@ void MainGame::handleInput() {
         playerPositions.push_back(std::make_pair<int, int>(
             player.getGridPosition().x, player.getGridPosition().y));
         mapStates.push_back(tileMap.getMapState());
-
         PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
         playerInteraction->handleMovement();
         delete playerInteraction;

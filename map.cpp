@@ -117,7 +117,6 @@ void Map::buildMap() {
                 case 0:
                     playerPosX = x;
                     playerPosY = y;
-                    std::cout << playerPosX << " " << playerPosX << std::endl;
                     tiles[y][x] = std::make_unique<WalkableGround>(x*tileSize, y*tileSize, walkableTexture);
                     break;
                 case 1:
@@ -194,6 +193,9 @@ void Map::buildMap() {
                     tiles[y][x] = std::make_unique<TransportTrack>(x*tileSize, y*tileSize, DOWN, transportTrackDownTex);
                     trackTileCoords.push_back(std::make_tuple(y, x, DOWN));
                     break;
+                case 50:
+                    tiles[y][x] = std::make_unique<TileInWater>(x*tileSize, y*tileSize, tileInWaterTex);
+                    break;    
                 default:
                     tiles[y][x] = nullptr; 
                     break;
@@ -282,12 +284,12 @@ void Map :: updateWaterTiles() {
         int y = it -> first;
         if(tiles[y][x] -> isTileMovableBlock()) {
             tiles[y][x] = std::make_unique<TileInWater>(x*tileSize, y*tileSize, tileInWaterTex);
+            //tileMap[y][x] = 50;
             waterTilesCoords.erase(it);
             //std::cout << "adding tile" << y << " " << x << std::endl;
             tilesInWaterCoords.push_back(std::make_pair(y, x));
             erasedWaterTiles.push_back(std::make_pair(y, x));
             //std::cout << "pushing tiles in water coords" << y << " " << x << " aaaaaaaaaa" << tilesInWaterCoords.size()<< std::endl;
-            std::cout << "erasing water tile " << it -> first << " " << it -> second << std::endl;
             return;
         }
     }
@@ -342,10 +344,6 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
         //movingToWater = true;
         if(!movingToWater) {
         }
-        std::cout << "water tiles coords list:" << std::endl;
-        for (auto it = waterTilesCoords.begin(); it != waterTilesCoords.end(); ++it) {
-            std::cout << it -> first << "," << it->second << std::endl;
-        }
         bool erasedWaterTilesExists = false;
         for(int i = 0; i < erasedWaterTiles.size(); i++) {
             if(oldGridPosX == erasedWaterTiles[i].second && oldGridPosY == erasedWaterTiles[i].first) {
@@ -361,12 +359,6 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
         // 4. Update tileMap to maintain consistency
         tileMap[newGridPosY][newGridPosX] = tileMap[oldGridPosY][oldGridPosX];
         
-        if(!wasWaterTile) {
-            std::cout << "nije water tile" << std::endl;
-        }
-        if(!movingToWater) {
-            std::cout << "nije moving to water tile" << std::endl;
-        }
         // 5. Handle the old position
         if ((wasWaterTile && movingToWater)) {
             // Restore the water tile
@@ -400,6 +392,7 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
                     //if(!exists) {
 
                         tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize, walkableTexture);
+                        tileMap[oldGridPosY][oldGridPosX] = 1;
                     /*} else {
                         tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX*tileSize, oldGridPosY*tileSize);
                     }*/
@@ -417,8 +410,10 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
         // 5. Create new walkable ground at old position
         tiles[oldGridPosY][oldGridPosX] = std::make_unique<WalkableGround>(oldGridPosX * tileSize, oldGridPosY * tileSize, walkableTexture);
         tileMap[oldGridPosY][oldGridPosX] = 1; // Assuming 1 is walkable ground
+
         }
-        
+        std::cout  << "HERE" << oldGridPosY <<  " " <<  oldGridPosX << " " << tileMap[oldGridPosY][oldGridPosX] << std::endl;
+        std::cout << "HERE" << newGridPosY << " " << newGridPosX <<" " << tileMap[newGridPosY][newGridPosX] << std::endl; 
     }
 
     Tile* Map :: getTileFromUniquePtr(std::unique_ptr<Tile> tile) const {
@@ -528,9 +523,14 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
                         break;
                     case 50:
                         tile = std::make_unique<TileInWater>(x*tileSize, y*tileSize, tileInWaterTex);
+                        break;
                     default:
                         tile = nullptr; 
                         break;
+                }
+                if(y * 16 + x == 235 || y*16 + x == 219) {
+
+                std::cout << "here" << y << " " << x<<" " << tileMap[y][x] << std::endl;
                 }
                 tiles[y][x] = std::move(tile);
             }
