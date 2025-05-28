@@ -98,7 +98,7 @@ void Map::loadTextures() {
     if(!transportTrackRightTex.loadFromFile("Images/transportTrack2.png")) {
         throw std::runtime_error("Failed to load transport track 3 texture");
     }
-    if(!transportTrackLeftTex.loadFromFile("Images/transportTrack3.png")) {
+    if(!transportTrackLeftTex.loadFromFile("Images/transportTrack.png")) {
         throw std::runtime_error("Failed to load transport track 3 texture");
     }
     if(!tileInWaterTex.loadFromFile("Images/tileInWater.png")) {
