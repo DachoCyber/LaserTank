@@ -371,13 +371,13 @@ void Map :: moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldG
         if ((wasWaterTile && movingToWater)) {
             // Restore the water tile
             tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize, tileInWaterTex);
-            tileMap[oldGridPosY][oldGridPosX] = 8;/* whatever value represents water tiles */
+            tileMap[oldGridPosY][oldGridPosX] = 50;/* whatever value represents water tiles */
             //std::cout << "jeste " << std::endl;
         } else {
             // Create new walkable ground at old position
                 if(erasedWaterTilesExists) {
                     tiles[oldGridPosY][oldGridPosX] = std::make_unique<TileInWater>(oldGridPosX * tileSize, oldGridPosY * tileSize, tileInWaterTex);
-                    tileMap[oldGridPosY][oldGridPosX] = 8;
+                    tileMap[oldGridPosY][oldGridPosX] = 50;
                 }
                 else {
 
