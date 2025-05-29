@@ -11,7 +11,7 @@ MainGame::MainGame(int windowSizeX, int windowSizeY, int level) :
     player(tileMap.getPlayerPositionX(), tileMap.getPlayerPositionY(), windowSizeX, windowSizeY),
     windowSizeX(windowSizeX),
     windowSizeY(windowSizeY),
-    bullet(nullptr)
+    bullets(0, nullptr)
 {   
         int playerPosX = tileMap.getPlayerPositionX();
         int playerPosY = tileMap.getPlayerPositionY();
@@ -76,7 +76,15 @@ void MainGame::run() {
     }
 }
 bool MainGame :: playerKilledByEnemy() {
-    return (static_cast<int>(bullet -> getPosition().x/tileSize == player.getGridPosition().x) && static_cast<int>(bullet -> getPosition().y/tileSize == player.getGridPosition().y));
+    for(const auto& bullet : bullets) {
+        
+        
+        bool killed = (static_cast<int>(bullet -> getPosition().x/tileSize == player.getGridPosition().x) && static_cast<int>(bullet -> getPosition().y/tileSize == player.getGridPosition().y));
+        if(killed) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool MainGame :: shouldEnemyFireBullet() {
@@ -88,10 +96,12 @@ bool MainGame :: shouldEnemyFireBullet() {
                     tileMap.getTileMap(),
                     player.getGridPosition().x * tileSize,
                     player.getGridPosition().y * tileSize)) {
-            
+                    std::cout << "now bullet should be fired" << std::endl;
                     tileMap.getTileMap()[i][j]->fireBullet();
-                    bullet = tileMap.getTileMap()[i][j]->getBullet(); 
+                    bullets.push_back(tileMap.getTileMap()[i][j]->getBullet()); 
                     bulletFired = true;
+                    coordXKillerTank = j;
+                    coordYKillerTank = i;
                     return true;
                 }
             }
@@ -162,19 +172,44 @@ void MainGame::update() {
         bulletInteract -> interact();
         delete bulletInteract;
     }
-    if (!bullet && shouldEnemyFireBullet()) {
-        
+    //std::cout << coordXKillerTank << " " << coordYKillerTank << std::endl;
+    if(bullets.size() == 0 || (player.getGridPosition().x != coordXKillerTank && player.getGridPosition().y != coordYKillerTank)) {
+       // std::cout << "should fire bullet " << std::endl;
+    shouldEnemyFireBullet();
     }
-    if (bullet != nullptr) {
-        const sf::Time updateInterval = sf::seconds(1.f/60.f);
-        bullet->update(updateInterval);
-
-        sf::Vector2f bulletPos = bullet->getPosition();
-        if (static_cast<int>(bulletPos.x) / tileSize == player.getGridPosition().x &&
-            static_cast<int>(bulletPos.y) / tileSize == player.getGridPosition().y) {
-            killPlayer = true;
-            bullet = nullptr;
+    else {
+        if(bullets.size() > 0) {
+            std::cout << "bullet vector size is greater than 0"  << std::endl;
         }
+        if(player.getGridPosition().x != coordXKillerTank && player.getGridPosition().y != coordYKillerTank) {
+            std::cout << "player grid position is not coord killer tank position" << std::endl;
+        }
+        std::cout << "bullet not  fired" << std::endl;
+    }
+    if (bullets.size() > 0) {
+        const sf::Time updateInterval = sf::seconds(1.f/60.f);
+        for(int i = 0; i < bullets.size(); i++) {
+            bullets[i]->update(updateInterval);
+        }
+        if(killPlayer) {
+            std::cout << "player should die" << std::endl;
+        }
+        //std::cout << static_cast<int>(bullet->getPosition().x)/tileSize << " " << static_cast<int>(bullet->getPosition().y)/tileSize << std::endl;
+        //std::cout << player.getGridPosition().x << " " << player.getGridPosition().y << std::endl;
+        for(int i = 0; i < bullets.size(); i++) {
+
+            sf::Vector2f bulletPos = bullets[i]->getPosition();
+            if (static_cast<int>(bulletPos.x) / tileSize == player.getGridPosition().x &&
+                static_cast<int>(bulletPos.y) / tileSize == player.getGridPosition().y) {
+                killPlayer = true;
+                //std::fill(bullets.begin(), bullets.end(), nullptr);
+            }
+            if(bullets[i] -> getPosition().x < 0 || bullets[i] -> getPosition().x > windowSizeX ||
+                bullets[i] -> getPosition().y < 0 || bullets[i] -> getPosition().y > windowSizeY) {
+                    bullets.erase(bullets.begin() + i);
+                }
+        }
+
     }
 }
 
@@ -183,8 +218,8 @@ void MainGame::render() {
     window->clear(sf::Color::White);
     window -> draw(tileMap);
     window->draw(player);
-    if(bullet != nullptr) {
-        window -> draw(*bullet);
+    for(int i = 0; i < bullets.size(); i++) {
+        window->draw(*bullets[i]);
     }
     if(gameLost()) {
         window -> draw(gameOverText);

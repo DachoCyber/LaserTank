@@ -53,7 +53,7 @@ private:
 
     bool returnFromTrack = false;
 
-    Bullet* bullet;
+    std::vector<Bullet*> bullets;
     sf::Clock gameClock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     const sf::Time timePerFrame = sf::seconds(1.f/60.f);
@@ -70,7 +70,7 @@ private:
     bool playerMoved = false;
     int moveCount = 0;
     std::vector<std::pair<int, int>> playerPositions;
-
+    int coordXKillerTank, coordYKillerTank;
 
     
 };
