@@ -247,7 +247,7 @@ void MainGame::drawGoblet() {
 
 void MainGame :: loadGoblet() {
     try {
-        if (!gobletTexture.loadFromFile("/home/dalibor/Desktop/LaserTank/Images/goblet.png")) {
+        if (!gobletTexture.loadFromFile("Images/goblet.png")) {
             throw std::runtime_error("Cannot load goblet image");
         }
 
