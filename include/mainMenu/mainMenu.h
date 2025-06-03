@@ -3,6 +3,7 @@
 #include "level.h"
 #include "quit.h"
 #include "start.h"
+#include "editor.h"
 #include <memory>
 #include <iostream>
 
@@ -10,10 +11,12 @@ class MainMenu : public sf::Drawable {
 private:
     Level levels;
     Start start;
-    Quit quit;
-    static constexpr int menuWindowSizeX = 300;
-    static constexpr int menuWindowSizeY = 300;
+    Editor editor;
+    static constexpr int menuWindowSizeX = 450;
+    static constexpr int menuWindowSizeY = 450;
     std::unique_ptr<sf::RenderWindow> window;
+
+    bool editorWinClose = false;
 
 public:
     int level;
@@ -21,7 +24,7 @@ public:
     MainMenu(int levelCount)
         : levels(menuWindowSizeX, menuWindowSizeY, levelCount),
           start(menuWindowSizeX, menuWindowSizeY),
-          quit(menuWindowSizeX, menuWindowSizeY),
+          editor(menuWindowSizeX, menuWindowSizeY, editorWinClose),
           level(-1),
           window(std::make_unique<sf::RenderWindow>(
               sf::VideoMode(menuWindowSizeX, menuWindowSizeY), "Laser Tank", sf::Style::Default)) {}
@@ -45,6 +48,7 @@ public:
                     sf::Vector2f mousePos = window->mapPixelToCoords({event.mouseButton.x, event.mouseButton.y});
                     levels.handleClick(mousePos);
                     start.handleClick(mousePos);
+                    editor.button.handleClick(mousePos);
                 }
             }
 
@@ -52,6 +56,9 @@ public:
                 level = levels.level;
                 window->close();
                 break;
+            }
+            if(editor.button.wasClicked()) {
+                editor.handleClick();
             }
 
             render();
@@ -62,6 +69,7 @@ public:
         window->clear(sf::Color::Black);
         window->draw(levels);
         window->draw(start);
+        window->draw(editor);
         window->display();
     }
 
