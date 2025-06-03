@@ -14,6 +14,7 @@ private:
     Editor editor;
     static constexpr int menuWindowSizeX = 450;
     static constexpr int menuWindowSizeY = 450;
+    std::vector<std::vector<int>> tileMap;
     std::unique_ptr<sf::RenderWindow> window;
 
     bool editorWinClose = false;

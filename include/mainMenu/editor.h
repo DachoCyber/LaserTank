@@ -56,6 +56,7 @@ public:
     sf::Texture transportTrackDownTex;
 
     sf::Texture tileInWaterTex;
+    std::vector<std::vector<int>> tileMap;
 public:
     Editor(int menuWinSizeX, int menuWinSizeY, bool editorWinClose) : button(menuWinSizeX, menuWinSizeY, editorWinClose) {}
     
@@ -68,7 +69,7 @@ public:
     }
 
     void handleClick() {
-        
+        sf::Image destructibleBlock;        
         if(editorWinClose) return;
 
         if (!walkableTexture.loadFromFile("Images/walkableGround.png")) {
@@ -147,34 +148,221 @@ public:
         int windowSizeX = mapSizeX + mapElementsSizeX;
         sf::RenderWindow window(sf::VideoMode(windowSizeX, windowSizeY), "Editor", sf::Style::Default);
 
-        std::vector<std::vector<int>> tileMap;
         std::vector<std::vector<std::unique_ptr<Tile>>> tiles;
         tiles.resize(16);
 
+        
+        sf::Sprite destructibleBlockSprite = createSprite(destructibleTexture, 16, 0, tileSize);
+        sf::Sprite mirror1Sprite = createSprite(mirror1Texture, 17, 0, tileSize);   
+        sf::Sprite mirror2Sprite = createSprite(mirror2Texture, 18, 0, tileSize);
+        sf::Sprite mirror3Sprite = createSprite(mirror3Texture, 16, 1, tileSize);
+        sf::Sprite mirror4Sprite = createSprite(mirror4Texture, 17, 1, tileSize);
 
-        for(int y= 0; y < 16; y++) {
-            for(int x = 0; x < 16; x++) {
-                tiles[y].resize(16);
-                tiles[y][x] = std::make_unique<WalkableGround>(x*tileSize, y*tileSize, walkableTexture);
-            }
+        sf::Sprite waterSprite = createSprite(waterTileTexture, 18, 1, tileSize);
+        sf::Sprite MovableBlockSprite = createSprite(movableBlockTexture, 16, 2, tileSize);
+        sf::Sprite flagSprite = createSprite(flagTexture, 17,2, tileSize);
+        sf::Sprite undestructableBlockSprite = createSprite(undestructableBlockTex, 18, 2, tileSize);
+
+    tileMap.resize(16);
+    for (int y = 0; y < 16; y++) {
+        tiles[y].resize(16);
+        tileMap[y].resize(16);
+        for (int x = 0; x < 16; x++) {
+            tiles[y][x] = std::make_unique<WalkableGround>(x * tileSize, y * tileSize, walkableTexture);
+            
+            tileMap[y][x] = 1;
         }
+    }
 
-        while(window.isOpen()) {
-            sf::Event event;
-            while(window.pollEvent(event)) {
-                if(event.type == sf::Event::Closed) {
-                    window.close();
-                    editorWinClose = true;
+    sf::Vector2i placedTile = {-1, -1};
+    bool placingDestructible = false;
+    bool placingMirror1Sprite = false;
+    bool placingMirror3Sprite = false;
+    bool placingMirror2Sprite = false;
+    bool placingMirror4Sprite = false;
+    bool placingWaterSprite = false;
+    bool placingMovableBlock = false;
+    bool placingFlagSprite = false;
+    bool placingUndestructibleSprite = false;
+    
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+
+                window.close();
+                editorWinClose = true;
+            }
+
+           if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                sf::Vector2f worldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                sf::Vector2i tileCoords = getTileCoords(window);
+                int tileX = tileCoords.x;
+                int tileY = tileCoords.y;
+
+                if (destructibleBlockSprite.getGlobalBounds().contains(worldPos)) {
+                    placingMovableBlock = false;
+                    placingWaterSprite = false;
+                    placingFlagSprite = false;
+                    placingUndestructibleSprite = false;
+                    placingDestructible = true;
+                    placingMirror1Sprite = placingMirror2Sprite = placingMirror3Sprite = false;
+                    placingMirror4Sprite = false;
+                    tileMap[tileY][tileX] = 3;
+                } else if (placingDestructible && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    tileMap[tileY][tileX] = 1;
+                    placeOrRemoveTile<DestructibleBlock>(tileX, tileY, 3, 1, tiles, tileMap, destructibleTexture);
+                }
+
+                if (mirror1Sprite.getGlobalBounds().contains(worldPos)) {
+                    placingMirror1Sprite = true;
+                    placingUndestructibleSprite = false;
+                    placingMovableBlock = false;
+                    placingFlagSprite = false;
+                    placingWaterSprite = false;
+                    placingDestructible = placingMirror2Sprite = placingMirror3Sprite = false;
+                    placingMirror4Sprite = false;
+                } else if (placingMirror1Sprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTile<Mirror1Tile>(tileX, tileY, 4, 1, tiles, tileMap, mirror1Texture);
+                }
+
+                if (mirror2Sprite.getGlobalBounds().contains(worldPos)) {
+                    placingMovableBlock = false;
+                    placingUndestructibleSprite = false;
+                    placingFlagSprite = false;
+                    placingMirror2Sprite = true;
+                    placingWaterSprite = false;
+                    placingDestructible = placingMirror1Sprite = placingMirror3Sprite = false;
+                } else if (placingMirror2Sprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTile<Mirror2Tile>(tileX, tileY, 5, 1, tiles, tileMap, mirror2Texture);
+                }
+
+                if(mirror3Sprite.getGlobalBounds().contains(worldPos)) {
+                    placingMirror3Sprite = true;
+                    placingUndestructibleSprite = false;
+                    placingMovableBlock = false;
+                    placingFlagSprite = false;
+                    placingWaterSprite = false;
+                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
+                } else if (placingMirror3Sprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTile<Mirror3Tile>(tileX, tileY, 6, 1, tiles, tileMap, mirror3Texture);
+                }
+
+                if(mirror4Sprite.getGlobalBounds().contains(worldPos)) {
+                    placingMirror4Sprite = true;
+                    placingWaterSprite = false;
+                    placingUndestructibleSprite = false;
+                    placingFlagSprite = false;
+                    placingMovableBlock = false;
+                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
+                    placingMirror3Sprite = false;
+                } else if (placingMirror4Sprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTile<Mirror4Tile>(tileX, tileY, 7, 1, tiles, tileMap, mirror4Texture);
+                }
+                if(waterSprite.getGlobalBounds().contains(worldPos)) {
+                    placingMirror4Sprite = false;
+                    placingUndestructibleSprite = false;
+                    placingWaterSprite = true;
+                    placingFlagSprite = false;
+                    placingMovableBlock = false;
+                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
+                    placingMirror3Sprite = false;
+                } else if (placingWaterSprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTile<WaterTile>(tileX, tileY, 8, 1, tiles, tileMap, waterTileTexture);
+                }
+                if(MovableBlockSprite.getGlobalBounds().contains(worldPos)) {
+                    placingMirror4Sprite = false;
+                    placingUndestructibleSprite = false;
+                    placingWaterSprite = false;
+                    placingFlagSprite = false;
+                    placingMovableBlock = true;
+                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
+                    placingMirror3Sprite = false;
+                } else if (placingMovableBlock && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTile<MovableBlock>(tileX, tileY, 9, 1, tiles, tileMap, movableBlockTexture);
+                }
+                if(flagSprite.getGlobalBounds().contains(worldPos)) {
+                    placingMirror4Sprite = false;
+                    placingUndestructibleSprite = false;
+                    placingWaterSprite = false;
+                    placingFlagSprite = true;
+                    placingMovableBlock = false;
+                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
+                    placingMirror3Sprite = false;
+                } else if (placingFlagSprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTile<Flag>(tileX, tileY, 10, 1, tiles, tileMap, flagTexture);
+                }
+
+                if(undestructableBlockSprite.getGlobalBounds().contains(worldPos)) {
+                    placingMirror4Sprite = false;
+                    placingUndestructibleSprite = true;
+                    placingWaterSprite = false;
+                    placingFlagSprite = false;
+                    placingMovableBlock = false;
+                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
+                    placingMirror3Sprite = false;
+                } else if (placingUndestructibleSprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTile<UndestructableBlock>(tileX, tileY, 11, 1, tiles, tileMap, undestructableBlockTex);
                 }
             }
-            window.clear();
-            for(int i = 0; i < 16; i++) {
-                for(int j = 0; j < 16; j++) {
-                    window.draw(*tiles[i][j]);
-                }
-            }
-            window.display();
+
         }
+
+        window.clear();
+        for (int y = 0; y < 16; ++y)
+            for (int x = 0; x < 16; ++x)
+                window.draw(*tiles[y][x]);
+
+        window.draw(destructibleBlockSprite);
+        window.draw(mirror1Sprite);
+        window.draw(mirror2Sprite);
+        window.draw(mirror3Sprite);
+        window.draw(mirror4Sprite);
+        window.draw(waterSprite);
+        window.draw(MovableBlockSprite);
+        window.draw(flagSprite);
+        window.draw(undestructableBlockSprite);
+        window.display();
+    }
 
     }
+
+    sf::Vector2i getTileCoords(sf::RenderWindow& window) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+        return { static_cast<int>(worldPos.x) / tileSize, static_cast<int>(worldPos.y) / tileSize };
+    }
+
+    template<typename TileType>
+    void placeOrRemoveTile(
+        int tileX, int tileY, 
+        int placeID, int removeID,
+        std::vector<std::vector<std::unique_ptr<Tile>>>& tiles,
+        std::vector<std::vector<int>>& tileMap,
+        sf::Texture& tileTexture
+    ) 
+    {
+
+        if (dynamic_cast<TileType*>(tiles[tileY][tileX].get())) {
+            tileMap[tileY][tileX] = removeID;
+            tiles[tileY][tileX] = std::make_unique<WalkableGround>(tileX * tileSize, tileY * tileSize, walkableTexture);
+        } else {
+            tileMap[tileY][tileX] = placeID;
+            tiles[tileY][tileX] = std::make_unique<TileType>(tileX * tileSize, tileY * tileSize, tileTexture);
+        }
+    }
+
+    sf::Sprite createSprite(sf::Texture& texture, int gridX, int gridY, int tileSize) {
+    sf::Sprite sprite(texture);
+    sprite.setScale(sf::Vector2f(
+        tileSize / sprite.getGlobalBounds().width,
+        tileSize / sprite.getGlobalBounds().height
+    ));
+    sprite.setPosition(static_cast<float>(gridX * tileSize), static_cast<float>(gridY * tileSize));
+    return sprite;
+}
+
+
+
 };
