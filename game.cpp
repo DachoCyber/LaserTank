@@ -20,6 +20,8 @@ MainGame::MainGame(int windowSizeX, int windowSizeY, int level) :
         window->setFramerateLimit(60);
         loadGoblet();
         loadGameOverFont();
+        
+
 
         playerPositions.push_back(std::make_pair<int, int>(static_cast<unsigned>(playerPosX), static_cast<unsigned>(playerPosY)));
        
@@ -31,9 +33,12 @@ void MainGame::run() {
     while (window->isOpen()) {
         if (!gameEnd()) {
             
-            if(tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x] -> isTransportTrack() && !returnFromTrack) {
-                std::cout << "jeste" << std::endl;
+            if(windowEnableRepeatMovement.getElapsedTime() >= windowEnableRepMovTime) {
+                isRepeatMovEnabled = true;
+                windowEnableRepeatMovement.restart();
             }
+            
+
             sf::Event event;
             while (window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
@@ -102,6 +107,9 @@ bool MainGame :: shouldEnemyFireBullet() {
                     bulletFired = true;
                     coordXKillerTank = j;
                     coordYKillerTank = i;
+
+                    isRepeatMovEnabled = false;
+                    window -> setKeyRepeatEnabled(false);
                     return true;
                 }
             }
@@ -141,10 +149,10 @@ void MainGame::handleInput() {
         // Save state BEFORE movement
         playerPositions.push_back(std::make_pair<int, int>(
             player.getGridPosition().x, player.getGridPosition().y));
-        mapStates.push_back(tileMap.getMapState());
-        PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
-        playerInteraction->handleMovement();
-        delete playerInteraction;
+            mapStates.push_back(tileMap.getMapState());
+            PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
+            playerInteraction->handleMovement();
+            delete playerInteraction;
 
         playerMoved = true;
         moveCount++;
@@ -157,6 +165,10 @@ void MainGame::handleInput() {
 
 
 void MainGame::update() {
+
+    if(isRepeatMovEnabled) {
+        window -> setKeyRepeatEnabled(true);
+    }
 
     for(int i = 0; i < tileMap.getTileMap().size(); i++) {
         for(int j = 0; j < tileMap.getTileMap()[i].size(); j++) {

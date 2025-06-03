@@ -72,5 +72,7 @@ private:
     std::vector<std::pair<int, int>> playerPositions;
     int coordXKillerTank, coordYKillerTank;
 
-    
+    sf::Clock windowEnableRepeatMovement;
+    const sf::Time windowEnableRepMovTime = sf::seconds(0.5f);
+    bool isRepeatMovEnabled = false;
 };
