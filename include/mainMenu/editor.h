@@ -2,6 +2,8 @@
 
 #include "editorButton.h"
 
+#include <filesystem>
+
 
 #include "../tile.h"
 #include "../destructibleBlock.h"
@@ -18,6 +20,8 @@
 #include "../tileInWater.h"
 
 #include "../flag.h"
+
+#include <fstream>
 
 #include <vector>
 
@@ -54,6 +58,8 @@ public:
     sf::Texture transportTrackUpTex;
     sf::Texture transportTrackRightTex;
     sf::Texture transportTrackDownTex;
+
+    sf::Texture tankTex;
 
     sf::Texture tileInWaterTex;
     std::vector<std::vector<int>> tileMap;
@@ -126,6 +132,7 @@ public:
     if(!destroyedTankRightTexture.loadFromFile("Images/destroyedTank4.png")) {
         throw std::runtime_error("Failed to load destoryed tank left texutre");
     }
+
     if(!transportTrackDownTex.loadFromFile("Images/transportTrack4.png")) {
         throw std::runtime_error("Failed to load transport track texture");
     }
@@ -141,6 +148,10 @@ public:
     if(!tileInWaterTex.loadFromFile("Images/tileInWater.png")) {
         throw std::runtime_error("Failed to load tile in water texture");
     } 
+    if(!tankTex.loadFromFile("Images/tank.png")) {
+        throw std::runtime_error("Failed to load tank texture");
+    }
+
 
         int mapSizeX = 512;
         int windowSizeY = 512;
@@ -150,6 +161,9 @@ public:
 
         std::vector<std::vector<std::unique_ptr<Tile>>> tiles;
         tiles.resize(16);
+
+        bool tankPlaced = false;
+        bool flagPlaced = false;
 
         
         sf::Sprite destructibleBlockSprite = createSprite(destructibleTexture, 16, 0, tileSize);
@@ -163,6 +177,19 @@ public:
         sf::Sprite flagSprite = createSprite(flagTexture, 17,2, tileSize);
         sf::Sprite undestructableBlockSprite = createSprite(undestructableBlockTex, 18, 2, tileSize);
 
+        sf::Sprite tank1LeftSprite = createSprite(EnemyTank1LeftTexture, 16, 3, tileSize);
+        sf::Sprite tank1RightSprite = createSprite(EnemyTank1RightTexture, 17, 3, tileSize);
+        sf::Sprite tank1UpSprite = createSprite(EnemyTank1UpTexture, 18, 3, tileSize);
+        sf::Sprite tank1DownSprite = createSprite(EnemyTank1DownTexture, 16, 4, tileSize);
+
+        sf::Sprite transportLeftSprite = createSprite(transportTrackLeftTex, 17, 4, tileSize);
+        sf::Sprite transportDownSprite = createSprite(transportTrackDownTex, 18, 4, tileSize);
+        sf::Sprite transportUpSprite = createSprite(transportTrackUpTex, 16, 5, tileSize);
+        sf::Sprite transportRightSprite = createSprite(transportTrackRightTex, 17, 5, tileSize);
+
+        sf::Sprite tankSprite(tankTex);
+        tankSprite.setScale(sf::Vector2f(0.65, 0.65)); 
+
     tileMap.resize(16);
     for (int y = 0; y < 16; y++) {
         tiles[y].resize(16);
@@ -175,16 +202,8 @@ public:
     }
 
     sf::Vector2i placedTile = {-1, -1};
-    bool placingDestructible = false;
-    bool placingMirror1Sprite = false;
-    bool placingMirror3Sprite = false;
-    bool placingMirror2Sprite = false;
-    bool placingMirror4Sprite = false;
-    bool placingWaterSprite = false;
-    bool placingMovableBlock = false;
-    bool placingFlagSprite = false;
-    bool placingUndestructibleSprite = false;
-    
+
+    bool placingCode[20] = {false};
 
     while (window.isOpen()) {
         sf::Event event;
@@ -194,6 +213,14 @@ public:
                 window.close();
                 editorWinClose = true;
             }
+            if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right) {
+                sf::Vector2f worldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                sf::Vector2i tileCoords = getTileCoords(window);
+                int tileX = tileCoords.x;
+                int tileY = tileCoords.y;
+                tankSprite.setPosition({static_cast<float>(tileX*tileSize), static_cast<float>(tileY*tileSize)});
+                tankPlaced = true;
+            }
 
            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2f worldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
@@ -202,108 +229,149 @@ public:
                 int tileY = tileCoords.y;
 
                 if (destructibleBlockSprite.getGlobalBounds().contains(worldPos)) {
-                    placingMovableBlock = false;
-                    placingWaterSprite = false;
-                    placingFlagSprite = false;
-                    placingUndestructibleSprite = false;
-                    placingDestructible = true;
-                    placingMirror1Sprite = placingMirror2Sprite = placingMirror3Sprite = false;
-                    placingMirror4Sprite = false;
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[3] = true;
                     tileMap[tileY][tileX] = 3;
-                } else if (placingDestructible && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                } else if (placingCode[3] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     tileMap[tileY][tileX] = 1;
                     placeOrRemoveTile<DestructibleBlock>(tileX, tileY, 3, 1, tiles, tileMap, destructibleTexture);
                 }
 
                 if (mirror1Sprite.getGlobalBounds().contains(worldPos)) {
-                    placingMirror1Sprite = true;
-                    placingUndestructibleSprite = false;
-                    placingMovableBlock = false;
-                    placingFlagSprite = false;
-                    placingWaterSprite = false;
-                    placingDestructible = placingMirror2Sprite = placingMirror3Sprite = false;
-                    placingMirror4Sprite = false;
-                } else if (placingMirror1Sprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[4] = true;
+                } else if (placingCode[4] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     placeOrRemoveTile<Mirror1Tile>(tileX, tileY, 4, 1, tiles, tileMap, mirror1Texture);
                 }
 
                 if (mirror2Sprite.getGlobalBounds().contains(worldPos)) {
-                    placingMovableBlock = false;
-                    placingUndestructibleSprite = false;
-                    placingFlagSprite = false;
-                    placingMirror2Sprite = true;
-                    placingWaterSprite = false;
-                    placingDestructible = placingMirror1Sprite = placingMirror3Sprite = false;
-                } else if (placingMirror2Sprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[5] = true;
+                } else if (placingCode[5] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     placeOrRemoveTile<Mirror2Tile>(tileX, tileY, 5, 1, tiles, tileMap, mirror2Texture);
                 }
 
                 if(mirror3Sprite.getGlobalBounds().contains(worldPos)) {
-                    placingMirror3Sprite = true;
-                    placingUndestructibleSprite = false;
-                    placingMovableBlock = false;
-                    placingFlagSprite = false;
-                    placingWaterSprite = false;
-                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
-                } else if (placingMirror3Sprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[6] = true;
+                } else if (placingCode[6] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     placeOrRemoveTile<Mirror3Tile>(tileX, tileY, 6, 1, tiles, tileMap, mirror3Texture);
                 }
 
                 if(mirror4Sprite.getGlobalBounds().contains(worldPos)) {
-                    placingMirror4Sprite = true;
-                    placingWaterSprite = false;
-                    placingUndestructibleSprite = false;
-                    placingFlagSprite = false;
-                    placingMovableBlock = false;
-                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
-                    placingMirror3Sprite = false;
-                } else if (placingMirror4Sprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[7] = true;
+                } else if (placingCode[7] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     placeOrRemoveTile<Mirror4Tile>(tileX, tileY, 7, 1, tiles, tileMap, mirror4Texture);
                 }
                 if(waterSprite.getGlobalBounds().contains(worldPos)) {
-                    placingMirror4Sprite = false;
-                    placingUndestructibleSprite = false;
-                    placingWaterSprite = true;
-                    placingFlagSprite = false;
-                    placingMovableBlock = false;
-                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
-                    placingMirror3Sprite = false;
-                } else if (placingWaterSprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[8] = true;
+                } else if (placingCode[8] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     placeOrRemoveTile<WaterTile>(tileX, tileY, 8, 1, tiles, tileMap, waterTileTexture);
                 }
                 if(MovableBlockSprite.getGlobalBounds().contains(worldPos)) {
-                    placingMirror4Sprite = false;
-                    placingUndestructibleSprite = false;
-                    placingWaterSprite = false;
-                    placingFlagSprite = false;
-                    placingMovableBlock = true;
-                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
-                    placingMirror3Sprite = false;
-                } else if (placingMovableBlock && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[9] = true;
+                } else if (placingCode[9] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     placeOrRemoveTile<MovableBlock>(tileX, tileY, 9, 1, tiles, tileMap, movableBlockTexture);
                 }
                 if(flagSprite.getGlobalBounds().contains(worldPos)) {
-                    placingMirror4Sprite = false;
-                    placingUndestructibleSprite = false;
-                    placingWaterSprite = false;
-                    placingFlagSprite = true;
-                    placingMovableBlock = false;
-                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
-                    placingMirror3Sprite = false;
-                } else if (placingFlagSprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[10] = true;
+                    flagPlaced = true;
+                } else if (placingCode[10] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     placeOrRemoveTile<Flag>(tileX, tileY, 10, 1, tiles, tileMap, flagTexture);
                 }
 
                 if(undestructableBlockSprite.getGlobalBounds().contains(worldPos)) {
-                    placingMirror4Sprite = false;
-                    placingUndestructibleSprite = true;
-                    placingWaterSprite = false;
-                    placingFlagSprite = false;
-                    placingMovableBlock = false;
-                    placingDestructible = placingMirror1Sprite = placingMirror2Sprite = false;
-                    placingMirror3Sprite = false;
-                } else if (placingUndestructibleSprite && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[11] = true;
+                } else if (placingCode[11] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
                     placeOrRemoveTile<UndestructableBlock>(tileX, tileY, 11, 1, tiles, tileMap, undestructableBlockTex);
+                }
+                if(tank1LeftSprite.getGlobalBounds().contains(worldPos)) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[12] = true;
+                } else if (placingCode[12] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTank(tileX, tileY, 12, 1, tiles, tileMap,LEFT, EnemyTank1LeftTexture);
+                }
+
+                if(tank1RightSprite.getGlobalBounds().contains(worldPos)) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[13] = true;
+                } else if (placingCode[13] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTank(tileX, tileY, 13, 1, tiles, tileMap,RIGHT, EnemyTank1RightTexture);
+                }
+                if(tank1UpSprite.getGlobalBounds().contains(worldPos)) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[14] = true;
+                } else if (placingCode[14] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTank(tileX, tileY, 14, 1, tiles, tileMap,UP, EnemyTank1UpTexture);
+                }
+                if(tank1DownSprite.getGlobalBounds().contains(worldPos)) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[15] = true;
+                } else if (placingCode[15] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTank(tileX, tileY, 15, 1, tiles, tileMap,DOWN, EnemyTank1DownTexture);
+                }
+                if(transportDownSprite.getGlobalBounds().contains(worldPos)) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[16] = true;
+                } else if (placingCode[16] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTrack(tileX, tileY, 16, 1, tiles, tileMap,DOWN, transportTrackDownTex);
+                }
+                if(transportUpSprite.getGlobalBounds().contains(worldPos)) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[17] = true;
+                } else if (placingCode[17] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTrack(tileX, tileY, 17, 1, tiles, tileMap,UP, transportTrackUpTex);
+                }
+                if(transportLeftSprite.getGlobalBounds().contains(worldPos)) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[17] = true;
+                } else if (placingCode[17] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTrack(tileX, tileY, 17, 1, tiles, tileMap,LEFT, transportTrackLeftTex);
+                }
+                if(transportRightSprite.getGlobalBounds().contains(worldPos)) {
+                    for(int i = 0; i < 20; i++) {
+                        placingCode[i] = false;
+                    }
+                    placingCode[17] = true;
+                } else if (placingCode[17] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
+                    placeOrRemoveTrack(tileX, tileY, 17, 1, tiles, tileMap,RIGHT, transportTrackRightTex);
                 }
             }
 
@@ -323,8 +391,72 @@ public:
         window.draw(MovableBlockSprite);
         window.draw(flagSprite);
         window.draw(undestructableBlockSprite);
+        window.draw(tank1LeftSprite);
+        window.draw(tank1DownSprite);
+        window.draw(tank1UpSprite);
+        window.draw(tank1RightSprite);
+        window.draw(transportDownSprite);
+        window.draw(transportLeftSprite);
+        window.draw(transportRightSprite);
+        window.draw(transportUpSprite);
+
+        if(tankPlaced) {
+            window.draw(tankSprite);
+        }
+
         window.display();
     }
+        if (tankPlaced && flagPlaced) {
+            int height = 16;
+            int width = 16;
+        std::string folder = "maps/";
+    std::string levelName = generateNextMapFilename(folder); // already includes .tmx
+
+    std::cout << levelName << std::endl;
+
+    std::ofstream file(folder + levelName);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file for writing!\n";
+        return;
+    }
+
+    int levelIndex = extractLevelIndex(levelName);
+    std::cout << "Creating level " << levelIndex << " with filename: " << levelName << std::endl;
+
+    // proceed to write to file...
+
+    // Replace .tmx if not present
+    if (levelName.find(".tmx") == std::string::npos)
+        levelName += ".tmx";
+
+
+    file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    file << "<map version=\"1.0\" tiledversion=\"1.9.2\" orientation=\"orthogonal\" renderorder=\"right-down\" ";
+    file << "width=\"" << width << "\" height=\"" << height << "\" tilewidth=\"32\" tileheight=\"32\" infinite=\"0\">\n";
+    file << "  <tileset firstgid=\"1\" name=\"tileset\" tilewidth=\"32\" tileheight=\"32\" tilecount=\"10\" columns=\"10\">\n";
+    file << "    <image source=\"tileset.png\" width=\"320\" height=\"32\"/>\n";
+    file << "  </tileset>\n";
+    file << "  <layer name=\"Tile Layer 1\" width=\"" << width << "\" height=\"" << height << "\">\n";
+    file << "    <data encoding=\"csv\">\n";
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            file << tileMap[y][x];
+            if (x < width - 1) file << ",";
+        }
+        if (y < height - 1) file << ",\n";
+        else file << "\n";
+    }
+
+    file << "    </data>\n";
+    file << "  </layer>\n";
+    file << "</map>\n";
+
+    file.close();
+    std::cout << "Map saved to 'maps/" << levelName << "'\n";
+}
+
+        
 
     }
 
@@ -332,6 +464,46 @@ public:
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
         return { static_cast<int>(worldPos.x) / tileSize, static_cast<int>(worldPos.y) / tileSize };
+    }
+
+    void placeOrRemoveTank(
+        int tileX, int tileY, 
+        int placeID, int removeID,
+        std::vector<std::vector<std::unique_ptr<Tile>>>& tiles,
+        std::vector<std::vector<int>>& tileMap, Direction dir,
+        sf::Texture& tileTexture
+    ) 
+    {
+
+        if (dynamic_cast<EnemyTank1*>(tiles[tileY][tileX].get())) {
+            tileMap[tileY][tileX] = removeID;
+            tiles[tileY][tileX] = std::make_unique<WalkableGround>(tileX * tileSize, tileY * tileSize, walkableTexture);
+        } else {
+            tileMap[tileY][tileX] = placeID;
+        
+
+            tiles[tileY][tileX] = std::make_unique<EnemyTank1>(tileX * tileSize, tileY * tileSize, dir, tileTexture);
+        }
+    }
+
+    void placeOrRemoveTrack(
+        int tileX, int tileY, 
+        int placeID, int removeID,
+        std::vector<std::vector<std::unique_ptr<Tile>>>& tiles,
+        std::vector<std::vector<int>>& tileMap, Direction dir,
+        sf::Texture& tileTexture
+    ) 
+    {
+
+        if (dynamic_cast<TransportTrack*>(tiles[tileY][tileX].get())) {
+            tileMap[tileY][tileX] = removeID;
+            tiles[tileY][tileX] = std::make_unique<WalkableGround>(tileX * tileSize, tileY * tileSize, walkableTexture);
+        } else {
+            tileMap[tileY][tileX] = placeID;
+        
+
+            tiles[tileY][tileX] = std::make_unique<TransportTrack>(tileX * tileSize, tileY * tileSize, dir, tileTexture);
+        }
     }
 
     template<typename TileType>
@@ -355,14 +527,52 @@ public:
 
     sf::Sprite createSprite(sf::Texture& texture, int gridX, int gridY, int tileSize) {
     sf::Sprite sprite(texture);
-    sprite.setScale(sf::Vector2f(
-        tileSize / sprite.getGlobalBounds().width,
-        tileSize / sprite.getGlobalBounds().height
-    ));
-    sprite.setPosition(static_cast<float>(gridX * tileSize), static_cast<float>(gridY * tileSize));
-    return sprite;
-}
+        sprite.setScale(sf::Vector2f(
+            tileSize / sprite.getGlobalBounds().width,
+            tileSize / sprite.getGlobalBounds().height
+        ));
+        sprite.setPosition(static_cast<float>(gridX * tileSize), static_cast<float>(gridY * tileSize));
+        return sprite;
+    }
 
 
+    std::string generateNextMapFilename(const std::string& folderPath) {
+        namespace fs = std::filesystem;
+
+        int maxIndex = 0;
+
+        for (const auto& entry : fs::directory_iterator(folderPath)) {
+            if (entry.is_regular_file()) {
+                std::string filename = entry.path().filename().string();
+
+                // Check if the file starts with "map" and ends with ".tmx"
+                if (filename.size() > 7 && filename.substr(0, 3) == "map" &&
+                    filename.substr(filename.size() - 4) == ".tmx") {
+
+                    // Extract the number part
+                    std::string numberPart = filename.substr(3, filename.size() - 7);
+                    try {
+                        int index = std::stoi(numberPart);
+                        if (index > maxIndex)
+                            maxIndex = index;
+                    } catch (...) {
+                        // Not a valid number, ignore
+                    }
+                }
+            }
+        }
+
+        return "map" + std::to_string(maxIndex + 1) + ".tmx";
+    }
+    int extractLevelIndex(const std::string& levelName) {
+    // Assumes format is "map<number>.tmx"
+        if (levelName.substr(0, 3) != "map" || levelName.size() <= 7 || 
+            levelName.substr(levelName.size() - 4) != ".tmx") {
+            throw std::invalid_argument("Invalid level name format");
+        }
+
+        std::string numberPart = levelName.substr(3, levelName.size() - 7); // removes "map" and ".tmx"
+        return std::stoi(numberPart);
+    }
 
 };

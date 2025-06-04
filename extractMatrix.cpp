@@ -1,6 +1,7 @@
 #include "tinyxml2/tinyxml2.h"
 #include "include/extractMatrix.h"
 #include <sstream>
+#include <string.h>
 
 using namespace tinyxml2;
 
@@ -9,30 +10,9 @@ void readMapFromXML(std::vector<std::vector<int>>& map, int level) {
     map.resize(N, std::vector<int>(N));
 
     XMLDocument doc;
-    XMLError res;
-    switch(level) {
-        case 1:
-            res = doc.LoadFile("maps/map1.tmx");
-            break;
-        case 2:
-            res = doc.LoadFile("maps/map2.tmx");
-            break;
-        case 3:
-            res = doc.LoadFile("maps/map3.tmx");
-            break;
-        case 4:
-            res = doc.LoadFile("maps/map4.tmx");
-            break;
-        case 5:
-            res = doc.LoadFile("maps/map5.tmx");
-            break;
-        case 6:
-            res = doc.LoadFile("maps/map6.tmx");
-            break;
-        case 7:
-            res = doc.LoadFile("maps/map7.tmx");
-            break;
-    }
+    std::string filename = "maps/map" + std::to_string(level) + ".tmx";
+
+    XMLError res = doc.LoadFile(filename.c_str());
 
     if(res != XML_SUCCESS) {
         throw std::runtime_error("Failed to load file map...");
