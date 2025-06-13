@@ -39,6 +39,9 @@
     <ClCompile Include="playerInteraction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sfmlWeb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\bullet.h">
@@ -132,6 +135,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="tinyxml2\tinyxml2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\curl-8.14.1_1-win32-mingw\include\curl\curl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\movesProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

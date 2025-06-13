@@ -15,6 +15,8 @@ public:
     bool gameEnd();
     bool gameLost();
     bool gameWon();
+    
+    int getMovesCount() { return movesPlayed; }
 private:
     void loadGoblet();
     void drawGoblet();
@@ -77,4 +79,5 @@ private:
     sf::Clock windowEnableRepeatMovement;
     const sf::Time windowEnableRepMovTime = sf::seconds(0.5f);
     bool isRepeatMovEnabled = false;
+    int movesPlayed = 0;
 };

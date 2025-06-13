@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 
+
 #include "resources.h"
 
 class Level : public sf::Drawable {
@@ -133,7 +134,9 @@ public:
         levelRectShape.setSize(sf::Vector2f(static_cast<float>(menuSizeX)*6/15, static_cast<float>(menuSizeY)/5));
         levelRectShape.setFillColor(sf::Color::White);
         levelRectShape.setPosition(sf::Vector2f((static_cast<float>(menuSizeX)) / 3, (static_cast<float>(menuSizeY*12)/30)));
-        
+        sf::Color rectColor = levelRectShape.getFillColor();
+        rectColor.a = 0;
+        levelRectShape.setFillColor(rectColor);
 
         
         
@@ -161,5 +164,9 @@ public:
             openMenuWindow();
             menuWindowOpen = true;
         }
+    }
+
+    void setTextColor(sf::Color color) {
+        levelText.setFillColor(color);
     }
 };

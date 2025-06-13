@@ -21,6 +21,7 @@ public:
 
         editorText.setFont(globalFont);
         editorText.setCharacterSize(24);
+
         editorText.setString("Editor");
         editorText.setFillColor(sf::Color::Black);
 
@@ -30,6 +31,9 @@ public:
             editorButton.getPosition().x + (editorButton.getSize().x - textWidth) / 2.f,
             editorButton.getPosition().y + (editorButton.getSize().y - textHeight) / 2.f - 5.f
         );
+        sf::Color rectColor = editorButton.getFillColor();
+        rectColor.a = 0;
+        editorButton.setFillColor(rectColor);
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {

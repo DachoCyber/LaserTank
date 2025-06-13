@@ -26,6 +26,9 @@ public:
             startButton.getPosition().x + (startButton.getSize().x - textWidth) / 2.f,
             startButton.getPosition().y + (startButton.getSize().y - textHeight) / 2.f - 5.f
         );
+        sf::Color rectColor = startButton.getFillColor();
+        rectColor.a = 0;
+        startButton.setFillColor(rectColor);
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {

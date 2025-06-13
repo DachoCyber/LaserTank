@@ -54,8 +54,10 @@ void MainGame::run() {
                     window->close();
                     isWindowClosed = true;
                 }
-                if (event.type == sf::Event::KeyPressed && (!tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() || returnFromTrack) && (tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() || !bulletFired))
+                if (event.type == sf::Event::KeyPressed && (!tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() || returnFromTrack) && (tileMap.getTileMap()[player.getGridPosition().y][player.getGridPosition().x]->isTransportTrack() || !bulletFired)) {
+
                     handleInput();
+                }
             }
 
             tileMap.updateTransportTracks();
@@ -138,23 +140,31 @@ void MainGame::handleInput() {
     sf::Keyboard::Key pressedKey = sf::Keyboard::Unknown;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        movesPlayed++;
         pressedKey = sf::Keyboard::Up;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        movesPlayed++;
         pressedKey = sf::Keyboard::Down;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        movesPlayed++;
         pressedKey = sf::Keyboard::Left;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        movesPlayed++;
         pressedKey = sf::Keyboard::Right;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        movesPlayed++;
         pressedKey = sf::Keyboard::Space;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::U) && moveCount > 0) {
         moveCount--;
-
+        movesPlayed--;
         tileMap.undoMove(mapStates.back());
 
         player.setGridPosition(sf::Vector2i(
             playerPositions[playerPositions.size() - 2].first,
             playerPositions[playerPositions.size() - 2].second));
+
+        std::cout << "Setting player position " << playerPositions[playerPositions.size() - 2].first << " " << playerPositions[playerPositions.size() - 2].second << std::endl;
+    
 
         playerPositions.pop_back(); // Remove last move
         mapStates.pop_back();
@@ -163,13 +173,16 @@ void MainGame::handleInput() {
 
     if (pressedKey != sf::Keyboard::Unknown) {
         // Save state BEFORE movement
-        playerPositions.push_back(std::make_pair<int, int>(
-            player.getGridPosition().x, player.getGridPosition().y));
+        std::cout << "Pushing player position: " << player.getGridPosition().x << " " << player.getGridPosition().y << std::endl;
+        
+
             mapStates.push_back(tileMap.getMapState());
             PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
             playerInteraction->handleMovement();
             delete playerInteraction;
 
+        playerPositions.push_back(std::make_pair<int, int>(
+            player.getGridPosition().x, player.getGridPosition().y));
         playerMoved = true;
         moveCount++;
     }

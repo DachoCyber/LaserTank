@@ -3,7 +3,11 @@
 
 #include "include/mainMenu/resources.h"
 
+#include "include/movesProcessor.h"
+
 #include <filesystem>
+#include <curl/curl.h>
+
 namespace fs = std::filesystem;
 
 int countMapFiles(const std::string& folderPath) {
@@ -52,9 +56,21 @@ int main() {
             game.run();
             getIsClosed = !game.getWindowClosedState();
             if (game.gameWon()) {
+                
                 std::cout << "game won" << std::endl;
-                chosenLevel = (chosenLevel + 1) % levelCount;
                 enterAnotherLevel = true;
+                
+                std::cout << game.getMovesCount() << std::endl;
+                std::cout << "Enter initials: ";
+                
+                std::string initials;
+                std::cin >> initials;
+                curl_global_init(CURL_GLOBAL_ALL);
+                sendScore(initials, game.getMovesCount(), chosenLevel);
+                curl_global_cleanup();
+
+
+                chosenLevel = (chosenLevel + 1) % levelCount;
             }
         }
         std::cout << getIsClosed << std::endl;
