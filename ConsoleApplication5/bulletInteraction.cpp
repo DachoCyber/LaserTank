@@ -37,6 +37,9 @@ void BulletInteraction :: interact() {
     if (bulletGridPosX >= 0 && bulletGridPosX < tileMap.getTileMap()[0].size() &&
     bulletGridPosY >= 0 && bulletGridPosY < tileMap.getTileMap().size()) {
         
+        
+        //::cout << "jeste " << std::endl;
+
         int tankType = tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isTank();
         bool deleted = false;
         if(tankType == 1) {
@@ -45,32 +48,32 @@ void BulletInteraction :: interact() {
                 return;
             }
             player.deleteBullet();
-            std::cout << "bullet direction is right" << std::endl;
+            //std::cout << "bullet direction is right" << std::endl;
         } else if(tankType == 2) {
             if(player.getBullet()->dir == LEFT) {
                 tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 4);
                 return;
             }
             player.deleteBullet();
-            std::cout << "bullet direction is left" << std::endl;
+           // std::cout << "bullet direction is left" << std::endl;
 
         } else if(tankType == 3) {
             if(player.getBullet()->dir == DOWN) {
                 tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 2);
                 return;
             }
-            std::cout << "bullet direction is down" << std::endl;
+            //std::cout << "bullet direction is down" << std::endl;
             player.deleteBullet();
         } else if(tankType == 4) {
             if(player.getBullet()->dir == UP) {
                 tileMap.destroyTank(bulletGridPosX, bulletGridPosY, 3);
                 return;
             }
-            std::cout << "bullet direction is up" << std::endl;
+           // std::cout << "bullet direction is up" << std::endl;
             player.deleteBullet();
 
         }
-        std::cout << "tank should move " << std::endl;
+       // std::cout << "tank should move " << std::endl;
 
         if(tankType != 0) {
             deleted = true;
@@ -78,23 +81,23 @@ void BulletInteraction :: interact() {
 
         if (tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] &&
             tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isBulletDestroyable()) {
-            std::cout << "bullet destroyed" << std::endl;
+           // std::cout << "bullet destroyed" << std::endl;
             player.deleteBullet();
             tileMap.destroyTile(bulletGridPosX, bulletGridPosY);
             }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isUndestructibleBlock()) {
             if(!deleted) {
                 player.deleteBullet();
-                std::cout << "bullet destroyed " << std::endl;
+                //std::cout << "bullet destroyed " << std::endl;
             }
         }
-        std::cout << bulletGridPosX << " " << bulletGridPosY << std::endl;
-        if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMovableBlock()) {
-            std::cout << "jeste " << std::endl;
+        //std::cout << bulletGridPosX << " " << bulletGridPosY << std::endl;
+        if(tileMap.getTileMapInt()[bulletGridPosY][bulletGridPosX] == 9 || tileMap.getTileMapInt()[bulletGridPosY][bulletGridPosX] == 50) {
+            
         }
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX] -> isTileMovableBlock() || tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMovableBlock()) {
-            std::cout << "dfddfdfdfd" << std::endl;
-            std::cout << tileMap.getTileMap().size() << std::endl;
+           // std::cout << "dfddfdfdfd" << std::endl;
+            //std::cout << tileMap.getTileMap().size() << std::endl;
             if(lastBulletGridPosY > bulletGridPosY) {
                 if(bulletGridPosY > 0 && (player.getGridPosition().x != bulletGridPosX || player.getGridPosition().y != bulletGridPosY - 1)) {
                     if(tileMap.getTileMap()[bulletGridPosY - 1][bulletGridPosX] -> isOverlappled()) {
@@ -123,6 +126,14 @@ void BulletInteraction :: interact() {
                     }
                 }
             }
+            std::vector<std::vector<int>> currMapState = tileMap.getTileMapInt();
+            std::cout << "Bullet interaction.cpp:" << std::endl;
+            for (int i = 0; i < currMapState.size(); i++) {
+                for (int j = 0; j < currMapState[i].size(); j++) {
+                    std::cout << currMapState[i][j] << ", ";
+                }
+                std::cout << std::endl;
+            }
             if(!deleted) {
 
                 player.deleteBullet();
@@ -132,7 +143,7 @@ void BulletInteraction :: interact() {
         if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
     && tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMirror1()) 
 {   
-    std::cout << lastBulletGridPosX << " " << lastBulletGridPosY << " " << bulletGridPosX << " "<< bulletGridPosY << std::endl;
+   // std::cout << lastBulletGridPosX << " " << lastBulletGridPosY << " " << bulletGridPosX << " "<< bulletGridPosY << std::endl;
     // First ensure bullet is actually on the mirror tile
     //if(!(bulletGridPosX == lastBulletGridPosX && bulletGridPosY == lastBulletGridPosY))
     //{
@@ -168,12 +179,12 @@ void BulletInteraction :: interact() {
                 bool canMove = (player.getGridPosition().x != bulletGridPosX  || player.getGridPosition().y != bulletGridPosY + 1) &&
                                bulletGridPosY < 17 && (!tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX] || 
                                tileMap.getTileMap()[bulletGridPosY + 1][bulletGridPosX]->isOverlappled());
-                std::cout << "1" << std::endl;
+               // std::cout << "1" << std::endl;
                 if(player.getGridPosition().x != bulletGridPosX  && player.getGridPosition().y != bulletGridPosY + 1) {
-                    std::cout << "3" << std::endl;
+                  //  std::cout << "3" << std::endl;
                 }
                 if(canMove) {
-                    std::cout << "2" << std::endl;
+                   // std::cout << "2" << std::endl;
                     tileMap.moveTile(bulletGridPosY + 1, bulletGridPosX,
                                    bulletGridPosY, bulletGridPosX);
                 }
@@ -185,7 +196,7 @@ void BulletInteraction :: interact() {
 if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
     && tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]->isMirror2()) 
 {   
-    std::cout << lastBulletGridPosX << " " << lastBulletGridPosY << " " << bulletGridPosX << " "<< bulletGridPosY << std::endl;
+    ////std::cout << lastBulletGridPosX << " " << lastBulletGridPosY << " " << bulletGridPosX << " "<< bulletGridPosY << //std::endl;
     // First ensure bullet is actually on the mirror tile
     //if(!(bulletGridPosX == lastBulletGridPosX && bulletGridPosY == lastBulletGridPosY))
     //{

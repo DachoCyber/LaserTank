@@ -37,7 +37,7 @@ public:
     int getPlayerPositionX() const {return playerPosX;}
     int getPlayerPositionY() const {return playerPosY;}
 
-    void undoMove(std::vector<std::vector<int>> lastMapState);
+    void undoMove(std::vector<std::vector<int>> *lastMapState);
 
     void updateTransportTracks();
     void moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldGridPosX);

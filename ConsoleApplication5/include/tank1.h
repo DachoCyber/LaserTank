@@ -56,7 +56,7 @@
                 case 1:
                     if(playerPosY != posY) return false;
                     if(posX > playerPosX) {
-                        std::cout << "posX > playerPosX" << std::endl;
+                        
                         return false;
                     }
                     for(int j = posX/tileSize + 1; j < playerPosX/tileSize; j++) {
@@ -64,11 +64,11 @@
                 
 
                         if(!(tileMap[gPosY][j]->isWalkable() || tileMap[gPosY][j]->isWater())) {
-                                std::cout << "not walkable or water" << std::endl;
+                               
                                 return false;
                             }
                     }
-                    std::cout << "bullet fired" << std::endl;
+                    
                     break;
                 case 2:
                     if(playerPosX != posX) return false;

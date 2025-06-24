@@ -157,7 +157,16 @@ void MainGame::handleInput() {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::U) && moveCount > 0) {
         moveCount--;
         movesPlayed--;
-        tileMap.undoMove(mapStates.back());
+        std::cout << std::endl << std::endl << std::endl;
+        std::vector<std::vector<int>> currMapState2 = mapStates.back();
+        for (int i = 0; i < currMapState2.size(); i++) {
+            for (int j = 0; j < currMapState2[i].size(); j++) {
+                std::cout << currMapState2[i][j] << ", ";
+            }
+            std::cout << std::endl;
+        }
+        tileMap.undoMove(&mapStates.back());
+
 
         player.setGridPosition(sf::Vector2i(
             playerPositions[playerPositions.size() - 2].first,
@@ -168,15 +177,28 @@ void MainGame::handleInput() {
 
         playerPositions.pop_back(); // Remove last move
         mapStates.pop_back();
+        
         return;
     }
-
+    
     if (pressedKey != sf::Keyboard::Unknown) {
         // Save state BEFORE movement
         std::cout << "Pushing player position: " << player.getGridPosition().x << " " << player.getGridPosition().y << std::endl;
-        
+        std::cout << "Map state:" << std::endl;
 
+
+        std::cout << "Now pushing mapState(line 196):" << std::endl;
             mapStates.push_back(tileMap.getMapState());
+            std::vector<std::vector<int>> currMapState2 = tileMap.getMapState();
+            for (int i = 0; i < currMapState2.size(); i++) {
+                for (int j = 0; j < currMapState2[i].size(); j++) {
+                    std::cout << currMapState2[i][j] << ", ";
+                }
+                std::cout << std::endl;
+            }
+
+         
+
             PlayerInteraction* playerInteraction = new PlayerInteraction(windowSizeX, windowSizeY, player, tileMap, pressedKey);
             playerInteraction->handleMovement();
             delete playerInteraction;
@@ -199,12 +221,8 @@ void MainGame::update() {
         window -> setKeyRepeatEnabled(true);
     }
 
-    for(int i = 0; i < tileMap.getTileMap().size(); i++) {
-        for(int j = 0; j < tileMap.getTileMap()[i].size(); j++) {
-            if(tileMap.getTileMap()[i][j] -> getBullet() == nullptr) {
-                bulletFired = false;
-            }
-        }
+    if (bullets.size() == 0) {
+        bulletFired = false;
     }
 
     if(player.getBullet() != nullptr) {
