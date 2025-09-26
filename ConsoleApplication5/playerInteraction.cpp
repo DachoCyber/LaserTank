@@ -73,10 +73,10 @@ void PlayerInteraction :: handleMovement() {
             player.setDir(LEFT);
         } else {
             if(validMove(newGridPos.x - 1, newGridPos.y)) {
-                std::cout << "this is good!" << std::endl;
+                //std::cout << "this is good!" << std::endl;
                 bool notLeftTrack = tileMap.getTileMap()[newGridPos.y][newGridPos.x - 1] -> isTransportTrack() != 2;
                 if(notLeftTrack) {
-                    std::cout << "this is also good!" << std::endl;
+                    //std::cout << "this is also good!" << std::endl;
                     if(tileMap.getTileMap()[newGridPos.y][newGridPos.x - 1] -> isWalkable()) {
 
                         newGridPos.x -= 1;
@@ -137,14 +137,14 @@ void PlayerInteraction :: handlTransportableTrack(int y, int x) {
                 tileMap.getTileMap()[y][x-1] -> isMirror3() ||
                 tileMap.getTileMap()[y][x-1] -> isMirror4() ||
                 tileMap.getTileMap()[y][x-1] -> isTank()) {
-                    std::cout << "here" << std::endl;
+                    //std::cout << "here" << std::endl;
                     return;
             }
             int currGridCoordX = x;
             int currGridCoordY = y;
 
-            std::cout << player.getGridPosition().x << std::endl;
+            //std::cout << player.getGridPosition().x << std::endl;
             player.setGridPosition(sf::Vector2i(x - 1, y));
-            std::cout << player.getGridPosition().x << std::endl;
+            //std::cout << player.getGridPosition().x << std::endl;
         }
 }*/

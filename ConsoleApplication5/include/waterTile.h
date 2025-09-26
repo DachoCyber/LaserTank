@@ -8,16 +8,32 @@ class WaterTile : public Tile {
 
     private:
         const sf::Texture* texturePtr;
+		const sf::Texture* secondFrameTexturePtr;
+        
     public:
-        WaterTile(int x, int y, const sf::Texture& WaterTileTexture) : Tile(x, y) {
+        WaterTile(int x, int y, const sf::Texture& WaterTileTexture, const sf::Texture& SFWaterTileTexture) : Tile(x, y) {
             walkable = false;
             texturePtr = &WaterTileTexture;
+			secondFrameTexturePtr = &SFWaterTileTexture;
             sprite.setTexture(*texturePtr);
             sprite.setPosition(x, y);
             sf::Color waterColor = sprite.getColor();
             waterColor.a = 155;
             sprite.setColor(sf::Color(waterColor));
         }
+        void switchFrame(int frameIndex) {
+            
+            
+            if (frameIndex % 2 == 0) {
+
+                sprite.setTexture(*secondFrameTexturePtr);
+            } else {
+				sprite.setTexture(*texturePtr);
+			}
+          
+            
+        }
+
     bool isUndestructibleBlock() override {
         return false;
     }
@@ -25,7 +41,7 @@ class WaterTile : public Tile {
         return 8;
     }
     std::unique_ptr<Tile> clone() const override {
-        auto clone = std::make_unique<WaterTile>(posX, posY, *texturePtr); // Copy constructor
+        auto clone = std::make_unique<WaterTile>(posX, posY, *texturePtr, *secondFrameTexturePtr); // Copy constructor
     clone->sprite = this->sprite; // Copy the sprite
     return clone;
     }

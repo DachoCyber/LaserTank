@@ -43,6 +43,7 @@ public:
     sf::Texture flagTexture;
     sf::Texture movableBlockTexture;
     sf::Texture undestructableBlockTex;
+    sf::Texture waterSecondFrameTexture;
 
     sf::Texture EnemyTank1UpTexture;
     sf::Texture EnemyTank1DownTexture;
@@ -98,6 +99,9 @@ public:
     }
     if(!waterTileTexture.loadFromFile("Images/waterTile.png")) {
         throw std::runtime_error("Failed to load water tile texture");
+    }
+    if (!waterSecondFrameTexture.loadFromFile("Images/waterTileSecondFrame.png")) {
+        throw std::runtime_error("Failed to load water tile second frame texture");
     }
     if(!movableBlockTexture.loadFromFile("Images/MovableBlock.png")) {
         throw std::runtime_error("Failed to load water tile texture");
@@ -280,7 +284,7 @@ public:
                     }
                     placingCode[8] = true;
                 } else if (placingCode[8] && tileX >= 0 && tileX < 16 && tileY >= 0 && tileY < 16) {
-                    placeOrRemoveTile<WaterTile>(tileX, tileY, 8, 1, tiles, tileMap, waterTileTexture);
+                    placeOrRemoveWaterTile(tileX, tileY, tiles, tileMap);
                 }
                 if(MovableBlockSprite.getGlobalBounds().contains(worldPos)) {
                     for(int i = 0; i < 20; i++) {
@@ -466,6 +470,25 @@ public:
         return { static_cast<int>(worldPos.x) / tileSize, static_cast<int>(worldPos.y) / tileSize };
     }
 
+    void placeOrRemoveWaterTile(int tileX, int tileY, 
+        std::vector<std::vector<std::unique_ptr<Tile>>>& tiles,
+        std::vector<std::vector<int>>& tileMap) 
+    {
+        if (dynamic_cast<WaterTile*>(tiles[tileY][tileX].get())) {
+            tileMap[tileY][tileX] = 1;
+            tiles[tileY][tileX] = std::make_unique<WalkableGround>(tileX * tileSize, tileY * tileSize, walkableTexture);
+        } else {
+            tileMap[tileY][tileX] = 8;
+        
+            tiles[tileY][tileX] = std::make_unique<WaterTile>(
+                tileX * tileSize,
+                tileY * tileSize,
+                waterTileTexture,
+                waterSecondFrameTexture
+            );
+		}
+    }
+
     void placeOrRemoveTank(
         int tileX, int tileY, 
         int placeID, int removeID,
@@ -521,7 +544,25 @@ public:
             tiles[tileY][tileX] = std::make_unique<WalkableGround>(tileX * tileSize, tileY * tileSize, walkableTexture);
         } else {
             tileMap[tileY][tileX] = placeID;
-            tiles[tileY][tileX] = std::make_unique<TileType>(tileX * tileSize, tileY * tileSize, tileTexture);
+
+            if (placeID == 8) {
+                // water tile ? 3 argumenta
+                tiles[tileY][tileX] = std::make_unique<WaterTile>(
+                    tileX * tileSize,
+                    tileY * tileSize,
+                    tileInWaterTex,
+                    waterSecondFrameTexture
+                );
+            }
+            else {
+                // svi ostali ? 2 argumenta
+                tiles[tileY][tileX] = std::make_unique<TileType>(
+                    tileX * tileSize,
+                    tileY * tileSize,
+                    tileTexture
+                );
+            }
+
         }
     }
 

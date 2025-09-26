@@ -1,6 +1,7 @@
 #include "include/bulletInteraction.h"
 
-BulletInteraction::BulletInteraction(int windowSizeX, int windowSizeY, Tank& tank, Map& map)
+BulletInteraction::BulletInteraction(int windowSizeX, int windowSizeY, Tank& tank, Map& map) 
+
     : windowSizeX(windowSizeX), windowSizeY(windowSizeY), player(tank), tileMap(map) {}
 
 void BulletInteraction :: interact() {
@@ -20,6 +21,8 @@ void BulletInteraction :: interact() {
     int lastBulletGridPosY = player.getBullet()->getPosition().y/tileSize;
 
     player.getBullet()->update(timePerFrame);
+
+    std::cout << player.getGridPosition().x << " " << player.getGridPosition().y << std::endl;
     
     if(player.getBullet()->getPosition().x >= windowSizeX || player.getBullet()->getPosition().x < 0 ||
         player.getBullet()->getPosition().y >= windowSizeY || player.getBullet()->getPosition().y < 0) {
@@ -32,7 +35,7 @@ void BulletInteraction :: interact() {
     int bulletGridPosY = player.getBullet()->getPosition().y/tileSize;
         //std::cout << bulletGridPosX << " " << bulletGridPosY << std::endl;
 
-
+    
 
     if (bulletGridPosX >= 0 && bulletGridPosX < tileMap.getTileMap()[0].size() &&
     bulletGridPosY >= 0 && bulletGridPosY < tileMap.getTileMap().size()) {
@@ -126,14 +129,7 @@ void BulletInteraction :: interact() {
                     }
                 }
             }
-            std::vector<std::vector<int>> currMapState = tileMap.getTileMapInt();
-            std::cout << "Bullet interaction.cpp:" << std::endl;
-            for (int i = 0; i < currMapState.size(); i++) {
-                for (int j = 0; j < currMapState[i].size(); j++) {
-                    std::cout << currMapState[i][j] << ", ";
-                }
-                std::cout << std::endl;
-            }
+          
             if(!deleted) {
 
                 player.deleteBullet();

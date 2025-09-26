@@ -46,22 +46,22 @@ int main() {
     bool enterAnotherLevel = false;
     int chosenLevel;
     do {
-        std::cout << chosenLevel << std::endl;
+        //std::cout << chosenLevel << std::endl;
         if (!enterAnotherLevel) {
             chosenLevel = menu.getChosenLevel();
         }
-        std::cout << chosenLevel << std::endl;
+        //std::cout << chosenLevel << std::endl;
         if (chosenLevel != -1) {
             MainGame game(512, 512, chosenLevel);
             game.run();
             getIsClosed = !game.getWindowClosedState();
             if (game.gameWon()) {
                 
-                std::cout << "game won" << std::endl;
+               // std::cout << "game won" << std::endl;
                 enterAnotherLevel = true;
                 
-                std::cout << game.getMovesCount() << std::endl;
-                std::cout << "Enter initials: ";
+               // std::cout << game.getMovesCount() << std::endl;
+               // std::cout << "Enter initials: ";
                 
                 std::string initials;
                 std::cin >> initials;
@@ -73,7 +73,7 @@ int main() {
                 chosenLevel = (chosenLevel + 1) % levelCount;
             }
         }
-        std::cout << getIsClosed << std::endl;
+        //std::cout << getIsClosed << std::endl;
     } while (getIsClosed);
     return 0;
 }

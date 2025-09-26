@@ -106,6 +106,14 @@ public:
         target.draw(shape);
     }
 
+    sf::Vector2f getDimensions() const {
+        return shape.getSize();
+    }
+
+    Direction getDirection() const {
+        return dir;
+    }
+
     void setPosition(float x, float y) { shape.setPosition(x, y); }
     sf::Vector2f getPosition() const { return shape.getPosition(); }
 };

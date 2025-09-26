@@ -25,6 +25,9 @@ public:
         tiles[gridPosY][gridPosX] = std::move(tile);
     }
 
+    void switchFramesWaterTiles(int i);
+
+
     void setTilesEl(size_t i, size_t j, std::unique_ptr<Tile> newElement);
 
     Tile* getTileFromUniquePtr(std::unique_ptr<Tile> tile) const;
@@ -37,11 +40,18 @@ public:
     int getPlayerPositionX() const {return playerPosX;}
     int getPlayerPositionY() const {return playerPosY;}
 
+
+
     void undoMove(std::vector<std::vector<int>> *lastMapState);
 
     void updateTransportTracks();
     void moveTile(int newGridPosY, int newGridPosX, int oldGridPosY, int oldGridPosX);
     std::vector<std::tuple<int, int, Direction>> getTrackCoord() const {return trackTileCoords;}
+
+    std::vector<std::pair<int, int>> getTilesInWaterCoords() const { return tilesInWaterCoords; }
+    void setTileCoords(int i, int j, int code);
+
+    void clearWaterTiles();
 
 private:
     void loadTextures();
@@ -68,7 +78,10 @@ private:
     sf::Texture mirror2Texture;
     sf::Texture mirror3Texture;
     sf::Texture mirror4Texture;
+    
     sf::Texture waterTileTexture;
+	sf::Texture waterSecondFrameTexture;
+
     sf::Texture flagTexture;
     sf::Texture movableBlockTexture;
     sf::Texture undestructableBlockTex;

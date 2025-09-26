@@ -48,12 +48,20 @@ private:
 
     int countSpacePressed;
 
+    int currBulletGridPosX, currBulletGridPosY;
+    int nextBulletGridPosX, nextBulletGridPosY;
+    bool shouldBeDeleted = false;
+
     const int tileSize = 32;
     bool moveQueued = false;
     int windowSizeX, windowSizeY;
 
     bool killPlayer = false;
     bool bulletFired = false;
+	bool playerFiredBullet = false;
+
+    bool playerMovedFromLastPosition = false;
+    bool updated = false;
 
     bool returnFromTrack = false;
 
@@ -61,6 +69,10 @@ private:
     sf::Clock gameClock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     const sf::Time timePerFrame = sf::seconds(1.f/60.f);
+
+    sf::Time updateFramesWaterTile = sf::seconds(0.5);
+
+    sf::Clock waterFramesClock;
 
     sf::Font weirdFont;
     sf::Text gameOverText;
@@ -70,6 +82,7 @@ private:
     sf::Sprite gobletSprite;
 
     std::vector<std::vector<std::vector<int>>> mapStates;
+
 
     bool playerMoved = false;
     int moveCount = 0;
