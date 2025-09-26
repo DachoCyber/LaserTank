@@ -159,6 +159,7 @@ sfml-system-s.lib
     <ClCompile Include="map.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerInteraction.cpp" />
+    <ClCompile Include="pullFromLevelsFromServer.cpp" />
     <ClCompile Include="sfmlWeb.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
   </ItemGroup>

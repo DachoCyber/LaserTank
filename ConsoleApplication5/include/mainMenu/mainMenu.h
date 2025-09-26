@@ -6,6 +6,8 @@
 #include "editor.h"
 #include <memory>
 #include <iostream>
+#include <sstream>
+#include <curl/curl.h>
 
 class MainMenu : public sf::Drawable {
 private:
@@ -86,11 +88,13 @@ public:
             }
             if(editor.button.wasClicked()) {
                 editor.handleClick();
+			
             }
 
             render();
         }
     }
+
 
     void render() {
         window->clear(sf::Color::Black);
@@ -104,4 +108,8 @@ public:
     int getChosenLevel() const {
         return level;
     }
+
+
+
+
 };

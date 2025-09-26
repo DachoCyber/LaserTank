@@ -2,9 +2,13 @@
 
 #include "editorButton.h"
 
+#include <sstream>
+#include <ostream>
+
 #include <filesystem>
+#include <curl/curl.h>
 
-
+#include "../walkableGround.h"
 #include "../tile.h"
 #include "../destructibleBlock.h"
 #include "../mirror1Tile.h"
@@ -64,9 +68,17 @@ public:
 
     sf::Texture tileInWaterTex;
     std::vector<std::vector<int>> tileMap;
+
 public:
     Editor(int menuWinSizeX, int menuWinSizeY, bool editorWinClose) : button(menuWinSizeX, menuWinSizeY, editorWinClose) {}
     
+    std::vector<std::vector<int>> getTileMap() { return tileMap; }
+
+    static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+        ((std::string*)userp)->append((char*)contents, size * nmemb);
+        return size * nmemb;
+    }
+
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(button);
     }
@@ -413,56 +425,122 @@ public:
         if (tankPlaced && flagPlaced) {
             int height = 16;
             int width = 16;
-        std::string folder = "maps/";
-    std::string levelName = generateNextMapFilename(folder); // already includes .tmx
+        
 
-    std::cout << levelName << std::endl;
+            std::string folder = "maps/";
+            std::string levelName = generateNextMapFilename(folder); // already includes .tmx
 
-    std::ofstream file(folder + levelName);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file for writing!\n";
-        return;
-    }
+            std::cout << levelName << std::endl;
 
-    int levelIndex = extractLevelIndex(levelName);
-    std::cout << "Creating level " << levelIndex << " with filename: " << levelName << std::endl;
+            std::ofstream file(folder + levelName);
+            if (!file.is_open()) {
+                std::cerr << "Failed to open file for writing!\n";
+                return;
+            }
 
-    // proceed to write to file...
+            int levelIndex = extractLevelIndex(levelName);
+            std::cout << "Creating level " << levelIndex << " with filename: " << levelName << std::endl;
 
-    // Replace .tmx if not present
-    if (levelName.find(".tmx") == std::string::npos)
-        levelName += ".tmx";
+            // proceed to write to file...
+
+            // Replace .tmx if not present
+            if (levelName.find(".tmx") == std::string::npos)
+                levelName += ".tmx";
 
 
-    file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    file << "<map version=\"1.0\" tiledversion=\"1.9.2\" orientation=\"orthogonal\" renderorder=\"right-down\" ";
-    file << "width=\"" << width << "\" height=\"" << height << "\" tilewidth=\"32\" tileheight=\"32\" infinite=\"0\">\n";
-    file << "  <tileset firstgid=\"1\" name=\"tileset\" tilewidth=\"32\" tileheight=\"32\" tilecount=\"10\" columns=\"10\">\n";
-    file << "    <image source=\"tileset.png\" width=\"320\" height=\"32\"/>\n";
-    file << "  </tileset>\n";
-    file << "  <layer name=\"Tile Layer 1\" width=\"" << width << "\" height=\"" << height << "\">\n";
-    file << "    <data encoding=\"csv\">\n";
+            file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+            file << "<map version=\"1.0\" tiledversion=\"1.9.2\" orientation=\"orthogonal\" renderorder=\"right-down\" ";
+            file << "width=\"" << width << "\" height=\"" << height << "\" tilewidth=\"32\" tileheight=\"32\" infinite=\"0\">\n";
+            file << "  <tileset firstgid=\"1\" name=\"tileset\" tilewidth=\"32\" tileheight=\"32\" tilecount=\"10\" columns=\"10\">\n";
+            file << "    <image source=\"tileset.png\" width=\"320\" height=\"32\"/>\n";
+            file << "  </tileset>\n";
+            file << "  <layer name=\"Tile Layer 1\" width=\"" << width << "\" height=\"" << height << "\">\n";
+            file << "    <data encoding=\"csv\">\n";
 
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            file << tileMap[y][x];
-            if (x < width - 1) file << ",";
-        }
-        if (y < height - 1) file << ",\n";
-        else file << "\n";
-    }
+            for (int y = 0; y < height; ++y) {
+                for (int x = 0; x < width; ++x) {
+                    file << tileMap[y][x];
+                    if (x < width - 1) file << ",";
+                }
+                if (y < height - 1) file << ",\n";
+                else file << "\n";
+            }
 
-    file << "    </data>\n";
-    file << "  </layer>\n";
-    file << "</map>\n";
+            file << "    </data>\n";
+            file << "  </layer>\n";
+            file << "</map>\n";
 
-    file.close();
-    std::cout << "Map saved to 'maps/" << levelName << "'\n";
+
+            file.close();
+
+
+            const std::string& url = "https://alas.matf.bg.ac.rs/~mr22033/public_html/levels";
+   
+
+
+
+            pushTileMapToServer(levelIndex);
+
+    
 }
 
         
 
     }
+    void pushTileMapToServer(int levelIndex) {
+        CURL* curl = curl_easy_init();
+        if (!curl) {
+            std::cerr << "Failed to init curl\n";
+            return;
+        }
+
+        std::string fileName = "maps/map" + std::to_string(levelIndex) + ".tmx";
+
+        if (!std::filesystem::exists(fileName)) {
+            std::cerr << "File does not exist: " << fileName << "\n";
+            curl_easy_cleanup(curl);
+            return;
+        }
+
+        // Direktno ka upload.php na tvom serveru
+        std::string url = "https://alas.matf.bg.ac.rs/~mr22033/levels/upload.php";
+
+        // Form-data upload
+        curl_mime* form = curl_mime_init(curl);
+        curl_mimepart* field = curl_mime_addpart(form);
+        curl_mime_name(field, "file");
+        curl_mime_filedata(field, fileName.c_str());
+
+        // Opcije
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
+
+        std::string response;
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L); // debug
+
+        std::cout << "Uploading " << fileName << " to " << url << std::endl;
+
+        CURLcode res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            std::cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
+        }
+        else {
+            long response_code;
+            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+            std::cout << "HTTP Response Code: " << response_code << std::endl;
+            std::cout << "Server Response: " << response << std::endl;
+        }
+
+        curl_mime_free(form);
+        curl_easy_cleanup(curl);
+    }
+
+
 
     sf::Vector2i getTileCoords(sf::RenderWindow& window) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);

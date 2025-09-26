@@ -42,6 +42,9 @@
     <ClCompile Include="sfmlWeb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pullFromLevelsFromServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\bullet.h">
