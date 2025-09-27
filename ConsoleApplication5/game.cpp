@@ -340,7 +340,7 @@ bool  MainGame::gameLost() {
 }
 
 bool MainGame::gameWon() {
-    return player.getGridPosition().x * tileSize == tileMap.getFlagCoordX() && player.getGridPosition().y * tileSize == tileMap.getFlagCoordY();
+    return tileMap.getTileMapInt()[player.getGridPosition().y][player.getGridPosition().x] == 10;
 }
 
 bool MainGame::gameEnd() {

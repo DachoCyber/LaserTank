@@ -23,6 +23,7 @@
 #include "../transportTrack.h"
 #include "../tileInWater.h"
 
+
 #include "../flag.h"
 
 #include <fstream>
@@ -68,6 +69,16 @@ public:
 
     sf::Texture tileInWaterTex;
     std::vector<std::vector<int>> tileMap;
+
+	sf::Font tankInstructionTextFont;
+	sf::Text tankInstructionText;
+
+	sf::RectangleShape tankInstructionBackground;
+
+	sf::RectangleShape tileInstructionBackground;
+
+	sf::Font tileInstructionTextFont;
+	sf::Text tileInstructionText;
 
 public:
     Editor(int menuWinSizeX, int menuWinSizeY, bool editorWinClose) : button(menuWinSizeX, menuWinSizeY, editorWinClose) {}
@@ -171,12 +182,51 @@ public:
 
         int mapSizeX = 512;
         int windowSizeY = 512;
-        int mapElementsSizeX = 96;
+        int mapElementsSizeX = 256;
+        sf::Sprite tankInstructionSprite(tankTex);
         int windowSizeX = mapSizeX + mapElementsSizeX;
         sf::RenderWindow window(sf::VideoMode(windowSizeX, windowSizeY), "Editor", sf::Style::Default);
 
         std::vector<std::vector<std::unique_ptr<Tile>>> tiles;
         tiles.resize(16);
+
+        if (!tileInstructionTextFont.loadFromFile("Fonts/arial.ttf"))
+            throw new std::runtime_error("Failed to load instruction font!");
+        tankInstructionTextFont = tileInstructionTextFont;
+        sf::RectangleShape instructionPanel;
+        instructionPanel.setFillColor(sf::Color::White);
+        instructionPanel.setSize(sf::Vector2f(256, 200));  // širina i visina panela
+        instructionPanel.setPosition(sf::Vector2f(512, 96)); // stavi ga desno od mape
+
+
+        tankInstructionSprite.setScale(0.5f, 0.5f); // smanji da lepo stane, po potrebi
+        tankInstructionSprite.setPosition(
+            instructionPanel.getPosition().x + 16,
+            instructionPanel.getPosition().y + 16
+        );
+
+        // Tekst "Press LB" pored tenka
+        sf::Text pressLbText;
+        pressLbText.setFont(tankInstructionTextFont);
+        pressLbText.setString("Click mouse Right\n Button for tank");
+        pressLbText.setCharacterSize(24);
+        pressLbText.setFillColor(sf::Color::Black);
+        pressLbText.setPosition(
+            tankInstructionSprite.getPosition().x + tankInstructionSprite.getGlobalBounds().width + 12,
+            tankInstructionSprite.getPosition().y
+        );
+
+        // Tekst "Press RB" ispod
+        sf::Text pressRbText;
+        pressRbText.setFont(tankInstructionTextFont);
+        pressRbText.setString("Click mouse Left\n Button for tile ");
+        pressRbText.setCharacterSize(24);
+        pressRbText.setFillColor(sf::Color::Black);
+        pressRbText.setPosition(
+            pressLbText.getPosition().x,
+            pressLbText.getPosition().y + pressLbText.getGlobalBounds().height + 50
+        );
+
 
         bool tankPlaced = false;
         bool flagPlaced = false;
@@ -185,26 +235,28 @@ public:
         sf::Sprite destructibleBlockSprite = createSprite(destructibleTexture, 16, 0, tileSize);
         sf::Sprite mirror1Sprite = createSprite(mirror1Texture, 17, 0, tileSize);   
         sf::Sprite mirror2Sprite = createSprite(mirror2Texture, 18, 0, tileSize);
-        sf::Sprite mirror3Sprite = createSprite(mirror3Texture, 16, 1, tileSize);
-        sf::Sprite mirror4Sprite = createSprite(mirror4Texture, 17, 1, tileSize);
+        sf::Sprite mirror3Sprite = createSprite(mirror3Texture, 19, 0, tileSize);
+        sf::Sprite mirror4Sprite = createSprite(mirror4Texture, 20, 0, tileSize);
 
-        sf::Sprite waterSprite = createSprite(waterTileTexture, 18, 1, tileSize);
-        sf::Sprite MovableBlockSprite = createSprite(movableBlockTexture, 16, 2, tileSize);
+        sf::Sprite waterSprite = createSprite(waterTileTexture, 21, 0, tileSize);
+        sf::Sprite MovableBlockSprite = createSprite(movableBlockTexture, 22, 0, tileSize);
         sf::Sprite flagSprite = createSprite(flagTexture, 17,2, tileSize);
-        sf::Sprite undestructableBlockSprite = createSprite(undestructableBlockTex, 18, 2, tileSize);
+        sf::Sprite undestructableBlockSprite = createSprite(undestructableBlockTex, 23, 0, tileSize);
 
-        sf::Sprite tank1LeftSprite = createSprite(EnemyTank1LeftTexture, 16, 3, tileSize);
-        sf::Sprite tank1RightSprite = createSprite(EnemyTank1RightTexture, 17, 3, tileSize);
-        sf::Sprite tank1UpSprite = createSprite(EnemyTank1UpTexture, 18, 3, tileSize);
-        sf::Sprite tank1DownSprite = createSprite(EnemyTank1DownTexture, 16, 4, tileSize);
+        sf::Sprite tank1LeftSprite = createSprite(EnemyTank1LeftTexture, 16, 1, tileSize);
+        sf::Sprite tank1RightSprite = createSprite(EnemyTank1RightTexture, 17, 1, tileSize);
+        sf::Sprite tank1UpSprite = createSprite(EnemyTank1UpTexture, 18, 1, tileSize);
+        sf::Sprite tank1DownSprite = createSprite(EnemyTank1DownTexture, 19, 1, tileSize);
 
-        sf::Sprite transportLeftSprite = createSprite(transportTrackLeftTex, 17, 4, tileSize);
-        sf::Sprite transportDownSprite = createSprite(transportTrackDownTex, 18, 4, tileSize);
-        sf::Sprite transportUpSprite = createSprite(transportTrackUpTex, 16, 5, tileSize);
-        sf::Sprite transportRightSprite = createSprite(transportTrackRightTex, 17, 5, tileSize);
+        sf::Sprite transportLeftSprite = createSprite(transportTrackLeftTex, 20, 1, tileSize);
+        sf::Sprite transportDownSprite = createSprite(transportTrackDownTex, 21, 1, tileSize);
+        sf::Sprite transportUpSprite = createSprite(transportTrackUpTex, 22, 1, tileSize);
+        sf::Sprite transportRightSprite = createSprite(transportTrackRightTex, 23, 1, tileSize);
 
         sf::Sprite tankSprite(tankTex);
+        
         tankSprite.setScale(sf::Vector2f(0.65, 0.65)); 
+        tankInstructionSprite.setScale(sf::Vector2f(0.65, 0.65));
 
     tileMap.resize(16);
     for (int y = 0; y < 16; y++) {
@@ -223,6 +275,18 @@ public:
 
     int tankPosX;
 	int tankPosY;
+
+    tileInstructionBackground.setFillColor(sf::Color::White);
+
+    tileInstructionBackground.setPosition(sf::Vector2f(512, 128));
+
+    tileInstructionBackground.setSize(sf::Vector2f(256, 64));
+    tankInstructionBackground.setFillColor(sf::Color::White);
+    tankInstructionBackground.setSize(sf::Vector2f(256, 64));
+    tankInstructionBackground.setPosition(sf::Vector2f(512, 96));
+
+
+
 
     while (window.isOpen()) {
         sf::Event event;
@@ -420,6 +484,13 @@ public:
         window.draw(transportLeftSprite);
         window.draw(transportRightSprite);
         window.draw(transportUpSprite);
+        window.draw(instructionPanel);
+        window.draw(tankInstructionSprite);
+        window.draw(pressLbText);
+        window.draw(pressRbText);
+
+
+
 
         if(tankPlaced) {
             window.draw(tankSprite);
@@ -462,6 +533,8 @@ public:
             file << "  <layer name=\"Tile Layer 1\" width=\"" << width << "\" height=\"" << height << "\">\n";
             file << "    <data encoding=\"csv\">\n";
 
+            std::cout << "TankPosY: " << tankPosY << " TankPosX: " << tankPosX << std::endl;
+
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
 
@@ -469,8 +542,9 @@ public:
                     else {
 
                         file << tileMap[y][x];
-                        if (x < width - 1) file << ",";
+                        
                     }
+                    if (x < width - 1) file << ",";
                 }
                 if (y < height - 1) file << ",\n";
                 else file << "\n";
