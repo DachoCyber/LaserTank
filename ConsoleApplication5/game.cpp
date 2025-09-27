@@ -135,6 +135,7 @@ bool MainGame::shouldEnemyFireBullet() {
                     tileMap.getTileMap(),
                     player.getGridPosition().x * tileSize,
                     player.getGridPosition().y * tileSize)) {
+
                     std::cout << "now bullet should be fired" << std::endl;
                     tileMap.getTileMap()[i][j]->fireBullet();
                     bullets.push_back(tileMap.getTileMap()[i][j]->getBullet());
@@ -187,22 +188,31 @@ void MainGame::handleInput() {
             return;
 		}
 
-        player.setGridPosition(sf::Vector2i(
-            playerPositions[playerPositions.size() - 2].first,
-            playerPositions[playerPositions.size() - 2].second));
+        if(arrOfMoves.back() != sf::Keyboard::Space) {
+            player.setGridPosition(sf::Vector2i(
+                playerPositions[playerPositions.size() - 1].first,
+                playerPositions[playerPositions.size() - 1].second));
 
-        std::cout << "PLAYERPOSITIONS SIZE:" << playerPositions.size() << std::endl;
+            std::cout << "PLAYERPOSITIONS SIZE:" << playerPositions.size() << std::endl;
 
-        if (playerPositions.size() > 0) {
+            if (playerPositions.size() > 0) {
 
-            playerPositions.pop_back(); // Remove last move
-        }
+                playerPositions.pop_back(); // Remove last move
+            }
+
+			//arrOfMoves.pop_back();
+		}
+
+		arrOfMoves.pop_back();
         mapStates.pop_back();
 
         return;
     }
 
     if (pressedKey != sf::Keyboard::Unknown) {
+
+	    arrOfMoves.push_back(pressedKey);
+
         std::vector<std::pair<sf::Keyboard::Key, Direction>> keyDirPairs =
         { std::make_pair(sf::Keyboard::Up, UP),
           std::make_pair(sf::Keyboard::Down, DOWN),
@@ -212,12 +222,10 @@ void MainGame::handleInput() {
         for (int i = 0; i < 4; i++) {
 
             if (pressedKey == keyDirPairs[i].first && player.getDir() == keyDirPairs[i].second) {
+                
                 playerPositions.push_back(std::make_pair<int, int>(
                     player.getGridPosition().x, player.getGridPosition().y));
 
-                for(const auto& pos : playerPositions) {
-                    std::cout << pos.first << " " << pos.second << std::endl;
-                }
 
                 break;
             }

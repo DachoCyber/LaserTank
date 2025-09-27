@@ -83,6 +83,8 @@ private:
 
     std::vector<std::vector<std::vector<int>>> mapStates;
 
+    std::vector<sf::Keyboard::Key> arrOfMoves;
+
 
     bool playerMoved = false;
     int moveCount = 0;

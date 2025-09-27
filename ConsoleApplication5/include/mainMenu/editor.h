@@ -221,6 +221,9 @@ public:
 
     bool placingCode[20] = {false};
 
+    int tankPosX;
+	int tankPosY;
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -234,6 +237,8 @@ public:
                 sf::Vector2i tileCoords = getTileCoords(window);
                 int tileX = tileCoords.x;
                 int tileY = tileCoords.y;
+				tankPosX = tileX;
+				tankPosY = tileY;
                 tankSprite.setPosition({static_cast<float>(tileX*tileSize), static_cast<float>(tileY*tileSize)});
                 tankPlaced = true;
             }
@@ -459,8 +464,13 @@ public:
 
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
-                    file << tileMap[y][x];
-                    if (x < width - 1) file << ",";
+
+                    if (y == tankPosY && x == tankPosX) file << 0;
+                    else {
+
+                        file << tileMap[y][x];
+                        if (x < width - 1) file << ",";
+                    }
                 }
                 if (y < height - 1) file << ",\n";
                 else file << "\n";
