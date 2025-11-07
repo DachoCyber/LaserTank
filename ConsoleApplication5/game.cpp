@@ -237,13 +237,7 @@ void MainGame::handleInput() {
 
         std::cout << "Now pushing mapState(line 196):" << std::endl;
         mapStates.push_back(tileMap.getMapState());
-        std::vector<std::vector<int>> currMapState2 = tileMap.getMapState();
-        for (int i = 0; i < currMapState2.size(); i++) {
-            for (int j = 0; j < currMapState2[i].size(); j++) {
-                std::cout << currMapState2[i][j] << ", ";
-            }
-            std::cout << std::endl;
-        }
+        
 
 
 

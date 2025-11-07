@@ -207,7 +207,7 @@ if(tileMap.getTileMap()[bulletGridPosY][bulletGridPosX]
         else if(lastBulletGridPosX < bulletGridPosX || -player.getGridPosition().x + bulletGridPosX == 1) {
             if(bulletGridPosX > 0) {  // Can we move left?
                 bool canMove = (player.getGridPosition().x != bulletGridPosX + 1 || player.getGridPosition().y != bulletGridPosY) &&
-                                bulletGridPosX > 0 && !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1] || 
+                                bulletGridPosX > 0 && bulletGridPosX < 15 && !tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1] || 
                              tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1]->isOverlappled();
                 
                 if(canMove && tileMap.getTileMap()[bulletGridPosY][bulletGridPosX + 1]->isOverlappled()) {

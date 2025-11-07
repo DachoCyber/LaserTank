@@ -77,7 +77,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Users\KORISNIK\Desktop\vcpkg\installed\x86-windows\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\KORISNIK\Desktop\vcpkg\installed\x86-windows\include;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\KORISNIK\Desktop\vcpkg\installed\x86-windows\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\KORISNIK\Desktop\vcpkg\installed\x86-windows\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\KORISNIK\Desktop\vcpkg\installed\x86-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -115,14 +119,8 @@ sfml-system-s.lib
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\SFML-2.6.2\lib;C:\Program Files (x86)\OpenSSL-Win32\lib\MinGW\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-s.lib;
-sfml-window-s.lib;
-sfml-system-s.lib
-;sfml-network-s.lib;opengl32.lib
-;freetype.lib
-;winmm.lib
-;gdi32.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SFML-2.6.2\lib;C:\Program Files (x86)\OpenSSL-Win32\lib\MinGW\x86;C:\Users\KORISNIK\Desktop\vcpkg\installed\x86-windows\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;sfml-network-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -143,12 +141,16 @@ sfml-system-s.lib
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DSFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>($SolutionDir)\Dependencies\SFML-2.6.2\include;($SolutionDir)\Dependencies\CURL;</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>($SolutionDir)/Dependendencies/SFML-2.6.2/lib;($SolutionDir)/Dependencies/CURL/lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-windows-s.lib;sfml-system-s.lib;sfml-network-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;libcurl.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

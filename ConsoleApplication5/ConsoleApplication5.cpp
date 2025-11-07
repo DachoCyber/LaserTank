@@ -28,7 +28,6 @@ size_t write_data(void* ptr, size_t size, size_t nmemb, FILE* stream) {
     return fwrite(ptr, size, nmemb, stream);
 }
 
-// Preuzmi jedan level
 bool downloadLevel(int levelIndex, const std::string& baseUrl) {
     if (!fs::exists("maps")) {
         fs::create_directory("maps");
@@ -78,22 +77,19 @@ bool downloadLevel(int levelIndex, const std::string& baseUrl) {
     curl_easy_cleanup(curl);
 
     if (res != CURLE_OK || response_code != 200) {
-        std::cerr << "Failed to download map" << levelIndex
-            << " (HTTP code: " << response_code << ")\n";
-        fs::remove(localFile); // briši nepotpuni fajl
+       
+        fs::remove(localFile);
         return false;
     }
 
     std::cout << "Downloaded map" << levelIndex << " successfully.\n";
     return true;
 }
-
-// Preuzmi sve levele dok ne naiđeš na prvi nepostojeći
 void downloadAllLevels(const std::string& baseUrl) {
     int level = 1;
     for(; ; level++) {
         if (!downloadLevel(level, baseUrl)) {
-            break; // prekini ako preuzimanje nije uspelo
+            break;
         }
 	}
 }
@@ -128,28 +124,25 @@ int main() {
         if (!enterAnotherLevel) {
             chosenLevel = menu.getChosenLevel();
         }
-        //std::cout << chosenLevel << std::endl;
-        if (chosenLevel != -1) {
-            MainGame game(512, 512, chosenLevel);
-            game.run();
-            getIsClosed = !game.getWindowClosedState();
-            if (game.gameWon()) {
+        MainGame game(512, 512, chosenLevel);
+        game.run();
+        getIsClosed = !game.getWindowClosedState();
+        if (game.gameWon()) {
                 
-               // std::cout << "game won" << std::endl;
-                enterAnotherLevel = true;
+            // std::cout << "game won" << std::endl;
+            enterAnotherLevel = true;
                 
-               // std::cout << game.getMovesCount() << std::endl;
-               // std::cout << "Enter initials: ";
+            // std::cout << game.getMovesCount() << std::endl;
+            // std::cout << "Enter initials: ";
                 
-                std::string initials;
-                std::cin >> initials;
-                curl_global_init(CURL_GLOBAL_ALL);
-                sendScore(initials, game.getMovesCount(), chosenLevel);
-                curl_global_cleanup();
+            std::string initials;
+            std::cin >> initials;
+            curl_global_init(CURL_GLOBAL_ALL);
+            sendScore(initials, game.getMovesCount(), chosenLevel);
+            curl_global_cleanup();
 
 
-                chosenLevel = (chosenLevel + 1) % levelCount;
-            }
+            chosenLevel = (chosenLevel + 1) % levelCount;
         }
         //std::cout << getIsClosed << std::endl;
     } while (getIsClosed);

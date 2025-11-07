@@ -48,7 +48,7 @@ void Map::clearWaterTiles()
 }
 
 void Map::loadTextures() {
-    if (!walkableTexture.loadFromFile("Images/walkableGround.png")) {
+    if (!walkableTexture.loadFromFile("Images/WalkableGround.png")) {
         throw std::runtime_error("Failed to load walkable texture");
     }
     if (!destructibleTexture.loadFromFile("Images/destructibleBlock.png")) {
